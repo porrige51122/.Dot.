@@ -47561,9 +47561,9 @@ function createLevel5(app, nodes) {
   var message = new PIXI.Text("Level 5", style);
   message.position.set(20, 20);
   app.stage.addChild(message);
-  var message2 = new PIXI.Text("", style);
+  var message2 = new PIXI.Text("What has happened here?", style);
   message2.anchor.set(0.5, 0.5);
-  message2.position.set(400, 100);
+  message2.position.set(400, 50);
   app.stage.addChild(message2);
 
   nodes = [];
