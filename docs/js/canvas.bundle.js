@@ -46916,7 +46916,7 @@ if (!PIXI.utils.isWebGLSupported()) type = "canvas";
 PIXI.utils.sayHello(type);
 
 // Render application
-var app = new PIXI.Application({});
+var app = new PIXI.Application({ height: 700 });
 document.body.appendChild(app.view);
 app.renderer.backgroundColor = 0x000034;
 

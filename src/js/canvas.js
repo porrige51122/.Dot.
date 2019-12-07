@@ -25,7 +25,7 @@ if (!PIXI.utils.isWebGLSupported())
 PIXI.utils.sayHello(type);
 
 // Render application
-let app = new PIXI.Application({});
+let app = new PIXI.Application({height: 700});
 document.body.appendChild(app.view);
 app.renderer.backgroundColor = 0x000034;
 
