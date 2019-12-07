@@ -101,7 +101,7 @@ function gameMenuTransition() {
   app.renderer.backgroundColor = 0x000034;
   transRectA.y += transRectA.vy;
   transRectA.vy += 0.5;
-  if (transRectA.y > 600) {
+  if (transRectA.y > 700) {
     transRectA.y = 0;
     transRectA.vy = 0.5;
     transRectA.visible = false;
@@ -128,7 +128,7 @@ let transRectB = new PIXI.Graphics();
 transRectB.beginFill(0xFCBF49);
 transRectB.drawRect(0, 0, 800, 700);
 transRectB.endFill();
-transRectB.y = 600;
+transRectB.y = 700;
 transRectB.visible = false;
 transRectB.vy = 0.5;
 
@@ -140,7 +140,7 @@ function menuGameTransition() {
   if (transRectB.y < 0) {
     app.renderer.backgroundColor = 0xFCBF49;
     transRectB.vy = 0.5;
-    transRectB.y = 600;
+    transRectB.y = 700;
     transRectB.visible = false;
     clearChildren();
     nextLevelSetup();
