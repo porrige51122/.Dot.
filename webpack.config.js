@@ -19,7 +19,13 @@ module.exports = {
             presets: ['env']
           }
         }
-      }
+      },
+      {
+         test: /\.(png|svg|jpg|gif)$/,
+         use: [
+           'file-loader',
+         ],
+       },
     ]
   },
   plugins: [
