@@ -110,6 +110,20 @@ function gameMenuTransition() {
     levelSetup();
   }
 }
+let style2 = new PIXI.TextStyle({
+  fontFamily: "Courier New",
+  fontSize: 50,
+  fill: "#FCBF49"
+});
+let message3 = new PIXI.Text("Thanks For Playing!", style2);
+message3.anchor.set(0.5, 0.5);
+message3.position.set(400, 300);
+
+function gameEnd() {
+  app.stage.addChild(message3);
+  app.renderer.render(app.stage);
+}
+
 let transRectB = new PIXI.Graphics();
 transRectB.beginFill(0xFCBF49);
 transRectB.drawRect(0, 0, 800, 600);
@@ -189,7 +203,7 @@ function levelSetup() {
     nodes = createLevel5(app, nodes);
     app.stage.addChild(line);
   } else {
-    console.log('THATS ALL FOLKS')
+    state = gameEnd;
   }
 }
 
