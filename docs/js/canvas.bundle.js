@@ -46984,7 +46984,7 @@ function menu(delta) {
 var finished = false;
 var transRectA = new PIXI.Graphics();
 transRectA.beginFill(0xFCBF49);
-transRectA.drawRect(0, 0, 800, 600);
+transRectA.drawRect(0, 0, 800, 700);
 transRectA.endFill();
 transRectA.visible = false;
 transRectA.vy = 0.5;
@@ -47019,7 +47019,7 @@ function gameEnd() {
 
 var transRectB = new PIXI.Graphics();
 transRectB.beginFill(0xFCBF49);
-transRectB.drawRect(0, 0, 800, 600);
+transRectB.drawRect(0, 0, 800, 700);
 transRectB.endFill();
 transRectB.y = 600;
 transRectB.visible = false;
