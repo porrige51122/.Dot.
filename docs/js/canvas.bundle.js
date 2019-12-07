@@ -46964,7 +46964,7 @@ var style = new PIXI.TextStyle({
   fontSize: 100,
   fill: "#000034"
 });
-var message = new PIXI.Text(".Dots.", style);
+var message = new PIXI.Text(".Dot.", style);
 message.anchor.set(0.5, 0.5);
 message.position.set(400, 200);
 message.visible = false;
@@ -47035,6 +47035,7 @@ function menuGameTransition() {
     transRectB.vy = 0.5;
     transRectB.y = 600;
     transRectB.visible = false;
+    clearChildren();
     nextLevelSetup();
     state = nextLevel;
   }
@@ -47175,7 +47176,6 @@ function nodeClick() {
     lineStart.b = false;
   }
   if (checkWin()) {
-    clearChildren();
     app.stage.addChild(transRectB);
     state = menuGameTransition;
   }
