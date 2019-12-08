@@ -1,6 +1,6 @@
-import { getNodeA, getNodeB, getNodeC } from '../sprites/node.js';
-import { nodeClick } from '../canvas.js';
 import * as PIXI from 'pixi.js';
+
+import { createNode } from '../sprites/node.js';
 
 export function createLevel5(app, nodes) {
   let style = new PIXI.TextStyle({
@@ -54,22 +54,7 @@ export function createLevel5(app, nodes) {
                   { s: 'B', x: 700, y: 500 },
                 ];
   for (let i = 0; i < nodePos.length; i++) {
-    let node, max;
-    if (nodePos[i].s == 'A') {
-      node = getNodeA();
-      max = 2;
-    } else if (nodePos[i].s == 'B') {
-      node = getNodeB();
-      max = 1;
-    } else if (nodePos[i].s == 'C') {
-      node = getNodeC();
-      max = 3;
-    }
-    node.x = nodePos[i].x;
-    node.y = nodePos[i].y;
-    node.tap = nodeClick;
-    node.click = nodeClick;
-    nodes.push({ n: node, m: max, c: 0});
+    nodes.push(createNode(nodePos[i]));
   }
   nodes.forEach(x => app.stage.addChild(x.n));
   return nodes;

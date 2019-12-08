@@ -1,22 +1,20 @@
 import * as PIXI from 'pixi.js';
 import Toastify from 'toastify-js';
 
-import Button from '../images/button.png';
-import {
-  createLevel1
-} from './levels/level1.js';
-import {
-  createLevel2
-} from './levels/level2.js';
-import {
-  createLevel3
-} from './levels/level3.js';
-import {
-  createLevel4
-} from './levels/level4.js';
-import {
-  createLevel5
-} from './levels/level5.js';
+// Images
+import StartButton from '../images/start.png';
+import NextButton from '../images/next.png';
+import Nodes from '../images/nodes.png';
+
+// Functions
+import { gameEnd } from './states/gameEnd.js';
+import { menu } from './states/menu.js';
+import { nextLevel } from './states/nextLevel.js';
+import { createLevel1 } from './levels/level1.js';
+import { createLevel2 } from './levels/level2.js';
+import { createLevel3 } from './levels/level3.js';
+import { createLevel4 } from './levels/level4.js';
+import { createLevel5 } from './levels/level5.js';
 
 // Check to see all has imported
 let type = "WebGL";
@@ -25,7 +23,9 @@ if (!PIXI.utils.isWebGLSupported())
 PIXI.utils.sayHello(type);
 
 // Render application
-let app = new PIXI.Application({height: 700});
+let app = new PIXI.Application({
+  height: 700
+});
 document.body.appendChild(app.view);
 app.renderer.backgroundColor = 0x000034;
 
@@ -35,20 +35,32 @@ let state = menu;
 // Get sprites
 const loader = new PIXI.Loader();
 let buttons = [];
-loader.add(Button).on("progress", loadProgressHandler).load(setup);
+export let nodeTypes = [];
+
+loader.add(NextButton)
+      .add(StartButton)
+      .add(Nodes)
+      .on("progress", loadProgressHandler)
+      .load(setup);
 
 // Levels
 let level = 1;
 
 // Load Textures
 function loadProgressHandler(loader, resource) {
-  console.log("loading: " + resource.name);
   console.log("progress: " + loader.progress + "%");
 }
 
 function setup() {
   console.log("All files loaded");
-  let button = new PIXI.Sprite(loader.resources[Button].texture);
+  let nodeSheet = loader.resources[Nodes].texture;
+  for (let x = 0; x < 900; x += 100) {
+    let sprite = new PIXI.Texture(nodeSheet);
+    sprite.frame = new PIXI.Rectangle(x, 0, 100, 100);
+    nodeTypes.push(sprite);
+  }
+  console.log(nodeTypes);
+  let button = new PIXI.Sprite(loader.resources[StartButton].texture);
   button.buttonMode = true;
   button.interactive = true;
   button.anchor.set(0.5);
@@ -66,6 +78,7 @@ function setup() {
 function gameLoop(delta) {
   state(delta);
 }
+
 let style = new PIXI.TextStyle({
   fontFamily: "Courier New",
   fontSize: 100,
@@ -82,9 +95,6 @@ function menuSetup() {
   buttons[0].visible = true;
   message.visible = true;
   app.renderer.render(app.stage);
-}
-
-function menu(delta) {
   app.renderer.backgroundColor = 0xFCBF49;
 }
 
@@ -119,10 +129,6 @@ let message3 = new PIXI.Text("Thanks For Playing!", style2);
 message3.anchor.set(0.5, 0.5);
 message3.position.set(400, 300);
 
-function gameEnd() {
-  app.stage.addChild(message3);
-  app.renderer.render(app.stage);
-}
 
 let transRectB = new PIXI.Graphics();
 transRectB.beginFill(0xFCBF49);
@@ -154,9 +160,6 @@ function gameSetup() {
   state = gameMenuTransition;
 }
 
-function nextLevel() {
-}
-
 function clearChildren() {
   for (var i = app.stage.children.length - 1; i >= 0; i--) {
     app.stage.removeChild(app.stage.children[i]);
@@ -173,7 +176,7 @@ function nextLevelSetup() {
   app.stage.addChild(message);
   app.renderer.render(app.stage);
 
-  let button = new PIXI.Sprite(loader.resources[Button].texture);
+  let button = new PIXI.Sprite(loader.resources[NextButton].texture);
   button.buttonMode = true;
   button.interactive = true;
   button.anchor.set(0.5);
@@ -204,6 +207,8 @@ function levelSetup() {
     nodes = createLevel5(app, nodes);
     app.stage.addChild(line);
   } else {
+    app.stage.addChild(message3);
+    app.renderer.render(app.stage);
     state = gameEnd;
   }
 }
@@ -263,9 +268,7 @@ export function nodeClick() {
       }
 
       // Check for max connections
-
       if (!within) {
-        console.log(nodes[nodeind[0]].m)
         if (nodes[nodeind[0]].m > nodes[nodeind[0]].c && nodes[nodeind[1]].m > nodes[nodeind[1]].c) {
           nodes[nodeind[0]].c++;
           nodes[nodeind[1]].c++;
@@ -333,8 +336,8 @@ function sameLine(r1, r2) {
   let a = r1[0],
     b = r1[1],
     c = r1[2],
-    d = r1[3];
-  let p = r2[0],
+    d = r1[3],
+    p = r2[0],
     q = r2[1],
     r = r2[2],
     s = r2[3];
@@ -348,7 +351,7 @@ function sameLine(r1, r2) {
 
 }
 
-function crossLine(r1, r2) {
+function crossLine(r1, r2, cr=true) {
   let a = r1[0],
     b = r1[1],
     c = r1[2],
@@ -357,6 +360,9 @@ function crossLine(r1, r2) {
     q = r2[1],
     r = r2[2],
     s = r2[3];
+  if (cr) {
+    return crossLine([a + 1,b + 1,c - 1,d - 1], r2, false);
+  }
   // check if cross
   var det, gamma, lambda;
   det = (c - a) * (s - q) - (r - p) * (d - b);

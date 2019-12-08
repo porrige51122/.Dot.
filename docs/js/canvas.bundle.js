@@ -46856,16 +46856,42 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./src/images/button.png":
-/*!*******************************!*\
-  !*** ./src/images/button.png ***!
-  \*******************************/
+/***/ "./src/images/next.png":
+/*!*****************************!*\
+  !*** ./src/images/next.png ***!
+  \*****************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "6cc83de5667e9e8f12203d777a361fdc.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "eebd13865c47d7f400d8408eaf620fcf.png");
+
+/***/ }),
+
+/***/ "./src/images/nodes.png":
+/*!******************************!*\
+  !*** ./src/images/nodes.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "c3cbd35e75acc9c67b5a08fbb5b2150c.png");
+
+/***/ }),
+
+/***/ "./src/images/start.png":
+/*!******************************!*\
+  !*** ./src/images/start.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "7b3c4474be21ca456c1e9bfde6aaa4f8.png");
 
 /***/ }),
 
@@ -46882,6 +46908,7 @@ __webpack_require__.r(__webpack_exports__);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.nodeTypes = undefined;
 exports.nodeClick = nodeClick;
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
@@ -46892,9 +46919,23 @@ var _toastifyJs = __webpack_require__(/*! toastify-js */ "./node_modules/toastif
 
 var _toastifyJs2 = _interopRequireDefault(_toastifyJs);
 
-var _button = __webpack_require__(/*! ../images/button.png */ "./src/images/button.png");
+var _start = __webpack_require__(/*! ../images/start.png */ "./src/images/start.png");
 
-var _button2 = _interopRequireDefault(_button);
+var _start2 = _interopRequireDefault(_start);
+
+var _next = __webpack_require__(/*! ../images/next.png */ "./src/images/next.png");
+
+var _next2 = _interopRequireDefault(_next);
+
+var _nodes = __webpack_require__(/*! ../images/nodes.png */ "./src/images/nodes.png");
+
+var _nodes2 = _interopRequireDefault(_nodes);
+
+var _gameEnd = __webpack_require__(/*! ./states/gameEnd.js */ "./src/js/states/gameEnd.js");
+
+var _menu = __webpack_require__(/*! ./states/menu.js */ "./src/js/states/menu.js");
+
+var _nextLevel = __webpack_require__(/*! ./states/nextLevel.js */ "./src/js/states/nextLevel.js");
 
 var _level = __webpack_require__(/*! ./levels/level1.js */ "./src/js/levels/level1.js");
 
@@ -46911,35 +46952,51 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 // Check to see all has imported
+
+
+// Functions
 var type = "WebGL";
+
+// Images
+
 if (!PIXI.utils.isWebGLSupported()) type = "canvas";
 PIXI.utils.sayHello(type);
 
 // Render application
-var app = new PIXI.Application({ height: 700 });
+var app = new PIXI.Application({
+  height: 700
+});
 document.body.appendChild(app.view);
 app.renderer.backgroundColor = 0x000034;
 
 // Begin States
-var state = menu;
+var state = _menu.menu;
 
 // Get sprites
 var loader = new PIXI.Loader();
 var buttons = [];
-loader.add(_button2.default).on("progress", loadProgressHandler).load(setup);
+var nodeTypes = exports.nodeTypes = [];
+
+loader.add(_next2.default).add(_start2.default).add(_nodes2.default).on("progress", loadProgressHandler).load(setup);
 
 // Levels
 var level = 1;
 
 // Load Textures
 function loadProgressHandler(loader, resource) {
-  console.log("loading: " + resource.name);
   console.log("progress: " + loader.progress + "%");
 }
 
 function setup() {
   console.log("All files loaded");
-  var button = new PIXI.Sprite(loader.resources[_button2.default].texture);
+  var nodeSheet = loader.resources[_nodes2.default].texture;
+  for (var x = 0; x < 900; x += 100) {
+    var sprite = new PIXI.Texture(nodeSheet);
+    sprite.frame = new PIXI.Rectangle(x, 0, 100, 100);
+    nodeTypes.push(sprite);
+  }
+  console.log(nodeTypes);
+  var button = new PIXI.Sprite(loader.resources[_start2.default].texture);
   button.buttonMode = true;
   button.interactive = true;
   button.anchor.set(0.5);
@@ -46959,6 +47016,7 @@ function setup() {
 function gameLoop(delta) {
   state(delta);
 }
+
 var style = new PIXI.TextStyle({
   fontFamily: "Courier New",
   fontSize: 100,
@@ -46971,13 +47029,10 @@ message.visible = false;
 app.stage.addChild(message);
 
 function menuSetup() {
-  state = menu;
+  state = _menu.menu;
   buttons[0].visible = true;
   message.visible = true;
   app.renderer.render(app.stage);
-}
-
-function menu(delta) {
   app.renderer.backgroundColor = 0xFCBF49;
 }
 
@@ -47012,11 +47067,6 @@ var message3 = new PIXI.Text("Thanks For Playing!", style2);
 message3.anchor.set(0.5, 0.5);
 message3.position.set(400, 300);
 
-function gameEnd() {
-  app.stage.addChild(message3);
-  app.renderer.render(app.stage);
-}
-
 var transRectB = new PIXI.Graphics();
 transRectB.beginFill(0xFCBF49);
 transRectB.drawRect(0, 0, 800, 700);
@@ -47037,7 +47087,7 @@ function menuGameTransition() {
     transRectB.visible = false;
     clearChildren();
     nextLevelSetup();
-    state = nextLevel;
+    state = _nextLevel.nextLevel;
   }
 }
 
@@ -47046,8 +47096,6 @@ function gameSetup() {
   app.stage.addChild(transRectA);
   state = gameMenuTransition;
 }
-
-function nextLevel() {}
 
 function clearChildren() {
   for (var i = app.stage.children.length - 1; i >= 0; i--) {
@@ -47065,7 +47113,7 @@ function nextLevelSetup() {
   app.stage.addChild(message);
   app.renderer.render(app.stage);
 
-  var button = new PIXI.Sprite(loader.resources[_button2.default].texture);
+  var button = new PIXI.Sprite(loader.resources[_next2.default].texture);
   button.buttonMode = true;
   button.interactive = true;
   button.anchor.set(0.5);
@@ -47096,7 +47144,9 @@ function levelSetup() {
     nodes = (0, _level5.createLevel5)(app, nodes);
     app.stage.addChild(line);
   } else {
-    state = gameEnd;
+    app.stage.addChild(message3);
+    app.renderer.render(app.stage);
+    state = _gameEnd.gameEnd;
   }
 }
 
@@ -47155,9 +47205,7 @@ function nodeClick() {
       }
 
       // Check for max connections
-
       if (!within) {
-        console.log(nodes[nodeind[0]].m);
         if (nodes[nodeind[0]].m > nodes[nodeind[0]].c && nodes[nodeind[1]].m > nodes[nodeind[1]].c) {
           nodes[nodeind[0]].c++;
           nodes[nodeind[1]].c++;
@@ -47224,8 +47272,8 @@ function sameLine(r1, r2) {
   var a = r1[0],
       b = r1[1],
       c = r1[2],
-      d = r1[3];
-  var p = r2[0],
+      d = r1[3],
+      p = r2[0],
       q = r2[1],
       r = r2[2],
       s = r2[3];
@@ -47239,6 +47287,8 @@ function sameLine(r1, r2) {
 }
 
 function crossLine(r1, r2) {
+  var cr = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
   var a = r1[0],
       b = r1[1],
       c = r1[2],
@@ -47247,6 +47297,9 @@ function crossLine(r1, r2) {
       q = r2[1],
       r = r2[2],
       s = r2[3];
+  if (cr) {
+    return crossLine([a + 1, b + 1, c - 1, d - 1], r2, false);
+  }
   // check if cross
   var det, gamma, lambda;
   det = (c - a) * (s - q) - (r - p) * (d - b);
@@ -47276,13 +47329,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createLevel1 = createLevel1;
 
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var PIXI = _interopRequireWildcard(_pixi);
+
+var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -47299,24 +47350,9 @@ function createLevel1(app, nodes) {
   message2.anchor.set(0.5, 0.5);
   message2.position.set(400, 100);
   app.stage.addChild(message2);
-
-  nodes = [];
-  var nodePos = [{ s: 'B', x: 300, y: 200 }, { s: 'A', x: 300, y: 300 }, { s: 'A', x: 500, y: 300 }, { s: 'B', x: 500, y: 400 }];
+  var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'B', x: 300, y: 300 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
   for (var i = 0; i < nodePos.length; i++) {
-    var node = void 0,
-        max = void 0;
-    if (nodePos[i].s == 'A') {
-      node = (0, _node.getNodeA)();
-      max = 2;
-    } else if (nodePos[i].s == 'B') {
-      node = (0, _node.getNodeB)();
-      max = 1;
-    }
-    node.x = nodePos[i].x;
-    node.y = nodePos[i].y;
-    node.tap = _canvas.nodeClick;
-    node.click = _canvas.nodeClick;
-    nodes.push({ n: node, m: max, c: 0 });
+    nodes.push((0, _node.createNode)(nodePos[i]));
   }
   nodes.forEach(function (x) {
     return app.stage.addChild(x.n);
@@ -47341,13 +47377,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createLevel2 = createLevel2;
 
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var PIXI = _interopRequireWildcard(_pixi);
+
+var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -47366,22 +47400,9 @@ function createLevel2(app, nodes) {
   app.stage.addChild(message2);
 
   nodes = [];
-  var nodePos = [{ s: 'B', x: 300, y: 200 }, { s: 'A', x: 300, y: 300 }, { s: 'A', x: 400, y: 300 }, { s: 'A', x: 200, y: 200 }, { s: 'A', x: 600, y: 140 }, { s: 'A', x: 500, y: 300 }, { s: 'B', x: 500, y: 400 }];
+  var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'B', x: 300, y: 300 }, { s: 'B', x: 400, y: 300 }, { s: 'B', x: 200, y: 200 }, { s: 'B', x: 600, y: 140 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
   for (var i = 0; i < nodePos.length; i++) {
-    var node = void 0,
-        max = void 0;
-    if (nodePos[i].s == 'A') {
-      node = (0, _node.getNodeA)();
-      max = 2;
-    } else if (nodePos[i].s == 'B') {
-      node = (0, _node.getNodeB)();
-      max = 1;
-    }
-    node.x = nodePos[i].x;
-    node.y = nodePos[i].y;
-    node.tap = _canvas.nodeClick;
-    node.click = _canvas.nodeClick;
-    nodes.push({ n: node, m: max, c: 0 });
+    nodes.push((0, _node.createNode)(nodePos[i]));
   }
   nodes.forEach(function (x) {
     return app.stage.addChild(x.n);
@@ -47406,13 +47427,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createLevel3 = createLevel3;
 
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var PIXI = _interopRequireWildcard(_pixi);
+
+var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -47431,25 +47450,9 @@ function createLevel3(app, nodes) {
   app.stage.addChild(message2);
 
   nodes = [];
-  var nodePos = [{ s: 'B', x: 300, y: 200 }, { s: 'C', x: 300, y: 300 }, { s: 'A', x: 400, y: 300 }, { s: 'B', x: 200, y: 200 }, { s: 'A', x: 600, y: 150 }, { s: 'A', x: 500, y: 300 }, { s: 'B', x: 500, y: 400 }];
+  var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'C', x: 300, y: 300 }, { s: 'B', x: 400, y: 300 }, { s: 'A', x: 200, y: 200 }, { s: 'B', x: 600, y: 150 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
   for (var i = 0; i < nodePos.length; i++) {
-    var node = void 0,
-        max = void 0;
-    if (nodePos[i].s == 'A') {
-      node = (0, _node.getNodeA)();
-      max = 2;
-    } else if (nodePos[i].s == 'B') {
-      node = (0, _node.getNodeB)();
-      max = 1;
-    } else if (nodePos[i].s == 'C') {
-      node = (0, _node.getNodeC)();
-      max = 3;
-    }
-    node.x = nodePos[i].x;
-    node.y = nodePos[i].y;
-    node.tap = _canvas.nodeClick;
-    node.click = _canvas.nodeClick;
-    nodes.push({ n: node, m: max, c: 0 });
+    nodes.push((0, _node.createNode)(nodePos[i]));
   }
   nodes.forEach(function (x) {
     return app.stage.addChild(x.n);
@@ -47474,13 +47477,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createLevel4 = createLevel4;
 
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var PIXI = _interopRequireWildcard(_pixi);
+
+var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -47499,25 +47500,10 @@ function createLevel4(app, nodes) {
   app.stage.addChild(message2);
 
   nodes = [];
-  var nodePos = [{ s: 'B', x: 50, y: 100 }, { s: 'A', x: 50, y: 200 }, { s: 'C', x: 50, y: 300 }, { s: 'B', x: 150, y: 300 }, { s: 'C', x: 250, y: 300 }, { s: 'B', x: 50, y: 400 }, { s: 'B', x: 150, y: 100 }, { s: 'A', x: 150, y: 400 }, { s: 'C', x: 50, y: 500 }, { s: 'B', x: 150, y: 200 }, { s: 'C', x: 350, y: 500 }, { s: 'A', x: 650, y: 300 }, { s: 'A', x: 650, y: 500 }, { s: 'B', x: 650, y: 100 }];
+  var nodePos = [{ s: 'A', x: 50, y: 100 }, { s: 'B', x: 50, y: 200 }, { s: 'C', x: 50, y: 300 }, { s: 'A', x: 150, y: 300 }, { s: 'C', x: 250, y: 300 }, { s: 'A', x: 50, y: 400 }, { s: 'A', x: 150, y: 100 }, { s: 'B', x: 150, y: 400 }, { s: 'C', x: 50, y: 500 }, { s: 'A', x: 150, y: 200 }, { s: 'C', x: 350, y: 500 }, { s: 'B', x: 650, y: 300 }, { s: 'B', x: 650, y: 500 }, { s: 'A', x: 650, y: 100 }];
+
   for (var i = 0; i < nodePos.length; i++) {
-    var node = void 0,
-        max = void 0;
-    if (nodePos[i].s == 'A') {
-      node = (0, _node.getNodeA)();
-      max = 2;
-    } else if (nodePos[i].s == 'B') {
-      node = (0, _node.getNodeB)();
-      max = 1;
-    } else if (nodePos[i].s == 'C') {
-      node = (0, _node.getNodeC)();
-      max = 3;
-    }
-    node.x = nodePos[i].x;
-    node.y = nodePos[i].y;
-    node.tap = _canvas.nodeClick;
-    node.click = _canvas.nodeClick;
-    nodes.push({ n: node, m: max, c: 0 });
+    nodes.push((0, _node.createNode)(nodePos[i]));
   }
   nodes.forEach(function (x) {
     return app.stage.addChild(x.n);
@@ -47542,13 +47528,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createLevel5 = createLevel5;
 
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var PIXI = _interopRequireWildcard(_pixi);
+
+var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -47569,23 +47553,7 @@ function createLevel5(app, nodes) {
   nodes = [];
   var nodePos = [{ s: 'A', x: 100, y: 100 }, { s: 'B', x: 200, y: 100 }, { s: 'C', x: 300, y: 100 }, { s: 'B', x: 400, y: 100 }, { s: 'B', x: 500, y: 100 }, { s: 'B', x: 600, y: 100 }, { s: 'B', x: 700, y: 100 }, { s: 'B', x: 100, y: 200 }, { s: 'A', x: 200, y: 200 }, { s: 'B', x: 300, y: 200 }, { s: 'C', x: 400, y: 200 }, { s: 'B', x: 500, y: 200 }, { s: 'C', x: 600, y: 200 }, { s: 'B', x: 700, y: 200 }, { s: 'B', x: 100, y: 300 }, { s: 'A', x: 200, y: 300 }, { s: 'B', x: 300, y: 300 }, { s: 'C', x: 400, y: 300 }, { s: 'B', x: 500, y: 300 }, { s: 'C', x: 600, y: 300 }, { s: 'B', x: 700, y: 300 }, { s: 'B', x: 100, y: 400 }, { s: 'B', x: 200, y: 400 }, { s: 'C', x: 300, y: 400 }, { s: 'B', x: 400, y: 400 }, { s: 'B', x: 500, y: 400 }, { s: 'C', x: 600, y: 400 }, { s: 'B', x: 700, y: 400 }, { s: 'A', x: 100, y: 500 }, { s: 'B', x: 200, y: 500 }, { s: 'B', x: 300, y: 500 }, { s: 'A', x: 400, y: 500 }, { s: 'B', x: 500, y: 500 }, { s: 'B', x: 600, y: 500 }, { s: 'B', x: 700, y: 500 }];
   for (var i = 0; i < nodePos.length; i++) {
-    var node = void 0,
-        max = void 0;
-    if (nodePos[i].s == 'A') {
-      node = (0, _node.getNodeA)();
-      max = 2;
-    } else if (nodePos[i].s == 'B') {
-      node = (0, _node.getNodeB)();
-      max = 1;
-    } else if (nodePos[i].s == 'C') {
-      node = (0, _node.getNodeC)();
-      max = 3;
-    }
-    node.x = nodePos[i].x;
-    node.y = nodePos[i].y;
-    node.tap = _canvas.nodeClick;
-    node.click = _canvas.nodeClick;
-    nodes.push({ n: node, m: max, c: 0 });
+    nodes.push((0, _node.createNode)(nodePos[i]));
   }
   nodes.forEach(function (x) {
     return app.stage.addChild(x.n);
@@ -47608,53 +47576,110 @@ function createLevel5(app, nodes) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getNodeB = getNodeB;
-exports.getNodeA = getNodeA;
-exports.getNodeC = getNodeC;
+exports.createNode = createNode;
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var PIXI = _interopRequireWildcard(_pixi);
 
+var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
+
+var _nodes = __webpack_require__(/*! ../../images/nodes.png */ "./src/images/nodes.png");
+
+var _nodes2 = _interopRequireDefault(_nodes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function getNodeB() {
-  var circle = new PIXI.Graphics();
-  circle.buttonMode = true;
-  circle.interactive = true;
-  circle.lineStyle(5, 0xFCBF49, 1);
-  circle.beginFill(0x000034);
-  circle.drawCircle(0, 0, 17);
-  circle.x = Math.random() * 800;
-  circle.y = Math.random() * 600;
-  circle.endFill();
-  return circle;
+function createNode(data) {
+  var a = void 0,
+      max = void 0;
+  if (data.s == 'A') {
+    a = new PIXI.Sprite(setAShape());
+    max = 1;
+  } else if (data.s == 'B') {
+    a = new PIXI.Sprite(setBShape());
+    max = 2;
+  } else if (data.s == 'C') {
+    a = new PIXI.Sprite(setCShape());
+    max = 3;
+  }
+  a.buttonMode = true;
+  a.interactive = true;
+  a.anchor.set(0.5);
+  a.scale.set(0.5);
+  a.position.set(data.x, data.y);
+  a.tap = _canvas.nodeClick;
+  a.click = _canvas.nodeClick;
+  return { n: a, m: max, c: 0 };
 }
 
-function getNodeA() {
-  var circle = new PIXI.Graphics();
-  circle.buttonMode = true;
-  circle.interactive = true;
-  circle.lineStyle(15, 0xFCBF49, 1);
-  circle.beginFill(0x000034);
-  circle.drawCircle(0, 0, 13);
-  circle.x = Math.random() * 800;
-  circle.y = Math.random() * 600;
-  circle.endFill();
-  return circle;
+function setAShape() {
+  return _canvas.nodeTypes[0];
 }
 
-function getNodeC() {
-  var circle = new PIXI.Graphics();
-  circle.buttonMode = true;
-  circle.interactive = true;
-  circle.beginFill(0xFCBF49);
-  circle.drawCircle(0, 0, 20);
-  circle.x = Math.random() * 800;
-  circle.y = Math.random() * 600;
-  circle.endFill();
-  return circle;
+function setBShape() {
+  return _canvas.nodeTypes[2];
 }
+
+function setCShape() {
+  return _canvas.nodeTypes[5];
+}
+
+/***/ }),
+
+/***/ "./src/js/states/gameEnd.js":
+/*!**********************************!*\
+  !*** ./src/js/states/gameEnd.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.gameEnd = gameEnd;
+function gameEnd() {}
+
+/***/ }),
+
+/***/ "./src/js/states/menu.js":
+/*!*******************************!*\
+  !*** ./src/js/states/menu.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.menu = menu;
+function menu() {}
+
+/***/ }),
+
+/***/ "./src/js/states/nextLevel.js":
+/*!************************************!*\
+  !*** ./src/js/states/nextLevel.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.nextLevel = nextLevel;
+function nextLevel() {}
 
 /***/ })
 
