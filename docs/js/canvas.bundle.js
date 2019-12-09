@@ -47287,8 +47287,6 @@ function sameLine(r1, r2) {
 }
 
 function crossLine(r1, r2) {
-  var cr = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
   var a = r1[0],
       b = r1[1],
       c = r1[2],
@@ -47297,9 +47295,6 @@ function crossLine(r1, r2) {
       q = r2[1],
       r = r2[2],
       s = r2[3];
-  if (cr) {
-    return crossLine([a + 1, b + 1, c - 1, d - 1], r2, false);
-  }
   // check if cross
   var det, gamma, lambda;
   det = (c - a) * (s - q) - (r - p) * (d - b);
