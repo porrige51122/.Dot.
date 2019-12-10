@@ -4,16 +4,19 @@ import { nodeClick, nodeTypes } from '../canvas.js';
 import Nodes from '../../images/nodes.png';
 
 export function createNode(data) {
-  let a, max;
+  let a, max, min;
   if (data.s == 'A') {
     a = new PIXI.Sprite(setAShape());
     max = 1;
+    min = 0;
   } else if (data.s == 'B') {
     a = new PIXI.Sprite(setBShape());
-    max = 2;
+    max = 4;
+    min = 2;
   } else if (data.s == 'C') {
     a = new PIXI.Sprite(setCShape());
-    max = 3;
+    max = 8;
+    min = 5;
   }
   a.buttonMode = true;
   a.interactive = true;
@@ -22,7 +25,7 @@ export function createNode(data) {
   a.position.set(data.x, data.y);
   a.tap = nodeClick;
   a.click = nodeClick;
-  return { n: a, m: max, c: 0 };
+  return { n: a, m: max, c: min };
 }
 
 function setAShape() {

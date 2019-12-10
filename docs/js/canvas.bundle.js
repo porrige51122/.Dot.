@@ -47191,7 +47191,9 @@ function nodeClick() {
       for (var _i = 0; _i < lines.length; _i++) {
         if (sameLine(c.currentPath.points, lines[_i].p)) {
           nodes[nodeind[0]].c--;
+          nodes[nodeind[0]].n.texture = nodeTypes[nodes[nodeind[0]].c];
           nodes[nodeind[1]].c--;
+          nodes[nodeind[1]].n.texture = nodeTypes[nodes[nodeind[1]].c];
           app.stage.removeChildAt(app.stage.getChildIndex(lines[_i].l));
           lines.splice(_i, 1);
           within = true;
@@ -47208,7 +47210,10 @@ function nodeClick() {
       if (!within) {
         if (nodes[nodeind[0]].m > nodes[nodeind[0]].c && nodes[nodeind[1]].m > nodes[nodeind[1]].c) {
           nodes[nodeind[0]].c++;
+          nodes[nodeind[0]].n.texture = nodeTypes[nodes[nodeind[0]].c];
           nodes[nodeind[1]].c++;
+          nodes[nodeind[1]].n.texture = nodeTypes[nodes[nodeind[1]].c];
+
           lines.push({
             p: [lineStart.x, lineStart.y, this.x, this.y],
             l: c
@@ -47589,16 +47594,20 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function createNode(data) {
   var a = void 0,
-      max = void 0;
+      max = void 0,
+      min = void 0;
   if (data.s == 'A') {
     a = new PIXI.Sprite(setAShape());
     max = 1;
+    min = 0;
   } else if (data.s == 'B') {
     a = new PIXI.Sprite(setBShape());
-    max = 2;
+    max = 4;
+    min = 2;
   } else if (data.s == 'C') {
     a = new PIXI.Sprite(setCShape());
-    max = 3;
+    max = 8;
+    min = 5;
   }
   a.buttonMode = true;
   a.interactive = true;
@@ -47607,7 +47616,7 @@ function createNode(data) {
   a.position.set(data.x, data.y);
   a.tap = _canvas.nodeClick;
   a.click = _canvas.nodeClick;
-  return { n: a, m: max, c: 0 };
+  return { n: a, m: max, c: min };
 }
 
 function setAShape() {

@@ -254,7 +254,9 @@ export function nodeClick() {
       for (let i = 0; i < lines.length; i++) {
         if (sameLine(c.currentPath.points, lines[i].p)) {
           nodes[nodeind[0]].c--;
+          nodes[nodeind[0]].n.texture = nodeTypes[nodes[nodeind[0]].c];
           nodes[nodeind[1]].c--;
+          nodes[nodeind[1]].n.texture = nodeTypes[nodes[nodeind[1]].c];
           app.stage.removeChildAt(app.stage.getChildIndex(lines[i].l));
           lines.splice(i, 1);
           within = true;
@@ -271,7 +273,10 @@ export function nodeClick() {
       if (!within) {
         if (nodes[nodeind[0]].m > nodes[nodeind[0]].c && nodes[nodeind[1]].m > nodes[nodeind[1]].c) {
           nodes[nodeind[0]].c++;
+          nodes[nodeind[0]].n.texture = nodeTypes[nodes[nodeind[0]].c];
           nodes[nodeind[1]].c++;
+          nodes[nodeind[1]].n.texture = nodeTypes[nodes[nodeind[1]].c];
+
           lines.push({
             p: [lineStart.x, lineStart.y, this.x, this.y],
             l: c
