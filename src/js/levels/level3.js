@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 
-import { createNode } from '../sprites/node.js';
+import { Node } from '../sprites/node.js';
 
 export function createLevel3(app, nodes) {
   let style = new PIXI.TextStyle({
@@ -26,8 +26,11 @@ export function createLevel3(app, nodes) {
                   { s: 'A', x: 500, y: 400 }
                 ];
   for (let i = 0; i < nodePos.length; i++) {
-    nodes.push(createNode(nodePos[i]));
+    let type = nodePos[i].s;
+    let x = nodePos[i].x;
+    let y = nodePos[i].y;
+    nodes.push(new Node(type, x, y));
   }
-  nodes.forEach(x => app.stage.addChild(x.n));
+  nodes.forEach(x => app.stage.addChild(x.sprite));
   return nodes;
 }

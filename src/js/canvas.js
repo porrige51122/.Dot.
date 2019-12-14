@@ -7,9 +7,11 @@ import NextButton from '../images/next.png';
 import Nodes from '../images/nodes.png';
 
 // Functions
-import { gameEnd } from './states/gameEnd.js';
-import { menu } from './states/menu.js';
-import { nextLevel } from './states/nextLevel.js';
+import * as utils from './maths/utils.js'
+
+import { menu, menuGameTransition, menuSetup } from './states/menu.js';
+import { gameMenuTransition, gameSetup } from './states/game.js';
+
 import { createLevel1 } from './levels/level1.js';
 import { createLevel2 } from './levels/level2.js';
 import { createLevel3 } from './levels/level3.js';
@@ -23,18 +25,27 @@ if (!PIXI.utils.isWebGLSupported())
 PIXI.utils.sayHello(type);
 
 // Render application
-let app = new PIXI.Application({
-  height: 700
+let width = window.innerWidth;
+let height = window.innerHeight;
+
+export let app = new PIXI.Application({
+  height: height,
+  width: width
 });
 document.body.appendChild(app.view);
-app.renderer.backgroundColor = 0x000034;
 
-// Begin States
-let state = menu;
+// Resize section
+window.addEventListener('resize', resize);
+
+function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  app.renderer.resize(width, height);
+}
 
 // Get sprites
 const loader = new PIXI.Loader();
-let buttons = [];
+export let buttons = [];
 export let nodeTypes = [];
 
 loader.add(NextButton)
@@ -59,7 +70,7 @@ function setup() {
     sprite.frame = new PIXI.Rectangle(x, 0, 100, 100);
     nodeTypes.push(sprite);
   }
-  console.log(nodeTypes);
+
   let button = new PIXI.Sprite(loader.resources[StartButton].texture);
   button.buttonMode = true;
   button.interactive = true;
@@ -75,51 +86,48 @@ function setup() {
   app.ticker.add(delta => gameLoop(delta));
 }
 
-function gameLoop(delta) {
-  state(delta);
-}
-
-let style = new PIXI.TextStyle({
-  fontFamily: "Courier New",
-  fontSize: 100,
-  fill: "#000034"
-});
-let message = new PIXI.Text(".Dot.", style);
-message.anchor.set(0.5, 0.5);
-message.position.set(400, 200);
-message.visible = false;
-app.stage.addChild(message);
-
-function menuSetup() {
-  state = menu;
-  buttons[0].visible = true;
-  message.visible = true;
-  app.renderer.render(app.stage);
-  app.renderer.backgroundColor = 0xFCBF49;
-}
-
-let finished = false;
-let transRectA = new PIXI.Graphics();
+export let transRectA = new PIXI.Graphics();
 transRectA.beginFill(0xFCBF49);
 transRectA.drawRect(0, 0, 800, 700);
 transRectA.endFill();
 transRectA.visible = false;
 transRectA.vy = 0.5;
 
-function gameMenuTransition() {
-  transRectA.visible = true;
-  app.renderer.backgroundColor = 0x000034;
-  transRectA.y += transRectA.vy;
-  transRectA.vy += 0.5;
-  if (transRectA.y > 700) {
-    transRectA.y = 0;
-    transRectA.vy = 0.5;
-    transRectA.visible = false;
-    gameSetup();
-    state = game;
-    levelSetup();
+function gameLoop(delta) {
+  // Transition
+  if (transRectA.visible === true) {
+    transRectA.y += transRectA.vy;
+    transRectA.vy += 0.5;
+    if (transRectA.y > 700) {
+      transRectA.visible = false;
+      levelSetup();
+    }
+  } else if (transRectB.visible) {
+    transRectB.y -= transRectB.vy;
+    transRectB.vy += 0.5;
+    if (transRectB.y < 0) {
+      app.renderer.backgroundColor = 0xFCBF49;
+      transRectB.vy = 0.5;
+      transRectB.y = 700;
+      transRectB.visible = false;
+      clearChildren();
+      nextLevelSetup();
+    }
+  }
+
+  // Line following mouse
+  if (lineStart.b) {
+    let mouseData = app.renderer.plugins.interaction.mouse.global;
+    app.stage.removeChildAt(app.stage.getChildIndex(line));
+    line = drawLine(lineStart.x, lineStart.y, mouseData.x, mouseData.y);
+    app.stage.addChild(line);
+  } else {
+    line.visible = false;
   }
 }
+
+let finished = false;
+
 let style2 = new PIXI.TextStyle({
   fontFamily: "Courier New",
   fontSize: 50,
@@ -129,8 +137,7 @@ let message3 = new PIXI.Text("Thanks For Playing!", style2);
 message3.anchor.set(0.5, 0.5);
 message3.position.set(400, 300);
 
-
-let transRectB = new PIXI.Graphics();
+export let transRectB = new PIXI.Graphics();
 transRectB.beginFill(0xFCBF49);
 transRectB.drawRect(0, 0, 800, 700);
 transRectB.endFill();
@@ -138,38 +145,23 @@ transRectB.y = 700;
 transRectB.visible = false;
 transRectB.vy = 0.5;
 
-function menuGameTransition() {
-  transRectB.visible = true;
-  app.renderer.backgroundColor = 0x000034;
-  transRectB.y -= transRectB.vy;
-  transRectB.vy += 0.5;
-  if (transRectB.y < 0) {
-    app.renderer.backgroundColor = 0xFCBF49;
-    transRectB.vy = 0.5;
-    transRectB.y = 700;
-    transRectB.visible = false;
-    clearChildren();
-    nextLevelSetup();
-    state = nextLevel;
-  }
-}
-
-function gameSetup() {
-  clearChildren();
-  app.stage.addChild(transRectA);
-  state = gameMenuTransition;
-}
-
-function clearChildren() {
+export function clearChildren() {
   for (var i = app.stage.children.length - 1; i >= 0; i--) {
     app.stage.removeChild(app.stage.children[i]);
   };
 }
 
-function nextLevelSetup() {
+export function nextLevelSetup() {
   nodes = [];
   lines = [];
   buttons = [];
+
+  let style = new PIXI.TextStyle({
+    fontFamily: "Courier New",
+    fontSize: 100,
+    fill: "#000034"
+  });
+
   let message = new PIXI.Text("Level " + level + "\nComplete!", style);
   message.anchor.set(0.5, 0.5);
   message.position.set(400, 200);
@@ -190,7 +182,7 @@ function nextLevelSetup() {
   level++;
 }
 
-function levelSetup() {
+export function levelSetup() {
   if (level == 1) {
     nodes = createLevel1(app, nodes);
     app.stage.addChild(line);
@@ -209,12 +201,12 @@ function levelSetup() {
   } else {
     app.stage.addChild(message3);
     app.renderer.render(app.stage);
-    state = gameEnd;
   }
 }
 
 let nodes = [];
 let lines = [];
+
 let line = new PIXI.Graphics();
 line.lineStyle(4, 0xFFFFFF, 1);
 line.moveTo(0, 0);
@@ -240,10 +232,10 @@ export function nodeClick() {
     let within = false;
     let nodeind = [];
     for (let i = 0; i < nodes.length; i++) {
-      if (this.x == nodes[i].n.x && this.y == nodes[i].n.y) {
+      if (this.x == nodes[i].sprite.x && this.y == nodes[i].sprite.y) {
         nodeind.push(i);
       }
-      if (lineStart.x == nodes[i].n.x && lineStart.y == nodes[i].n.y) {
+      if (lineStart.x == nodes[i].sprite.x && lineStart.y == nodes[i].sprite.y) {
         nodeind.push(i);
       }
     }
@@ -252,17 +244,15 @@ export function nodeClick() {
     } else {
       // Check for collisions
       for (let i = 0; i < lines.length; i++) {
-        if (sameLine(c.currentPath.points, lines[i].p)) {
-          nodes[nodeind[0]].c--;
-          nodes[nodeind[0]].n.texture = nodeTypes[nodes[nodeind[0]].c];
-          nodes[nodeind[1]].c--;
-          nodes[nodeind[1]].n.texture = nodeTypes[nodes[nodeind[1]].c];
+        if (utils.sameLine(c.currentPath.points, lines[i].p)) {
+          nodes[nodeind[0]].break();
+          nodes[nodeind[1]].break();
           app.stage.removeChildAt(app.stage.getChildIndex(lines[i].l));
           lines.splice(i, 1);
           within = true;
           break;
         }
-        if (crossLine(c.currentPath.points, lines[i].p)) {
+        if (utils.crossLine(c.currentPath.points, lines[i].p)) {
           popup("You cannot cross the connections")
           within = true;
           break;
@@ -271,17 +261,17 @@ export function nodeClick() {
 
       // Check for max connections
       if (!within) {
-        if (nodes[nodeind[0]].m > nodes[nodeind[0]].c && nodes[nodeind[1]].m > nodes[nodeind[1]].c) {
-          nodes[nodeind[0]].c++;
-          nodes[nodeind[0]].n.texture = nodeTypes[nodes[nodeind[0]].c];
-          nodes[nodeind[1]].c++;
-          nodes[nodeind[1]].n.texture = nodeTypes[nodes[nodeind[1]].c];
-
-          lines.push({
-            p: [lineStart.x, lineStart.y, this.x, this.y],
-            l: c
-          });
-          app.stage.addChild(lines[lines.length - 1].l);
+        if (nodes[nodeind[0]].connect()) {
+          if (nodes[nodeind[1]].connect()) {
+            lines.push({
+              p: [lineStart.x, lineStart.y, this.x, this.y],
+              l: c
+            });
+            app.stage.addChild(lines[lines.length - 1].l);
+          } else {
+            nodes[nodeind[0]].break();
+            popup("Max connections per node reached")
+          }
         } else {
           popup("Max connections per node reached")
         }
@@ -293,13 +283,13 @@ export function nodeClick() {
   }
   if (checkWin()) {
     app.stage.addChild(transRectB);
-    state = menuGameTransition;
+    menuGameTransition();
   }
 }
 
 function checkWin() {
   for (let i = 0; i < nodes.length; i++) {
-    if (nodes[i].c != nodes[i].m) {
+    if (nodes[i].min != nodes[i].max) {
       return false;
     }
   }
@@ -324,55 +314,3 @@ function drawLine(sx, sy, ex, ey) {
   a.visible = true;
   return a;
 }
-
-function game(delta) {
-  if (lineStart.b) {
-    let mouseData = app.renderer.plugins.interaction.mouse.global;
-    app.stage.removeChildAt(app.stage.getChildIndex(line));
-    line = drawLine(lineStart.x, lineStart.y, mouseData.x, mouseData.y);
-    app.stage.addChild(line);
-  } else {
-    line.visible = false;
-  }
-
-}
-
-function sameLine(r1, r2) {
-  let a = r1[0],
-    b = r1[1],
-    c = r1[2],
-    d = r1[3],
-    p = r2[0],
-    q = r2[1],
-    r = r2[2],
-    s = r2[3];
-  // check if same line
-  if (a == p && b == q && c == r & d == s) {
-    return true;
-  } else if (a == r && b == s && c == p & d == q) {
-    return true;
-  }
-  return false;
-
-}
-
-function crossLine(r1, r2) {
-  let a = r1[0],
-    b = r1[1],
-    c = r1[2],
-    d = r1[3];
-  let p = r2[0],
-    q = r2[1],
-    r = r2[2],
-    s = r2[3];
-  // check if cross
-  var det, gamma, lambda;
-  det = (c - a) * (s - q) - (r - p) * (d - b);
-  if (det === 0) {
-    return false;
-  } else {
-    lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
-    gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
-    return (0 < lambda && lambda < 1) && (0 < gamma && gamma < 1);
-  }
-};

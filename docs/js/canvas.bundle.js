@@ -46908,7 +46908,10 @@ __webpack_require__.r(__webpack_exports__);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.nodeTypes = undefined;
+exports.transRectB = exports.transRectA = exports.nodeTypes = exports.buttons = exports.app = undefined;
+exports.clearChildren = clearChildren;
+exports.nextLevelSetup = nextLevelSetup;
+exports.levelSetup = levelSetup;
 exports.nodeClick = nodeClick;
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
@@ -46931,11 +46934,13 @@ var _nodes = __webpack_require__(/*! ../images/nodes.png */ "./src/images/nodes.
 
 var _nodes2 = _interopRequireDefault(_nodes);
 
-var _gameEnd = __webpack_require__(/*! ./states/gameEnd.js */ "./src/js/states/gameEnd.js");
+var _utils = __webpack_require__(/*! ./maths/utils.js */ "./src/js/maths/utils.js");
+
+var utils = _interopRequireWildcard(_utils);
 
 var _menu = __webpack_require__(/*! ./states/menu.js */ "./src/js/states/menu.js");
 
-var _nextLevel = __webpack_require__(/*! ./states/nextLevel.js */ "./src/js/states/nextLevel.js");
+var _game = __webpack_require__(/*! ./states/game.js */ "./src/js/states/game.js");
 
 var _level = __webpack_require__(/*! ./levels/level1.js */ "./src/js/levels/level1.js");
 
@@ -46963,18 +46968,27 @@ if (!PIXI.utils.isWebGLSupported()) type = "canvas";
 PIXI.utils.sayHello(type);
 
 // Render application
-var app = new PIXI.Application({
-  height: 700
+var width = window.innerWidth;
+var height = window.innerHeight;
+
+var app = exports.app = new PIXI.Application({
+  height: height,
+  width: width
 });
 document.body.appendChild(app.view);
-app.renderer.backgroundColor = 0x000034;
 
-// Begin States
-var state = _menu.menu;
+// Resize section
+window.addEventListener('resize', resize);
+
+function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  app.renderer.resize(width, height);
+}
 
 // Get sprites
 var loader = new PIXI.Loader();
-var buttons = [];
+var buttons = exports.buttons = [];
 var nodeTypes = exports.nodeTypes = [];
 
 loader.add(_next2.default).add(_start2.default).add(_nodes2.default).on("progress", loadProgressHandler).load(setup);
@@ -46995,69 +47009,66 @@ function setup() {
     sprite.frame = new PIXI.Rectangle(x, 0, 100, 100);
     nodeTypes.push(sprite);
   }
-  console.log(nodeTypes);
+
   var button = new PIXI.Sprite(loader.resources[_start2.default].texture);
   button.buttonMode = true;
   button.interactive = true;
   button.anchor.set(0.5);
   button.position.x = 400;
   button.position.y = 300;
-  button.tap = gameSetup;
-  button.click = gameSetup;
+  button.tap = _game.gameSetup;
+  button.click = _game.gameSetup;
   app.stage.addChild(button);
   buttons.push(button);
 
-  menuSetup();
+  (0, _menu.menuSetup)();
   app.ticker.add(function (delta) {
     return gameLoop(delta);
   });
 }
 
-function gameLoop(delta) {
-  state(delta);
-}
-
-var style = new PIXI.TextStyle({
-  fontFamily: "Courier New",
-  fontSize: 100,
-  fill: "#000034"
-});
-var message = new PIXI.Text(".Dot.", style);
-message.anchor.set(0.5, 0.5);
-message.position.set(400, 200);
-message.visible = false;
-app.stage.addChild(message);
-
-function menuSetup() {
-  state = _menu.menu;
-  buttons[0].visible = true;
-  message.visible = true;
-  app.renderer.render(app.stage);
-  app.renderer.backgroundColor = 0xFCBF49;
-}
-
-var finished = false;
-var transRectA = new PIXI.Graphics();
+var transRectA = exports.transRectA = new PIXI.Graphics();
 transRectA.beginFill(0xFCBF49);
 transRectA.drawRect(0, 0, 800, 700);
 transRectA.endFill();
 transRectA.visible = false;
 transRectA.vy = 0.5;
 
-function gameMenuTransition() {
-  transRectA.visible = true;
-  app.renderer.backgroundColor = 0x000034;
-  transRectA.y += transRectA.vy;
-  transRectA.vy += 0.5;
-  if (transRectA.y > 700) {
-    transRectA.y = 0;
-    transRectA.vy = 0.5;
-    transRectA.visible = false;
-    gameSetup();
-    state = game;
-    levelSetup();
+function gameLoop(delta) {
+  // Transition
+  if (transRectA.visible === true) {
+    transRectA.y += transRectA.vy;
+    transRectA.vy += 0.5;
+    if (transRectA.y > 700) {
+      transRectA.visible = false;
+      levelSetup();
+    }
+  } else if (transRectB.visible) {
+    transRectB.y -= transRectB.vy;
+    transRectB.vy += 0.5;
+    if (transRectB.y < 0) {
+      app.renderer.backgroundColor = 0xFCBF49;
+      transRectB.vy = 0.5;
+      transRectB.y = 700;
+      transRectB.visible = false;
+      clearChildren();
+      nextLevelSetup();
+    }
+  }
+
+  // Line following mouse
+  if (lineStart.b) {
+    var mouseData = app.renderer.plugins.interaction.mouse.global;
+    app.stage.removeChildAt(app.stage.getChildIndex(line));
+    line = drawLine(lineStart.x, lineStart.y, mouseData.x, mouseData.y);
+    app.stage.addChild(line);
+  } else {
+    line.visible = false;
   }
 }
+
+var finished = false;
+
 var style2 = new PIXI.TextStyle({
   fontFamily: "Courier New",
   fontSize: 50,
@@ -47067,35 +47078,13 @@ var message3 = new PIXI.Text("Thanks For Playing!", style2);
 message3.anchor.set(0.5, 0.5);
 message3.position.set(400, 300);
 
-var transRectB = new PIXI.Graphics();
+var transRectB = exports.transRectB = new PIXI.Graphics();
 transRectB.beginFill(0xFCBF49);
 transRectB.drawRect(0, 0, 800, 700);
 transRectB.endFill();
 transRectB.y = 700;
 transRectB.visible = false;
 transRectB.vy = 0.5;
-
-function menuGameTransition() {
-  transRectB.visible = true;
-  app.renderer.backgroundColor = 0x000034;
-  transRectB.y -= transRectB.vy;
-  transRectB.vy += 0.5;
-  if (transRectB.y < 0) {
-    app.renderer.backgroundColor = 0xFCBF49;
-    transRectB.vy = 0.5;
-    transRectB.y = 700;
-    transRectB.visible = false;
-    clearChildren();
-    nextLevelSetup();
-    state = _nextLevel.nextLevel;
-  }
-}
-
-function gameSetup() {
-  clearChildren();
-  app.stage.addChild(transRectA);
-  state = gameMenuTransition;
-}
 
 function clearChildren() {
   for (var i = app.stage.children.length - 1; i >= 0; i--) {
@@ -47106,7 +47095,14 @@ function clearChildren() {
 function nextLevelSetup() {
   nodes = [];
   lines = [];
-  buttons = [];
+  exports.buttons = buttons = [];
+
+  var style = new PIXI.TextStyle({
+    fontFamily: "Courier New",
+    fontSize: 100,
+    fill: "#000034"
+  });
+
   var message = new PIXI.Text("Level " + level + "\nComplete!", style);
   message.anchor.set(0.5, 0.5);
   message.position.set(400, 200);
@@ -47119,8 +47115,8 @@ function nextLevelSetup() {
   button.anchor.set(0.5);
   button.position.x = 400;
   button.position.y = 500;
-  button.tap = gameSetup;
-  button.click = gameSetup;
+  button.tap = _game.gameSetup;
+  button.click = _game.gameSetup;
   app.stage.addChild(button);
   buttons.push(button);
 
@@ -47146,12 +47142,12 @@ function levelSetup() {
   } else {
     app.stage.addChild(message3);
     app.renderer.render(app.stage);
-    state = _gameEnd.gameEnd;
   }
 }
 
 var nodes = [];
 var lines = [];
+
 var line = new PIXI.Graphics();
 line.lineStyle(4, 0xFFFFFF, 1);
 line.moveTo(0, 0);
@@ -47177,10 +47173,10 @@ function nodeClick() {
     var within = false;
     var nodeind = [];
     for (var i = 0; i < nodes.length; i++) {
-      if (this.x == nodes[i].n.x && this.y == nodes[i].n.y) {
+      if (this.x == nodes[i].sprite.x && this.y == nodes[i].sprite.y) {
         nodeind.push(i);
       }
-      if (lineStart.x == nodes[i].n.x && lineStart.y == nodes[i].n.y) {
+      if (lineStart.x == nodes[i].sprite.x && lineStart.y == nodes[i].sprite.y) {
         nodeind.push(i);
       }
     }
@@ -47189,17 +47185,15 @@ function nodeClick() {
     } else {
       // Check for collisions
       for (var _i = 0; _i < lines.length; _i++) {
-        if (sameLine(c.currentPath.points, lines[_i].p)) {
-          nodes[nodeind[0]].c--;
-          nodes[nodeind[0]].n.texture = nodeTypes[nodes[nodeind[0]].c];
-          nodes[nodeind[1]].c--;
-          nodes[nodeind[1]].n.texture = nodeTypes[nodes[nodeind[1]].c];
+        if (utils.sameLine(c.currentPath.points, lines[_i].p)) {
+          nodes[nodeind[0]].break();
+          nodes[nodeind[1]].break();
           app.stage.removeChildAt(app.stage.getChildIndex(lines[_i].l));
           lines.splice(_i, 1);
           within = true;
           break;
         }
-        if (crossLine(c.currentPath.points, lines[_i].p)) {
+        if (utils.crossLine(c.currentPath.points, lines[_i].p)) {
           popup("You cannot cross the connections");
           within = true;
           break;
@@ -47208,17 +47202,17 @@ function nodeClick() {
 
       // Check for max connections
       if (!within) {
-        if (nodes[nodeind[0]].m > nodes[nodeind[0]].c && nodes[nodeind[1]].m > nodes[nodeind[1]].c) {
-          nodes[nodeind[0]].c++;
-          nodes[nodeind[0]].n.texture = nodeTypes[nodes[nodeind[0]].c];
-          nodes[nodeind[1]].c++;
-          nodes[nodeind[1]].n.texture = nodeTypes[nodes[nodeind[1]].c];
-
-          lines.push({
-            p: [lineStart.x, lineStart.y, this.x, this.y],
-            l: c
-          });
-          app.stage.addChild(lines[lines.length - 1].l);
+        if (nodes[nodeind[0]].connect()) {
+          if (nodes[nodeind[1]].connect()) {
+            lines.push({
+              p: [lineStart.x, lineStart.y, this.x, this.y],
+              l: c
+            });
+            app.stage.addChild(lines[lines.length - 1].l);
+          } else {
+            nodes[nodeind[0]].break();
+            popup("Max connections per node reached");
+          }
         } else {
           popup("Max connections per node reached");
         }
@@ -47230,13 +47224,13 @@ function nodeClick() {
   }
   if (checkWin()) {
     app.stage.addChild(transRectB);
-    state = menuGameTransition;
+    (0, _menu.menuGameTransition)();
   }
 }
 
 function checkWin() {
   for (var i = 0; i < nodes.length; i++) {
-    if (nodes[i].c != nodes[i].m) {
+    if (nodes[i].min != nodes[i].max) {
       return false;
     }
   }
@@ -47261,56 +47255,6 @@ function drawLine(sx, sy, ex, ey) {
   a.visible = true;
   return a;
 }
-
-function game(delta) {
-  if (lineStart.b) {
-    var mouseData = app.renderer.plugins.interaction.mouse.global;
-    app.stage.removeChildAt(app.stage.getChildIndex(line));
-    line = drawLine(lineStart.x, lineStart.y, mouseData.x, mouseData.y);
-    app.stage.addChild(line);
-  } else {
-    line.visible = false;
-  }
-}
-
-function sameLine(r1, r2) {
-  var a = r1[0],
-      b = r1[1],
-      c = r1[2],
-      d = r1[3],
-      p = r2[0],
-      q = r2[1],
-      r = r2[2],
-      s = r2[3];
-  // check if same line
-  if (a == p && b == q && c == r & d == s) {
-    return true;
-  } else if (a == r && b == s && c == p & d == q) {
-    return true;
-  }
-  return false;
-}
-
-function crossLine(r1, r2) {
-  var a = r1[0],
-      b = r1[1],
-      c = r1[2],
-      d = r1[3];
-  var p = r2[0],
-      q = r2[1],
-      r = r2[2],
-      s = r2[3];
-  // check if cross
-  var det, gamma, lambda;
-  det = (c - a) * (s - q) - (r - p) * (d - b);
-  if (det === 0) {
-    return false;
-  } else {
-    lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
-    gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
-    return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
-  }
-};
 
 /***/ }),
 
@@ -47351,11 +47295,15 @@ function createLevel1(app, nodes) {
   message2.position.set(400, 100);
   app.stage.addChild(message2);
   var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'B', x: 300, y: 300 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
+
   for (var i = 0; i < nodePos.length; i++) {
-    nodes.push((0, _node.createNode)(nodePos[i]));
+    var type = nodePos[i].s;
+    var x = nodePos[i].x;
+    var y = nodePos[i].y;
+    nodes.push(new _node.Node(type, x, y));
   }
   nodes.forEach(function (x) {
-    return app.stage.addChild(x.n);
+    return app.stage.addChild(x.sprite);
   });
   return nodes;
 }
@@ -47402,10 +47350,13 @@ function createLevel2(app, nodes) {
   nodes = [];
   var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'B', x: 300, y: 300 }, { s: 'B', x: 400, y: 300 }, { s: 'B', x: 200, y: 200 }, { s: 'B', x: 600, y: 140 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
   for (var i = 0; i < nodePos.length; i++) {
-    nodes.push((0, _node.createNode)(nodePos[i]));
+    var type = nodePos[i].s;
+    var x = nodePos[i].x;
+    var y = nodePos[i].y;
+    nodes.push(new _node.Node(type, x, y));
   }
   nodes.forEach(function (x) {
-    return app.stage.addChild(x.n);
+    return app.stage.addChild(x.sprite);
   });
   return nodes;
 }
@@ -47452,10 +47403,13 @@ function createLevel3(app, nodes) {
   nodes = [];
   var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'C', x: 300, y: 300 }, { s: 'B', x: 400, y: 300 }, { s: 'A', x: 200, y: 200 }, { s: 'B', x: 600, y: 150 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
   for (var i = 0; i < nodePos.length; i++) {
-    nodes.push((0, _node.createNode)(nodePos[i]));
+    var type = nodePos[i].s;
+    var x = nodePos[i].x;
+    var y = nodePos[i].y;
+    nodes.push(new _node.Node(type, x, y));
   }
   nodes.forEach(function (x) {
-    return app.stage.addChild(x.n);
+    return app.stage.addChild(x.sprite);
   });
   return nodes;
 }
@@ -47503,10 +47457,13 @@ function createLevel4(app, nodes) {
   var nodePos = [{ s: 'A', x: 50, y: 100 }, { s: 'B', x: 50, y: 200 }, { s: 'C', x: 50, y: 300 }, { s: 'A', x: 150, y: 300 }, { s: 'C', x: 250, y: 300 }, { s: 'A', x: 50, y: 400 }, { s: 'A', x: 150, y: 100 }, { s: 'B', x: 150, y: 400 }, { s: 'C', x: 50, y: 500 }, { s: 'A', x: 150, y: 200 }, { s: 'C', x: 350, y: 500 }, { s: 'B', x: 650, y: 300 }, { s: 'B', x: 650, y: 500 }, { s: 'A', x: 650, y: 100 }];
 
   for (var i = 0; i < nodePos.length; i++) {
-    nodes.push((0, _node.createNode)(nodePos[i]));
+    var type = nodePos[i].s;
+    var x = nodePos[i].x;
+    var y = nodePos[i].y;
+    nodes.push(new _node.Node(type, x, y));
   }
   nodes.forEach(function (x) {
-    return app.stage.addChild(x.n);
+    return app.stage.addChild(x.sprite);
   });
   return nodes;
 }
@@ -47553,12 +47510,71 @@ function createLevel5(app, nodes) {
   nodes = [];
   var nodePos = [{ s: 'A', x: 100, y: 100 }, { s: 'B', x: 200, y: 100 }, { s: 'C', x: 300, y: 100 }, { s: 'B', x: 400, y: 100 }, { s: 'B', x: 500, y: 100 }, { s: 'B', x: 600, y: 100 }, { s: 'B', x: 700, y: 100 }, { s: 'B', x: 100, y: 200 }, { s: 'A', x: 200, y: 200 }, { s: 'B', x: 300, y: 200 }, { s: 'C', x: 400, y: 200 }, { s: 'B', x: 500, y: 200 }, { s: 'C', x: 600, y: 200 }, { s: 'B', x: 700, y: 200 }, { s: 'B', x: 100, y: 300 }, { s: 'A', x: 200, y: 300 }, { s: 'B', x: 300, y: 300 }, { s: 'C', x: 400, y: 300 }, { s: 'B', x: 500, y: 300 }, { s: 'C', x: 600, y: 300 }, { s: 'B', x: 700, y: 300 }, { s: 'B', x: 100, y: 400 }, { s: 'B', x: 200, y: 400 }, { s: 'C', x: 300, y: 400 }, { s: 'B', x: 400, y: 400 }, { s: 'B', x: 500, y: 400 }, { s: 'C', x: 600, y: 400 }, { s: 'B', x: 700, y: 400 }, { s: 'A', x: 100, y: 500 }, { s: 'B', x: 200, y: 500 }, { s: 'B', x: 300, y: 500 }, { s: 'A', x: 400, y: 500 }, { s: 'B', x: 500, y: 500 }, { s: 'B', x: 600, y: 500 }, { s: 'B', x: 700, y: 500 }];
   for (var i = 0; i < nodePos.length; i++) {
-    nodes.push((0, _node.createNode)(nodePos[i]));
+    var type = nodePos[i].s;
+    var x = nodePos[i].x;
+    var y = nodePos[i].y;
+    nodes.push(new _node.Node(type, x, y));
   }
   nodes.forEach(function (x) {
-    return app.stage.addChild(x.n);
+    return app.stage.addChild(x.sprite);
   });
   return nodes;
+}
+
+/***/ }),
+
+/***/ "./src/js/maths/utils.js":
+/*!*******************************!*\
+  !*** ./src/js/maths/utils.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.crossLine = crossLine;
+exports.sameLine = sameLine;
+function crossLine(r1, r2) {
+  var a = r1[0],
+      b = r1[1],
+      c = r1[2],
+      d = r1[3];
+  var p = r2[0],
+      q = r2[1],
+      r = r2[2],
+      s = r2[3];
+  // check if cross
+  var det, gamma, lambda;
+  det = (c - a) * (s - q) - (r - p) * (d - b);
+  if (det === 0) {
+    return false;
+  } else {
+    lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
+    gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
+    return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
+  }
+};
+
+function sameLine(r1, r2) {
+  var a = r1[0],
+      b = r1[1],
+      c = r1[2],
+      d = r1[3],
+      p = r2[0],
+      q = r2[1],
+      r = r2[2],
+      s = r2[3];
+  // check if same line
+  if (a == p && b == q && c == r & d == s) {
+    return true;
+  } else if (a == r && b == s && c == p & d == q) {
+    return true;
+  }
+  return false;
 }
 
 /***/ }),
@@ -47576,7 +47592,9 @@ function createLevel5(app, nodes) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createNode = createNode;
+exports.Node = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
@@ -47592,51 +47610,75 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function createNode(data) {
-  var a = void 0,
-      max = void 0,
-      min = void 0;
-  if (data.s == 'A') {
-    a = new PIXI.Sprite(setAShape());
-    max = 1;
-    min = 0;
-  } else if (data.s == 'B') {
-    a = new PIXI.Sprite(setBShape());
-    max = 4;
-    min = 2;
-  } else if (data.s == 'C') {
-    a = new PIXI.Sprite(setCShape());
-    max = 8;
-    min = 5;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = exports.Node = function () {
+  function Node(type, x, y) {
+    _classCallCheck(this, Node);
+
+    if (type == 'A') {
+      this.setA();
+    } else if (type == 'B') {
+      this.setB();
+    } else if (type == 'C') {
+      this.setC();
+    }
+    this.sprite = new PIXI.Sprite(_canvas.nodeTypes[this.min]);
+    this.sprite.buttonMode = true;
+    this.sprite.interactive = true;
+    this.sprite.anchor.set(0.5);
+    this.sprite.scale.set(0.5);
+    this.sprite.position.set(x, y);
+    this.sprite.tap = _canvas.nodeClick;
+    this.sprite.click = _canvas.nodeClick;
   }
-  a.buttonMode = true;
-  a.interactive = true;
-  a.anchor.set(0.5);
-  a.scale.set(0.5);
-  a.position.set(data.x, data.y);
-  a.tap = _canvas.nodeClick;
-  a.click = _canvas.nodeClick;
-  return { n: a, m: max, c: min };
-}
 
-function setAShape() {
-  return _canvas.nodeTypes[0];
-}
+  _createClass(Node, [{
+    key: 'setA',
+    value: function setA() {
+      this.min = 0;
+      this.max = 1;
+    }
+  }, {
+    key: 'setB',
+    value: function setB() {
+      this.min = 2;
+      this.max = 4;
+    }
+  }, {
+    key: 'setC',
+    value: function setC() {
+      this.min = 5;
+      this.max = 8;
+    }
+  }, {
+    key: 'connect',
+    value: function connect() {
+      if (this.min < this.max) {
+        this.min++;
+        this.sprite.texture = _canvas.nodeTypes[this.min];
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: 'break',
+    value: function _break() {
+      this.min--;
+      this.sprite.texture = _canvas.nodeTypes[this.min];
+    }
+  }]);
 
-function setBShape() {
-  return _canvas.nodeTypes[2];
-}
-
-function setCShape() {
-  return _canvas.nodeTypes[5];
-}
+  return Node;
+}();
 
 /***/ }),
 
-/***/ "./src/js/states/gameEnd.js":
-/*!**********************************!*\
-  !*** ./src/js/states/gameEnd.js ***!
-  \**********************************/
+/***/ "./src/js/states/game.js":
+/*!*******************************!*\
+  !*** ./src/js/states/game.js ***!
+  \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -47646,8 +47688,23 @@ function setCShape() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.gameEnd = gameEnd;
-function gameEnd() {}
+exports.gameMenuTransition = gameMenuTransition;
+exports.gameSetup = gameSetup;
+
+var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
+
+function gameMenuTransition() {
+  _canvas.transRectA.y = 0;
+  _canvas.transRectA.vy = 0.5;
+  _canvas.transRectA.visible = true;
+  _canvas.app.renderer.backgroundColor = 0x000034;
+}
+
+function gameSetup() {
+  (0, _canvas.clearChildren)();
+  _canvas.app.stage.addChild(_canvas.transRectA);
+  gameMenuTransition();
+}
 
 /***/ }),
 
@@ -47664,26 +47721,40 @@ function gameEnd() {}
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.menu = menu;
-function menu() {}
+exports.menuSetup = menuSetup;
+exports.menuGameTransition = menuGameTransition;
 
-/***/ }),
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-/***/ "./src/js/states/nextLevel.js":
-/*!************************************!*\
-  !*** ./src/js/states/nextLevel.js ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+var PIXI = _interopRequireWildcard(_pixi);
 
-"use strict";
+var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
 
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.nextLevel = nextLevel;
-function nextLevel() {}
+function menuSetup() {
+  _canvas.buttons[0].visible = true;
+
+  var style = new PIXI.TextStyle({
+    fontFamily: "Courier New",
+    fontSize: 100,
+    fill: "#000034"
+  });
+
+  var message = new PIXI.Text(".Dot.", style);
+  message.anchor.set(0.5, 0.5);
+  message.position.set(400, 200);
+  _canvas.app.stage.addChild(message);
+  _canvas.app.renderer.render(_canvas.app.stage);
+  _canvas.app.renderer.backgroundColor = 0xFCBF49;
+}
+
+function menuGameTransition() {
+  _canvas.transRectB.visible = true;
+  _canvas.transRectB.y = 700;
+  _canvas.transRectB.vy = 0;
+  _canvas.app.renderer.backgroundColor = 0x000034;
+}
 
 /***/ })
 
