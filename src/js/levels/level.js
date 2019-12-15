@@ -10,7 +10,7 @@ import * as Level5 from './level5.js';
 
 export class Level {
   constructor() {
-    this.level = 5;
+    this.level = 1;
     this.font = new TextStyle({
       fontFamily: 'Courier New',
       fontSize: 20,
