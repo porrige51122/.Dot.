@@ -1,64 +1,37 @@
-import * as PIXI from 'pixi.js';
+export const nodes = [ { s: 'A', x: 1, y: 1 },
+                       { s: 'B', x: 2, y: 1 },
+                       { s: 'B', x: 6, y: 1 },
+                       { s: 'B', x: 7, y: 1 },
+                       { s: 'B', x: 1, y: 2 },
+                       { s: 'A', x: 2, y: 2 },
+                       { s: 'B', x: 3, y: 2 },
+                       { s: 'C', x: 4, y: 2 },
+                       { s: 'B', x: 5, y: 2 },
+                       { s: 'C', x: 6, y: 2 },
+                       { s: 'B', x: 7, y: 2 },
+                       { s: 'B', x: 1, y: 3 },
+                       { s: 'A', x: 2, y: 3 },
+                       { s: 'A', x: 3, y: 3 },
+                       { s: 'C', x: 4, y: 3 },
+                       { s: 'B', x: 5, y: 3 },
+                       { s: 'C', x: 6, y: 3 },
+                       { s: 'B', x: 7, y: 3 },
+                       { s: 'B', x: 1, y: 4 },
+                       { s: 'B', x: 2, y: 4 },
+                       { s: 'C', x: 3, y: 4 },
+                       { s: 'B', x: 4, y: 4 },
+                       { s: 'B', x: 5, y: 4 },
+                       { s: 'C', x: 6, y: 4 },
+                       { s: 'B', x: 7, y: 4 },
+                       { s: 'A', x: 1, y: 5 },
+                       { s: 'B', x: 2, y: 5 },
+                       { s: 'B', x: 3, y: 5 },
+                       { s: 'A', x: 4, y: 5 },
+                       { s: 'B', x: 5, y: 5 },
+                       { s: 'B', x: 6, y: 5 },
+                       { s: 'B', x: 7, y: 5 },
+                     ];
 
-import { Node } from '../sprites/node.js';
+export const grid = { w: 7, h: 5 };
 
-export function createLevel5(app, nodes) {
-  let style = new PIXI.TextStyle({
-    fontFamily: "Courier New",
-    fontSize: 20,
-    fill: "#FCBF49"
-  });
-  let message = new PIXI.Text("Level 5", style);
-  message.position.set(20, 20);
-  app.stage.addChild(message);
-  let message2 = new PIXI.Text("What has happened here?", style);
-  message2.anchor.set(0.5, 0.5);
-  message2.position.set(400, 50);
-  app.stage.addChild(message2);
-
-  nodes = [];
-  let nodePos = [ { s: 'A', x: 100, y: 100 },
-                  { s: 'B', x: 200, y: 100 },
-                  { s: 'C', x: 300, y: 100 },
-                  { s: 'B', x: 400, y: 100 },
-                  { s: 'B', x: 500, y: 100 },
-                  { s: 'B', x: 600, y: 100 },
-                  { s: 'B', x: 700, y: 100 },
-                  { s: 'B', x: 100, y: 200 },
-                  { s: 'A', x: 200, y: 200 },
-                  { s: 'B', x: 300, y: 200 },
-                  { s: 'C', x: 400, y: 200 },
-                  { s: 'B', x: 500, y: 200 },
-                  { s: 'C', x: 600, y: 200 },
-                  { s: 'B', x: 700, y: 200 },
-                  { s: 'B', x: 100, y: 300 },
-                  { s: 'A', x: 200, y: 300 },
-                  { s: 'B', x: 300, y: 300 },
-                  { s: 'C', x: 400, y: 300 },
-                  { s: 'B', x: 500, y: 300 },
-                  { s: 'C', x: 600, y: 300 },
-                  { s: 'B', x: 700, y: 300 },
-                  { s: 'B', x: 100, y: 400 },
-                  { s: 'B', x: 200, y: 400 },
-                  { s: 'C', x: 300, y: 400 },
-                  { s: 'B', x: 400, y: 400 },
-                  { s: 'B', x: 500, y: 400 },
-                  { s: 'C', x: 600, y: 400 },
-                  { s: 'B', x: 700, y: 400 },
-                  { s: 'A', x: 100, y: 500 },
-                  { s: 'B', x: 200, y: 500 },
-                  { s: 'B', x: 300, y: 500 },
-                  { s: 'A', x: 400, y: 500 },
-                  { s: 'B', x: 500, y: 500 },
-                  { s: 'B', x: 600, y: 500 },
-                  { s: 'B', x: 700, y: 500 },
-                ];
-  for (let i = 0; i < nodePos.length; i++) {
-    let type = nodePos[i].s;
-    let x = nodePos[i].x;
-    let y = nodePos[i].y;
-    nodes.push(new Node(type, x, y));
-  }
-  nodes.forEach(x => app.stage.addChild(x.sprite));
-  return nodes;
-}
+export const message = "What has happened here?";

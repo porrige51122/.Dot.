@@ -46908,7 +46908,7 @@ __webpack_require__.r(__webpack_exports__);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.transRectB = exports.transRectA = exports.nodeTypes = exports.buttons = exports.app = undefined;
+exports.transRectB = exports.transRectA = exports.nodeTypes = exports.buttons = exports.app = exports.height = exports.width = undefined;
 exports.clearChildren = clearChildren;
 exports.nextLevelSetup = nextLevelSetup;
 exports.levelSetup = levelSetup;
@@ -46942,15 +46942,7 @@ var _menu = __webpack_require__(/*! ./states/menu.js */ "./src/js/states/menu.js
 
 var _game = __webpack_require__(/*! ./states/game.js */ "./src/js/states/game.js");
 
-var _level = __webpack_require__(/*! ./levels/level1.js */ "./src/js/levels/level1.js");
-
-var _level2 = __webpack_require__(/*! ./levels/level2.js */ "./src/js/levels/level2.js");
-
-var _level3 = __webpack_require__(/*! ./levels/level3.js */ "./src/js/levels/level3.js");
-
-var _level4 = __webpack_require__(/*! ./levels/level4.js */ "./src/js/levels/level4.js");
-
-var _level5 = __webpack_require__(/*! ./levels/level5.js */ "./src/js/levels/level5.js");
+var _level = __webpack_require__(/*! ./levels/level.js */ "./src/js/levels/level.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46968,22 +46960,30 @@ if (!PIXI.utils.isWebGLSupported()) type = "canvas";
 PIXI.utils.sayHello(type);
 
 // Render application
-var width = window.innerWidth;
-var height = window.innerHeight;
+var width = exports.width = window.innerWidth;
+var height = exports.height = window.innerHeight;
 
 var app = exports.app = new PIXI.Application({
   height: height,
   width: width
 });
+
 document.body.appendChild(app.view);
 
 // Resize section
 window.addEventListener('resize', resize);
-
 function resize() {
-  width = window.innerWidth;
-  height = window.innerHeight;
+  exports.width = width = window.innerWidth;
+  exports.height = height = window.innerHeight;
   app.renderer.resize(width, height);
+
+  transRectA.beginFill(0xFCBF49);
+  transRectA.drawRect(0, 0, width, height);
+  transRectA.endFill();
+
+  transRectB.beginFill(0xFCBF49);
+  transRectB.drawRect(0, 0, width, height);
+  transRectB.endFill();
 }
 
 // Get sprites
@@ -46991,10 +46991,49 @@ var loader = new PIXI.Loader();
 var buttons = exports.buttons = [];
 var nodeTypes = exports.nodeTypes = [];
 
-loader.add(_next2.default).add(_start2.default).add(_nodes2.default).on("progress", loadProgressHandler).load(setup);
+// Build Transitions
+var transRectA = exports.transRectA = new PIXI.Graphics();
+transRectA.beginFill(0xFCBF49);
+transRectA.drawRect(0, 0, width, height);
+transRectA.endFill();
+transRectA.visible = false;
+transRectA.vy = 0.5;
 
-// Levels
-var level = 1;
+var transRectB = exports.transRectB = new PIXI.Graphics();
+transRectB.beginFill(0xFCBF49);
+transRectB.drawRect(0, 0, width, height);
+transRectB.endFill();
+transRectB.y = 700;
+transRectB.visible = false;
+transRectB.vy = 0.5;
+
+var line = new PIXI.Graphics();
+line.lineStyle(4, 0xFFFFFF, 1);
+line.moveTo(0, 0);
+line.lineTo(80, 50);
+line.x = 30;
+line.y = 32;
+line.visible = false;
+
+var lineStart = {
+  b: false,
+  x: 0,
+  y: 0
+};
+
+var level = new _level.Level();
+var finished = false;
+
+var style2 = new PIXI.TextStyle({
+  fontFamily: "Courier New",
+  fontSize: 50,
+  fill: "#FCBF49"
+});
+var message3 = new PIXI.Text("Thanks For Playing!", style2);
+message3.anchor.set(0.5, 0.5);
+message3.position.set(400, 300);
+
+loader.add(_next2.default).add(_start2.default).add(_nodes2.default).on("progress", loadProgressHandler).load(setup);
 
 // Load Textures
 function loadProgressHandler(loader, resource) {
@@ -47014,8 +47053,8 @@ function setup() {
   button.buttonMode = true;
   button.interactive = true;
   button.anchor.set(0.5);
-  button.position.x = 400;
-  button.position.y = 300;
+  button.position.x = width / 2;
+  button.position.y = height / 3 * 2;
   button.tap = _game.gameSetup;
   button.click = _game.gameSetup;
   app.stage.addChild(button);
@@ -47027,19 +47066,12 @@ function setup() {
   });
 }
 
-var transRectA = exports.transRectA = new PIXI.Graphics();
-transRectA.beginFill(0xFCBF49);
-transRectA.drawRect(0, 0, 800, 700);
-transRectA.endFill();
-transRectA.visible = false;
-transRectA.vy = 0.5;
-
 function gameLoop(delta) {
   // Transition
   if (transRectA.visible === true) {
     transRectA.y += transRectA.vy;
     transRectA.vy += 0.5;
-    if (transRectA.y > 700) {
+    if (transRectA.y > height) {
       transRectA.visible = false;
       levelSetup();
     }
@@ -47048,8 +47080,6 @@ function gameLoop(delta) {
     transRectB.vy += 0.5;
     if (transRectB.y < 0) {
       app.renderer.backgroundColor = 0xFCBF49;
-      transRectB.vy = 0.5;
-      transRectB.y = 700;
       transRectB.visible = false;
       clearChildren();
       nextLevelSetup();
@@ -47067,25 +47097,6 @@ function gameLoop(delta) {
   }
 }
 
-var finished = false;
-
-var style2 = new PIXI.TextStyle({
-  fontFamily: "Courier New",
-  fontSize: 50,
-  fill: "#FCBF49"
-});
-var message3 = new PIXI.Text("Thanks For Playing!", style2);
-message3.anchor.set(0.5, 0.5);
-message3.position.set(400, 300);
-
-var transRectB = exports.transRectB = new PIXI.Graphics();
-transRectB.beginFill(0xFCBF49);
-transRectB.drawRect(0, 0, 800, 700);
-transRectB.endFill();
-transRectB.y = 700;
-transRectB.visible = false;
-transRectB.vy = 0.5;
-
 function clearChildren() {
   for (var i = app.stage.children.length - 1; i >= 0; i--) {
     app.stage.removeChild(app.stage.children[i]);
@@ -47093,7 +47104,6 @@ function clearChildren() {
 }
 
 function nextLevelSetup() {
-  nodes = [];
   lines = [];
   exports.buttons = buttons = [];
 
@@ -47102,10 +47112,9 @@ function nextLevelSetup() {
     fontSize: 100,
     fill: "#000034"
   });
-
-  var message = new PIXI.Text("Level " + level + "\nComplete!", style);
+  var message = new PIXI.Text("Level " + level.level + "\nComplete!", style);
   message.anchor.set(0.5, 0.5);
-  message.position.set(400, 200);
+  message.position.set(width / 2, height / 4);
   app.stage.addChild(message);
   app.renderer.render(app.stage);
 
@@ -47113,53 +47122,22 @@ function nextLevelSetup() {
   button.buttonMode = true;
   button.interactive = true;
   button.anchor.set(0.5);
-  button.position.x = 400;
-  button.position.y = 500;
+  button.position.x = width / 2;
+  button.position.y = height / 4 * 3;
   button.tap = _game.gameSetup;
   button.click = _game.gameSetup;
   app.stage.addChild(button);
   buttons.push(button);
 
-  level++;
+  level.level++;
 }
 
 function levelSetup() {
-  if (level == 1) {
-    nodes = (0, _level.createLevel1)(app, nodes);
-    app.stage.addChild(line);
-  } else if (level == 2) {
-    nodes = (0, _level2.createLevel2)(app, nodes);
-    app.stage.addChild(line);
-  } else if (level == 3) {
-    nodes = (0, _level3.createLevel3)(app, nodes);
-    app.stage.addChild(line);
-  } else if (level == 4) {
-    nodes = (0, _level4.createLevel4)(app, nodes);
-    app.stage.addChild(line);
-  } else if (level == 5) {
-    nodes = (0, _level5.createLevel5)(app, nodes);
-    app.stage.addChild(line);
-  } else {
-    app.stage.addChild(message3);
-    app.renderer.render(app.stage);
-  }
+  level.buildLevel();
+  app.stage.addChild(line);
 }
 
-var nodes = [];
 var lines = [];
-
-var line = new PIXI.Graphics();
-line.lineStyle(4, 0xFFFFFF, 1);
-line.moveTo(0, 0);
-line.lineTo(80, 50);
-line.x = 30;
-line.y = 32;
-line.visible = false;
-var lineStart = {
-  b: false,
-  x: 0,
-  y: 0
-};
 
 function nodeClick() {
   if (!lineStart.b) {
@@ -47172,11 +47150,11 @@ function nodeClick() {
     var c = drawLine(lineStart.x, lineStart.y, this.x, this.y);
     var within = false;
     var nodeind = [];
-    for (var i = 0; i < nodes.length; i++) {
-      if (this.x == nodes[i].sprite.x && this.y == nodes[i].sprite.y) {
+    for (var i = 0; i < level.nodes.length; i++) {
+      if (this.x == level.nodes[i].sprite.x && this.y == level.nodes[i].sprite.y) {
         nodeind.push(i);
       }
-      if (lineStart.x == nodes[i].sprite.x && lineStart.y == nodes[i].sprite.y) {
+      if (lineStart.x == level.nodes[i].sprite.x && lineStart.y == level.nodes[i].sprite.y) {
         nodeind.push(i);
       }
     }
@@ -47186,8 +47164,8 @@ function nodeClick() {
       // Check for collisions
       for (var _i = 0; _i < lines.length; _i++) {
         if (utils.sameLine(c.currentPath.points, lines[_i].p)) {
-          nodes[nodeind[0]].break();
-          nodes[nodeind[1]].break();
+          level.nodes[nodeind[0]].break();
+          level.nodes[nodeind[1]].break();
           app.stage.removeChildAt(app.stage.getChildIndex(lines[_i].l));
           lines.splice(_i, 1);
           within = true;
@@ -47202,15 +47180,15 @@ function nodeClick() {
 
       // Check for max connections
       if (!within) {
-        if (nodes[nodeind[0]].connect()) {
-          if (nodes[nodeind[1]].connect()) {
+        if (level.nodes[nodeind[0]].connect()) {
+          if (level.nodes[nodeind[1]].connect()) {
             lines.push({
               p: [lineStart.x, lineStart.y, this.x, this.y],
               l: c
             });
             app.stage.addChild(lines[lines.length - 1].l);
           } else {
-            nodes[nodeind[0]].break();
+            level.nodes[nodeind[0]].break();
             popup("Max connections per node reached");
           }
         } else {
@@ -47222,19 +47200,10 @@ function nodeClick() {
     line.visible = false;
     lineStart.b = false;
   }
-  if (checkWin()) {
+  if (level.checkWin()) {
     app.stage.addChild(transRectB);
     (0, _menu.menuGameTransition)();
   }
-}
-
-function checkWin() {
-  for (var i = 0; i < nodes.length; i++) {
-    if (nodes[i].min != nodes[i].max) {
-      return false;
-    }
-  }
-  return true;
 }
 
 function popup(message) {
@@ -47258,6 +47227,122 @@ function drawLine(sx, sy, ex, ey) {
 
 /***/ }),
 
+/***/ "./src/js/levels/level.js":
+/*!********************************!*\
+  !*** ./src/js/levels/level.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Level = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
+
+var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
+
+var _level = __webpack_require__(/*! ./level1.js */ "./src/js/levels/level1.js");
+
+var Level1 = _interopRequireWildcard(_level);
+
+var _level2 = __webpack_require__(/*! ./level2.js */ "./src/js/levels/level2.js");
+
+var Level2 = _interopRequireWildcard(_level2);
+
+var _level3 = __webpack_require__(/*! ./level3.js */ "./src/js/levels/level3.js");
+
+var Level3 = _interopRequireWildcard(_level3);
+
+var _level4 = __webpack_require__(/*! ./level4.js */ "./src/js/levels/level4.js");
+
+var Level4 = _interopRequireWildcard(_level4);
+
+var _level5 = __webpack_require__(/*! ./level5.js */ "./src/js/levels/level5.js");
+
+var Level5 = _interopRequireWildcard(_level5);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Level = exports.Level = function () {
+  function Level() {
+    _classCallCheck(this, Level);
+
+    this.level = 5;
+    this.font = new _pixi.TextStyle({
+      fontFamily: 'Courier New',
+      fontSize: 20,
+      fill: '#FCBF49'
+    });
+  }
+
+  _createClass(Level, [{
+    key: 'buildLevel',
+    value: function buildLevel() {
+      this.nodes = [];
+      this.title = new _pixi.Text("Level " + this.level, this.font);
+      if (this.level == 1) {
+        this.message = new _pixi.Text(Level1.message, this.font);
+        this.grid = Level1.grid;
+        this.stage = Level1.nodes;
+      } else if (this.level == 2) {
+        this.message = new _pixi.Text(Level2.message, this.font);
+        this.grid = Level2.grid;
+        this.stage = Level2.nodes;
+      } else if (this.level == 3) {
+        this.message = new _pixi.Text(Level3.message, this.font);
+        this.grid = Level3.grid;
+        this.stage = Level3.nodes;
+      } else if (this.level == 4) {
+        this.message = new _pixi.Text(Level4.message, this.font);
+        this.grid = Level4.grid;
+        this.stage = Level4.nodes;
+      } else if (this.level == 5) {
+        this.message = new _pixi.Text(Level5.message, this.font);
+        this.grid = Level5.grid;
+        this.stage = Level5.nodes;
+      }
+
+      this.title.position.set(20, 20);
+      this.message.anchor.set(0.5, 0.5);
+      this.message.position.set(_canvas.width / 2, _canvas.height / 6);
+      _canvas.app.stage.addChild(this.title);
+      _canvas.app.stage.addChild(this.message);
+
+      for (var i = 0; i < this.stage.length; i++) {
+        var type = this.stage[i].s;
+        var x = this.stage[i].x * (_canvas.width / (this.grid.w + 1));
+        var y = this.stage[i].y * (_canvas.height / (this.grid.h + 1));
+        this.nodes.push(new _node.Node(type, x, y));
+      }
+      this.nodes.forEach(function (x) {
+        return _canvas.app.stage.addChild(x.sprite);
+      });
+    }
+  }, {
+    key: 'checkWin',
+    value: function checkWin() {
+      for (var i = 0; i < this.nodes.length; i++) {
+        if (this.nodes[i].min != this.nodes[i].max) return false;
+      }return true;
+    }
+  }]);
+
+  return Level;
+}();
+
+/***/ }),
+
 /***/ "./src/js/levels/level1.js":
 /*!*********************************!*\
   !*** ./src/js/levels/level1.js ***!
@@ -47269,44 +47354,13 @@ function drawLine(sx, sy, ex, ey) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+                       value: true
 });
-exports.createLevel1 = createLevel1;
+var nodes = exports.nodes = [{ s: 'A', x: 1, y: 1 }, { s: 'B', x: 1, y: 2 }, { s: 'B', x: 2, y: 2 }, { s: 'A', x: 2, y: 3 }];
 
-var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+var grid = exports.grid = { w: 2, h: 3 };
 
-var PIXI = _interopRequireWildcard(_pixi);
-
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function createLevel1(app, nodes) {
-  var style = new PIXI.TextStyle({
-    fontFamily: "Courier New",
-    fontSize: 20,
-    fill: "#FCBF49"
-  });
-  var message = new PIXI.Text("Level 1", style);
-  message.position.set(20, 20);
-  app.stage.addChild(message);
-  var message2 = new PIXI.Text("Click two nodes to connect them...", style);
-  message2.anchor.set(0.5, 0.5);
-  message2.position.set(400, 100);
-  app.stage.addChild(message2);
-  var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'B', x: 300, y: 300 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
-
-  for (var i = 0; i < nodePos.length; i++) {
-    var type = nodePos[i].s;
-    var x = nodePos[i].x;
-    var y = nodePos[i].y;
-    nodes.push(new _node.Node(type, x, y));
-  }
-  nodes.forEach(function (x) {
-    return app.stage.addChild(x.sprite);
-  });
-  return nodes;
-}
+var message = exports.message = "Click two nodes to connect them...";
 
 /***/ }),
 
@@ -47321,45 +47375,13 @@ function createLevel1(app, nodes) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+                       value: true
 });
-exports.createLevel2 = createLevel2;
+var nodes = exports.nodes = [{ s: 'A', x: 2, y: 2 }, { s: 'B', x: 2, y: 3 }, { s: 'B', x: 3, y: 3 }, { s: 'B', x: 1, y: 2 }, { s: 'B', x: 5, y: 1 }, { s: 'B', x: 4, y: 3 }, { s: 'A', x: 4, y: 4 }];
 
-var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+var grid = exports.grid = { w: 5, h: 4 };
 
-var PIXI = _interopRequireWildcard(_pixi);
-
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function createLevel2(app, nodes) {
-  var style = new PIXI.TextStyle({
-    fontFamily: "Courier New",
-    fontSize: 20,
-    fill: "#FCBF49"
-  });
-  var message = new PIXI.Text("Level 2", style);
-  message.position.set(20, 20);
-  app.stage.addChild(message);
-  var message2 = new PIXI.Text("Different nodes have different max connections", style);
-  message2.anchor.set(0.5, 0.5);
-  message2.position.set(400, 100);
-  app.stage.addChild(message2);
-
-  nodes = [];
-  var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'B', x: 300, y: 300 }, { s: 'B', x: 400, y: 300 }, { s: 'B', x: 200, y: 200 }, { s: 'B', x: 600, y: 140 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
-  for (var i = 0; i < nodePos.length; i++) {
-    var type = nodePos[i].s;
-    var x = nodePos[i].x;
-    var y = nodePos[i].y;
-    nodes.push(new _node.Node(type, x, y));
-  }
-  nodes.forEach(function (x) {
-    return app.stage.addChild(x.sprite);
-  });
-  return nodes;
-}
+var message = exports.message = "Different nodes have different max connections";
 
 /***/ }),
 
@@ -47374,45 +47396,13 @@ function createLevel2(app, nodes) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+                       value: true
 });
-exports.createLevel3 = createLevel3;
+var nodes = exports.nodes = [{ s: 'A', x: 2, y: 2 }, { s: 'C', x: 2, y: 3 }, { s: 'B', x: 3, y: 3 }, { s: 'A', x: 1, y: 2 }, { s: 'B', x: 5, y: 1 }, { s: 'B', x: 4, y: 3 }, { s: 'A', x: 4, y: 4 }];
 
-var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+var grid = exports.grid = { w: 5, h: 4 };
 
-var PIXI = _interopRequireWildcard(_pixi);
-
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function createLevel3(app, nodes) {
-  var style = new PIXI.TextStyle({
-    fontFamily: "Courier New",
-    fontSize: 20,
-    fill: "#FCBF49"
-  });
-  var message = new PIXI.Text("Level 3", style);
-  message.position.set(20, 20);
-  app.stage.addChild(message);
-  var message2 = new PIXI.Text("But they must all have hit their max connections...", style);
-  message2.anchor.set(0.5, 0.5);
-  message2.position.set(400, 100);
-  app.stage.addChild(message2);
-
-  nodes = [];
-  var nodePos = [{ s: 'A', x: 300, y: 200 }, { s: 'C', x: 300, y: 300 }, { s: 'B', x: 400, y: 300 }, { s: 'A', x: 200, y: 200 }, { s: 'B', x: 600, y: 150 }, { s: 'B', x: 500, y: 300 }, { s: 'A', x: 500, y: 400 }];
-  for (var i = 0; i < nodePos.length; i++) {
-    var type = nodePos[i].s;
-    var x = nodePos[i].x;
-    var y = nodePos[i].y;
-    nodes.push(new _node.Node(type, x, y));
-  }
-  nodes.forEach(function (x) {
-    return app.stage.addChild(x.sprite);
-  });
-  return nodes;
-}
+var message = exports.message = "But they must all have hit their max connections...";
 
 /***/ }),
 
@@ -47427,46 +47417,13 @@ function createLevel3(app, nodes) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+                       value: true
 });
-exports.createLevel4 = createLevel4;
+var nodes = exports.nodes = [{ s: 'A', x: 1, y: 1 }, { s: 'B', x: 1, y: 2 }, { s: 'C', x: 1, y: 3 }, { s: 'A', x: 2, y: 3 }, { s: 'C', x: 3, y: 3 }, { s: 'A', x: 1, y: 4 }, { s: 'A', x: 2, y: 1 }, { s: 'B', x: 2, y: 4 }, { s: 'C', x: 1, y: 5 }, { s: 'A', x: 2, y: 2 }, { s: 'C', x: 4, y: 5 }, { s: 'B', x: 7, y: 3 }, { s: 'B', x: 7, y: 5 }, { s: 'A', x: 7, y: 1 }];
 
-var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+var grid = exports.grid = { w: 7, h: 5 };
 
-var PIXI = _interopRequireWildcard(_pixi);
-
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function createLevel4(app, nodes) {
-  var style = new PIXI.TextStyle({
-    fontFamily: "Courier New",
-    fontSize: 20,
-    fill: "#FCBF49"
-  });
-  var message = new PIXI.Text("Level 4", style);
-  message.position.set(20, 20);
-  app.stage.addChild(message);
-  var message2 = new PIXI.Text("Don't want any crossing though", style);
-  message2.anchor.set(0.5, 0.5);
-  message2.position.set(400, 100);
-  app.stage.addChild(message2);
-
-  nodes = [];
-  var nodePos = [{ s: 'A', x: 50, y: 100 }, { s: 'B', x: 50, y: 200 }, { s: 'C', x: 50, y: 300 }, { s: 'A', x: 150, y: 300 }, { s: 'C', x: 250, y: 300 }, { s: 'A', x: 50, y: 400 }, { s: 'A', x: 150, y: 100 }, { s: 'B', x: 150, y: 400 }, { s: 'C', x: 50, y: 500 }, { s: 'A', x: 150, y: 200 }, { s: 'C', x: 350, y: 500 }, { s: 'B', x: 650, y: 300 }, { s: 'B', x: 650, y: 500 }, { s: 'A', x: 650, y: 100 }];
-
-  for (var i = 0; i < nodePos.length; i++) {
-    var type = nodePos[i].s;
-    var x = nodePos[i].x;
-    var y = nodePos[i].y;
-    nodes.push(new _node.Node(type, x, y));
-  }
-  nodes.forEach(function (x) {
-    return app.stage.addChild(x.sprite);
-  });
-  return nodes;
-}
+var message = exports.message = "Don't want any crossing though";
 
 /***/ }),
 
@@ -47481,45 +47438,13 @@ function createLevel4(app, nodes) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+                       value: true
 });
-exports.createLevel5 = createLevel5;
+var nodes = exports.nodes = [{ s: 'A', x: 1, y: 1 }, { s: 'B', x: 2, y: 1 }, { s: 'B', x: 6, y: 1 }, { s: 'B', x: 7, y: 1 }, { s: 'B', x: 1, y: 2 }, { s: 'A', x: 2, y: 2 }, { s: 'B', x: 3, y: 2 }, { s: 'C', x: 4, y: 2 }, { s: 'B', x: 5, y: 2 }, { s: 'C', x: 6, y: 2 }, { s: 'B', x: 7, y: 2 }, { s: 'B', x: 1, y: 3 }, { s: 'A', x: 2, y: 3 }, { s: 'A', x: 3, y: 3 }, { s: 'C', x: 4, y: 3 }, { s: 'B', x: 5, y: 3 }, { s: 'C', x: 6, y: 3 }, { s: 'B', x: 7, y: 3 }, { s: 'B', x: 1, y: 4 }, { s: 'B', x: 2, y: 4 }, { s: 'C', x: 3, y: 4 }, { s: 'B', x: 4, y: 4 }, { s: 'B', x: 5, y: 4 }, { s: 'C', x: 6, y: 4 }, { s: 'B', x: 7, y: 4 }, { s: 'A', x: 1, y: 5 }, { s: 'B', x: 2, y: 5 }, { s: 'B', x: 3, y: 5 }, { s: 'A', x: 4, y: 5 }, { s: 'B', x: 5, y: 5 }, { s: 'B', x: 6, y: 5 }, { s: 'B', x: 7, y: 5 }];
 
-var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+var grid = exports.grid = { w: 7, h: 5 };
 
-var PIXI = _interopRequireWildcard(_pixi);
-
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function createLevel5(app, nodes) {
-  var style = new PIXI.TextStyle({
-    fontFamily: "Courier New",
-    fontSize: 20,
-    fill: "#FCBF49"
-  });
-  var message = new PIXI.Text("Level 5", style);
-  message.position.set(20, 20);
-  app.stage.addChild(message);
-  var message2 = new PIXI.Text("What has happened here?", style);
-  message2.anchor.set(0.5, 0.5);
-  message2.position.set(400, 50);
-  app.stage.addChild(message2);
-
-  nodes = [];
-  var nodePos = [{ s: 'A', x: 100, y: 100 }, { s: 'B', x: 200, y: 100 }, { s: 'C', x: 300, y: 100 }, { s: 'B', x: 400, y: 100 }, { s: 'B', x: 500, y: 100 }, { s: 'B', x: 600, y: 100 }, { s: 'B', x: 700, y: 100 }, { s: 'B', x: 100, y: 200 }, { s: 'A', x: 200, y: 200 }, { s: 'B', x: 300, y: 200 }, { s: 'C', x: 400, y: 200 }, { s: 'B', x: 500, y: 200 }, { s: 'C', x: 600, y: 200 }, { s: 'B', x: 700, y: 200 }, { s: 'B', x: 100, y: 300 }, { s: 'A', x: 200, y: 300 }, { s: 'B', x: 300, y: 300 }, { s: 'C', x: 400, y: 300 }, { s: 'B', x: 500, y: 300 }, { s: 'C', x: 600, y: 300 }, { s: 'B', x: 700, y: 300 }, { s: 'B', x: 100, y: 400 }, { s: 'B', x: 200, y: 400 }, { s: 'C', x: 300, y: 400 }, { s: 'B', x: 400, y: 400 }, { s: 'B', x: 500, y: 400 }, { s: 'C', x: 600, y: 400 }, { s: 'B', x: 700, y: 400 }, { s: 'A', x: 100, y: 500 }, { s: 'B', x: 200, y: 500 }, { s: 'B', x: 300, y: 500 }, { s: 'A', x: 400, y: 500 }, { s: 'B', x: 500, y: 500 }, { s: 'B', x: 600, y: 500 }, { s: 'B', x: 700, y: 500 }];
-  for (var i = 0; i < nodePos.length; i++) {
-    var type = nodePos[i].s;
-    var x = nodePos[i].x;
-    var y = nodePos[i].y;
-    nodes.push(new _node.Node(type, x, y));
-  }
-  nodes.forEach(function (x) {
-    return app.stage.addChild(x.sprite);
-  });
-  return nodes;
-}
+var message = exports.message = "What has happened here?";
 
 /***/ }),
 
@@ -47743,7 +47668,7 @@ function menuSetup() {
 
   var message = new PIXI.Text(".Dot.", style);
   message.anchor.set(0.5, 0.5);
-  message.position.set(400, 200);
+  message.position.set(_canvas.width / 2, _canvas.height / 3);
   _canvas.app.stage.addChild(message);
   _canvas.app.renderer.render(_canvas.app.stage);
   _canvas.app.renderer.backgroundColor = 0xFCBF49;
@@ -47751,7 +47676,7 @@ function menuSetup() {
 
 function menuGameTransition() {
   _canvas.transRectB.visible = true;
-  _canvas.transRectB.y = 700;
+  _canvas.transRectB.y = _canvas.height;
   _canvas.transRectB.vy = 0;
   _canvas.app.renderer.backgroundColor = 0x000034;
 }
