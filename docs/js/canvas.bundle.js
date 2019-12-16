@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/js/canvas.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/AppInit.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -45671,355 +45671,6 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ "./node_modules/toastify-js/src/toastify.js":
-/*!**************************************************!*\
-  !*** ./node_modules/toastify-js/src/toastify.js ***!
-  \**************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*!
- * Toastify js 1.6.1
- * https://github.com/apvarun/toastify-js
- * @license MIT licensed
- *
- * Copyright (C) 2018 Varun A P
- */
-(function(root, factory) {
-  if ( true && module.exports) {
-    module.exports = factory();
-  } else {
-    root.Toastify = factory();
-  }
-})(this, function(global) {
-  // Object initialization
-  var Toastify = function(options) {
-      // Returning a new init object
-      return new Toastify.lib.init(options);
-    },
-    // Library version
-    version = "1.6.1";
-
-  // Defining the prototype of the object
-  Toastify.lib = Toastify.prototype = {
-    toastify: version,
-
-    constructor: Toastify,
-
-    // Initializing the object with required parameters
-    init: function(options) {
-      // Verifying and validating the input object
-      if (!options) {
-        options = {};
-      }
-
-      // Creating the options object
-      this.options = {};
-
-      this.toastElement = null;
-
-      // Validating the options
-      this.options.text = options.text || "Hi there!"; // Display message
-      this.options.duration = options.duration || 3000; // Display duration
-      this.options.selector = options.selector; // Parent selector
-      this.options.callback = options.callback || function() {}; // Callback after display
-      this.options.destination = options.destination; // On-click destination
-      this.options.newWindow = options.newWindow || false; // Open destination in new window
-      this.options.close = options.close || false; // Show toast close icon
-      this.options.gravity = options.gravity == "bottom" ? "toastify-bottom" : "toastify-top"; // toast position - top or bottom
-      this.options.positionLeft = options.positionLeft || false; // toast position - left or right
-      this.options.position = options.position || ''; // toast position - left or right
-      this.options.backgroundColor = options.backgroundColor; // toast background color
-      this.options.avatar = options.avatar || ""; // img element src - url or a path
-      this.options.className = options.className || ""; // additional class names for the toast
-      this.options.stopOnFocus = options.stopOnFocus === undefined? true: options.stopOnFocus; // stop timeout on focus
-
-      // Returning the current object for chaining functions
-      return this;
-    },
-
-    // Building the DOM element
-    buildToast: function() {
-      // Validating if the options are defined
-      if (!this.options) {
-        throw "Toastify is not initialized";
-      }
-
-      // Creating the DOM object
-      var divElement = document.createElement("div");
-      divElement.className = "toastify on " + this.options.className;
-
-      // Positioning toast to left or right or center
-      if (!!this.options.position) {
-        divElement.className += " toastify-" + this.options.position;
-      } else {
-        // To be depreciated in further versions
-        if (this.options.positionLeft === true) {
-          divElement.className += " toastify-left";
-          console.warn('Property `positionLeft` will be depreciated in further versions. Please use `position` instead.')
-        } else {
-          // Default position
-          divElement.className += " toastify-right";
-        }
-      }
-
-      // Assigning gravity of element
-      divElement.className += " " + this.options.gravity;
-
-      if (this.options.backgroundColor) {
-        divElement.style.background = this.options.backgroundColor;
-      }
-
-      // Adding the toast message
-      divElement.innerHTML = this.options.text;
-
-      if (this.options.avatar !== "") {
-        var avatarElement = document.createElement("img");
-        avatarElement.src = this.options.avatar;
-
-        avatarElement.className = "toastify-avatar";
-
-        if (this.options.position == "left" || this.options.positionLeft === true) {
-          // Adding close icon on the left of content
-          divElement.appendChild(avatarElement);
-        } else {
-          // Adding close icon on the right of content
-          divElement.insertAdjacentElement("beforeend", avatarElement);
-        }
-      }
-
-      // Adding a close icon to the toast
-      if (this.options.close === true) {
-        // Create a span for close element
-        var closeElement = document.createElement("span");
-        closeElement.innerHTML = "&#10006;";
-
-        closeElement.className = "toast-close";
-
-        // Triggering the removal of toast from DOM on close click
-        closeElement.addEventListener(
-          "click",
-          function(event) {
-            event.stopPropagation();
-            this.removeElement(event.target.parentElement);
-            window.clearTimeout(event.target.parentElement.timeOutValue);
-          }.bind(this)
-        );
-
-        // Clear timeout while toast is focused
-        if (this.options.stopOnFocus && this.options.duration > 0) {
-          const self = this;
-          // stop countdown
-          divElement.addEventListener(
-            "mouseover",
-            function(event) {
-              window.clearTimeout(divElement.timeOutValue);
-            }
-          )
-          // add back the timeout
-          divElement.addEventListener(
-            "mouseleave",
-            function() {
-              divElement.timeOutValue = window.setTimeout(
-                function() {
-                  // Remove the toast from DOM
-                  self.removeElement(divElement);
-                },
-                self.options.duration
-              )
-            }
-          )
-        }
-
-        //Calculating screen width
-        var width = window.innerWidth > 0 ? window.innerWidth : screen.width;
-
-        // Adding the close icon to the toast element
-        // Display on the right if screen width is less than or equal to 360px
-        if ((this.options.position == "left" || this.options.positionLeft === true) && width > 360) {
-          // Adding close icon on the left of content
-          divElement.insertAdjacentElement("afterbegin", closeElement);
-        } else {
-          // Adding close icon on the right of content
-          divElement.appendChild(closeElement);
-        }
-      }
-
-      // Adding an on-click destination path
-      if (typeof this.options.destination !== "undefined") {
-        divElement.addEventListener(
-          "click",
-          function(event) {
-            event.stopPropagation();
-            if (this.options.newWindow === true) {
-              window.open(this.options.destination, "_blank");
-            } else {
-              window.location = this.options.destination;
-            }
-          }.bind(this)
-        );
-      }
-
-      // Returning the generated element
-      return divElement;
-    },
-
-    // Displaying the toast
-    showToast: function() {
-      // Creating the DOM object for the toast
-      this.toastElement = this.buildToast();
-
-      // Getting the root element to with the toast needs to be added
-      var rootElement;
-      if (typeof this.options.selector === "undefined") {
-        rootElement = document.body;
-      } else {
-        rootElement = document.getElementById(this.options.selector);
-      }
-
-      // Validating if root element is present in DOM
-      if (!rootElement) {
-        throw "Root element is not defined";
-      }
-
-      // Adding the DOM element
-      rootElement.insertBefore(this.toastElement, rootElement.firstChild);
-
-      // Repositioning the toasts in case multiple toasts are present
-      Toastify.reposition();
-
-      if (this.options.duration > 0) {
-        this.toastElement.timeOutValue = window.setTimeout(
-          function() {
-            // Remove the toast from DOM
-            this.removeElement(this.toastElement);
-          }.bind(this),
-          this.options.duration
-        ); // Binding `this` for function invocation
-      }
-
-      // Supporting function chaining
-      return this;
-    },
-
-    hideToast: function() {
-      if (this.toastElement.timeOutValue) {
-        clearTimeout(this.toastElement.timeOutValue);
-      }
-      this.removeElement(this.toastElement);
-    },
-
-    // Removing the element from the DOM
-    removeElement: function(toastElement) {
-      // Hiding the element
-      // toastElement.classList.remove("on");
-      toastElement.className = toastElement.className.replace(" on", "");
-
-      // Removing the element from DOM after transition end
-      window.setTimeout(
-        function() {
-          // Remove the elemenf from the DOM
-          toastElement.parentNode.removeChild(toastElement);
-
-          // Calling the callback function
-          this.options.callback.call(toastElement);
-
-          // Repositioning the toasts again
-          Toastify.reposition();
-        }.bind(this),
-        400
-      ); // Binding `this` for function invocation
-    },
-  };
-
-  // Positioning the toasts on the DOM
-  Toastify.reposition = function() {
-    // Top margins with gravity
-    var topLeftOffsetSize = {
-      top: 15,
-      bottom: 15,
-    };
-    var topRightOffsetSize = {
-      top: 15,
-      bottom: 15,
-    };
-    var offsetSize = {
-      top: 15,
-      bottom: 15,
-    };
-
-    // Get all toast messages on the DOM
-    var allToasts = document.getElementsByClassName("toastify");
-
-    var classUsed;
-
-    // Modifying the position of each toast element
-    for (var i = 0; i < allToasts.length; i++) {
-      // Getting the applied gravity
-      if (containsClass(allToasts[i], "toastify-top") === true) {
-        classUsed = "toastify-top";
-      } else {
-        classUsed = "toastify-bottom";
-      }
-
-      var height = allToasts[i].offsetHeight;
-      classUsed = classUsed.substr(9, classUsed.length-1)
-      // Spacing between toasts
-      var offset = 15;
-
-      var width = window.innerWidth > 0 ? window.innerWidth : screen.width;
-
-      // Show toast in center if screen with less than or qual to 360px
-      if (width <= 360) {
-        // Setting the position
-        allToasts[i].style[classUsed] = offsetSize[classUsed] + "px";
-
-        offsetSize[classUsed] += height + offset;
-      } else {
-        if (containsClass(allToasts[i], "toastify-left") === true) {
-          // Setting the position
-          allToasts[i].style[classUsed] = topLeftOffsetSize[classUsed] + "px";
-
-          topLeftOffsetSize[classUsed] += height + offset;
-        } else {
-          // Setting the position
-          allToasts[i].style[classUsed] = topRightOffsetSize[classUsed] + "px";
-
-          topRightOffsetSize[classUsed] += height + offset;
-        }
-      }
-    }
-
-    // Supporting function chaining
-    return this;
-  };
-
-  function containsClass(elem, yourClass) {
-    if (!elem || typeof yourClass !== "string") {
-      return false;
-    } else if (
-      elem.className &&
-      elem.className
-        .trim()
-        .split(/\s+/gi)
-        .indexOf(yourClass) > -1
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // Setting up the prototype for the init object
-  Toastify.lib.init.prototype = Toastify.lib;
-
-  // Returning the Toastify function to be assigned to the window object/module
-  return Toastify;
-});
-
-
-/***/ }),
-
 /***/ "./node_modules/url/url.js":
 /*!*********************************!*\
   !*** ./node_modules/url/url.js ***!
@@ -46856,6 +46507,45 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./src/AppInit.js":
+/*!************************!*\
+  !*** ./src/AppInit.js ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _GameController = __webpack_require__(/*! ./js/GameController.js */ "./src/js/GameController.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * AppInit Class
+ *
+ * Initialises controller than initialises game
+ */
+var AppInit = function AppInit() {
+  _classCallCheck(this, AppInit);
+
+  var gameController = new _GameController.GameController();
+
+  gameController.init().then(function () {
+    console.log('Game Ready');
+  });
+};
+
+var type = "WebGL";
+if (!_pixi.utils.isWebGLSupported()) type = "canvas";
+_pixi.utils.sayHello(type);
+
+new AppInit();
+
+/***/ }),
+
 /***/ "./src/images/next.png":
 /*!*****************************!*\
   !*** ./src/images/next.png ***!
@@ -46895,10 +46585,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/js/canvas.js":
-/*!**************************!*\
-  !*** ./src/js/canvas.js ***!
-  \**************************/
+/***/ "./src/js/AssetManager.js":
+/*!********************************!*\
+  !*** ./src/js/AssetManager.js ***!
+  \********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -46908,19 +46598,11 @@ __webpack_require__.r(__webpack_exports__);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.transRectB = exports.transRectA = exports.nodeTypes = exports.buttons = exports.app = exports.height = exports.width = undefined;
-exports.clearChildren = clearChildren;
-exports.nextLevelSetup = nextLevelSetup;
-exports.levelSetup = levelSetup;
-exports.nodeClick = nodeClick;
+exports.AssetManager = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
-
-var PIXI = _interopRequireWildcard(_pixi);
-
-var _toastifyJs = __webpack_require__(/*! toastify-js */ "./node_modules/toastify-js/src/toastify.js");
-
-var _toastifyJs2 = _interopRequireDefault(_toastifyJs);
 
 var _start = __webpack_require__(/*! ../images/start.png */ "./src/images/start.png");
 
@@ -46934,524 +46616,49 @@ var _nodes = __webpack_require__(/*! ../images/nodes.png */ "./src/images/nodes.
 
 var _nodes2 = _interopRequireDefault(_nodes);
 
-var _utils = __webpack_require__(/*! ./maths/utils.js */ "./src/js/maths/utils.js");
-
-var utils = _interopRequireWildcard(_utils);
-
-var _menu = __webpack_require__(/*! ./states/menu.js */ "./src/js/states/menu.js");
-
-var _game = __webpack_require__(/*! ./states/game.js */ "./src/js/states/game.js");
-
-var _level = __webpack_require__(/*! ./levels/level.js */ "./src/js/levels/level.js");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-// Check to see all has imported
-
-
-// Functions
-var type = "WebGL";
-
-// Images
-
-if (!PIXI.utils.isWebGLSupported()) type = "canvas";
-PIXI.utils.sayHello(type);
-
-// Render application
-var width = exports.width = window.innerWidth;
-var height = exports.height = window.innerHeight;
-
-var app = exports.app = new PIXI.Application({
-  height: height,
-  width: width
-});
-
-document.body.appendChild(app.view);
-
-// Resize section
-window.addEventListener('resize', resize);
-function resize() {
-  exports.width = width = window.innerWidth;
-  exports.height = height = window.innerHeight;
-  app.renderer.resize(width, height);
-
-  transRectA.beginFill(0xFCBF49);
-  transRectA.drawRect(0, 0, width, height);
-  transRectA.endFill();
-
-  transRectB.beginFill(0xFCBF49);
-  transRectB.drawRect(0, 0, width, height);
-  transRectB.endFill();
-}
-
-// Get sprites
-var loader = new PIXI.Loader();
-var buttons = exports.buttons = [];
-var nodeTypes = exports.nodeTypes = [];
-
-// Build Transitions
-var transRectA = exports.transRectA = new PIXI.Graphics();
-transRectA.beginFill(0xFCBF49);
-transRectA.drawRect(0, 0, width, height);
-transRectA.endFill();
-transRectA.visible = false;
-transRectA.vy = 0.5;
-
-var transRectB = exports.transRectB = new PIXI.Graphics();
-transRectB.beginFill(0xFCBF49);
-transRectB.drawRect(0, 0, width, height);
-transRectB.endFill();
-transRectB.y = 700;
-transRectB.visible = false;
-transRectB.vy = 0.5;
-
-var line = new PIXI.Graphics();
-line.lineStyle(4, 0xFFFFFF, 1);
-line.moveTo(0, 0);
-line.lineTo(80, 50);
-line.x = 30;
-line.y = 32;
-line.visible = false;
-
-var lineStart = {
-  b: false,
-  x: 0,
-  y: 0
-};
-
-var level = new _level.Level();
-var finished = false;
-
-var style2 = new PIXI.TextStyle({
-  fontFamily: "Courier New",
-  fontSize: 50,
-  fill: "#FCBF49"
-});
-var message3 = new PIXI.Text("Thanks For Playing!", style2);
-message3.anchor.set(0.5, 0.5);
-message3.position.set(400, 300);
-
-loader.add(_next2.default).add(_start2.default).add(_nodes2.default).on("progress", loadProgressHandler).load(setup);
-
-// Load Textures
-function loadProgressHandler(loader, resource) {
-  console.log("progress: " + loader.progress + "%");
-}
-
-function setup() {
-  console.log("All files loaded");
-  var nodeSheet = loader.resources[_nodes2.default].texture;
-  for (var x = 0; x < 900; x += 100) {
-    var sprite = new PIXI.Texture(nodeSheet);
-    sprite.frame = new PIXI.Rectangle(x, 0, 100, 100);
-    nodeTypes.push(sprite);
-  }
-
-  var button = new PIXI.Sprite(loader.resources[_start2.default].texture);
-  button.buttonMode = true;
-  button.interactive = true;
-  button.anchor.set(0.5);
-  button.position.x = width / 2;
-  button.position.y = height / 3 * 2;
-  button.tap = _game.gameSetup;
-  button.click = _game.gameSetup;
-  app.stage.addChild(button);
-  buttons.push(button);
-
-  (0, _menu.menuSetup)();
-  app.ticker.add(function (delta) {
-    return gameLoop(delta);
-  });
-}
-
-function gameLoop(delta) {
-  // Transition
-  if (transRectA.visible === true) {
-    transRectA.y += transRectA.vy;
-    transRectA.vy += 0.5;
-    if (transRectA.y > height) {
-      transRectA.visible = false;
-      levelSetup();
-    }
-  } else if (transRectB.visible) {
-    transRectB.y -= transRectB.vy;
-    transRectB.vy += 0.5;
-    if (transRectB.y < 0) {
-      app.renderer.backgroundColor = 0xFCBF49;
-      transRectB.visible = false;
-      clearChildren();
-      nextLevelSetup();
-    }
-  }
-
-  // Line following mouse
-  if (lineStart.b) {
-    var mouseData = app.renderer.plugins.interaction.mouse.global;
-    app.stage.removeChildAt(app.stage.getChildIndex(line));
-    line = drawLine(lineStart.x, lineStart.y, mouseData.x, mouseData.y);
-    app.stage.addChild(line);
-  } else {
-    line.visible = false;
-  }
-}
-
-function clearChildren() {
-  for (var i = app.stage.children.length - 1; i >= 0; i--) {
-    app.stage.removeChild(app.stage.children[i]);
-  };
-}
-
-function nextLevelSetup() {
-  lines = [];
-  exports.buttons = buttons = [];
-
-  var style = new PIXI.TextStyle({
-    fontFamily: "Courier New",
-    fontSize: 100,
-    fill: "#000034"
-  });
-  var message = new PIXI.Text("Level " + level.level + "\nComplete!", style);
-  message.anchor.set(0.5, 0.5);
-  message.position.set(width / 2, height / 4);
-  app.stage.addChild(message);
-  app.renderer.render(app.stage);
-
-  var button = new PIXI.Sprite(loader.resources[_next2.default].texture);
-  button.buttonMode = true;
-  button.interactive = true;
-  button.anchor.set(0.5);
-  button.position.x = width / 2;
-  button.position.y = height / 4 * 3;
-  button.tap = _game.gameSetup;
-  button.click = _game.gameSetup;
-  app.stage.addChild(button);
-  buttons.push(button);
-
-  level.level++;
-}
-
-function levelSetup() {
-  level.buildLevel();
-  app.stage.addChild(line);
-}
-
-var lines = [];
-
-function nodeClick() {
-  if (!lineStart.b) {
-    lineStart = {
-      b: true,
-      x: this.x,
-      y: this.y
-    };
-  } else {
-    var c = drawLine(lineStart.x, lineStart.y, this.x, this.y);
-    var within = false;
-    var nodeind = [];
-    for (var i = 0; i < level.nodes.length; i++) {
-      if (this.x == level.nodes[i].sprite.x && this.y == level.nodes[i].sprite.y) {
-        nodeind.push(i);
-      }
-      if (lineStart.x == level.nodes[i].sprite.x && lineStart.y == level.nodes[i].sprite.y) {
-        nodeind.push(i);
-      }
-    }
-    if (nodeind[0] == nodeind[1]) {
-      popup("Cannot connect to itself");
-    } else {
-      // Check for collisions
-      for (var _i = 0; _i < lines.length; _i++) {
-        if (utils.sameLine(c.currentPath.points, lines[_i].p)) {
-          level.nodes[nodeind[0]].break();
-          level.nodes[nodeind[1]].break();
-          app.stage.removeChildAt(app.stage.getChildIndex(lines[_i].l));
-          lines.splice(_i, 1);
-          within = true;
-          break;
-        }
-        if (utils.crossLine(c.currentPath.points, lines[_i].p)) {
-          popup("You cannot cross the connections");
-          within = true;
-          break;
-        }
-      }
-
-      // Check for max connections
-      if (!within) {
-        if (level.nodes[nodeind[0]].connect()) {
-          if (level.nodes[nodeind[1]].connect()) {
-            lines.push({
-              p: [lineStart.x, lineStart.y, this.x, this.y],
-              l: c
-            });
-            app.stage.addChild(lines[lines.length - 1].l);
-          } else {
-            level.nodes[nodeind[0]].break();
-            popup("Max connections per node reached");
-          }
-        } else {
-          popup("Max connections per node reached");
-        }
-      }
-    }
-
-    line.visible = false;
-    lineStart.b = false;
-  }
-  if (level.checkWin()) {
-    app.stage.addChild(transRectB);
-    (0, _menu.menuGameTransition)();
-  }
-}
-
-function popup(message) {
-  (0, _toastifyJs2.default)({
-    text: message,
-    duration: 3000,
-    gravity: "top", // `top` or `bottom`
-    position: 'left', // `left`, `center` or `right`
-    backgroundColor: "#FCBF49"
-  }).showToast();
-}
-
-function drawLine(sx, sy, ex, ey) {
-  var a = new PIXI.Graphics();
-  a.lineStyle(4, 0xFFFFFF, 1);
-  a.moveTo(sx, sy);
-  a.lineTo(ex, ey);
-  a.visible = true;
-  return a;
-}
-
-/***/ }),
-
-/***/ "./src/js/levels/level.js":
-/*!********************************!*\
-  !*** ./src/js/levels/level.js ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Level = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
-
-var _node = __webpack_require__(/*! ../sprites/node.js */ "./src/js/sprites/node.js");
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
-var _level = __webpack_require__(/*! ./level1.js */ "./src/js/levels/level1.js");
-
-var Level1 = _interopRequireWildcard(_level);
-
-var _level2 = __webpack_require__(/*! ./level2.js */ "./src/js/levels/level2.js");
-
-var Level2 = _interopRequireWildcard(_level2);
-
-var _level3 = __webpack_require__(/*! ./level3.js */ "./src/js/levels/level3.js");
-
-var Level3 = _interopRequireWildcard(_level3);
-
-var _level4 = __webpack_require__(/*! ./level4.js */ "./src/js/levels/level4.js");
-
-var Level4 = _interopRequireWildcard(_level4);
-
-var _level5 = __webpack_require__(/*! ./level5.js */ "./src/js/levels/level5.js");
-
-var Level5 = _interopRequireWildcard(_level5);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Level = exports.Level = function () {
-  function Level() {
-    _classCallCheck(this, Level);
+/**
+ * Asset Manager class
+ * Used to store assets
+ */
+var AssetManager = exports.AssetManager = function () {
+  function AssetManager() {
+    var _this = this;
 
-    this.level = 5;
-    this.font = new _pixi.TextStyle({
-      fontFamily: 'Courier New',
-      fontSize: 20,
-      fill: '#FCBF49'
+    _classCallCheck(this, AssetManager);
+
+    this.promise = new Promise(function (resolve, reject) {
+      _this.loader = new _pixi.Loader();
+
+      _this.loader.add(_next2.default).add(_start2.default).add(_nodes2.default);
+
+      _this.loader.on('progress', _this.loadProgressHandler);
+      _this.loader.load(function () {
+        console.log('All Assets Loaded');
+        resolve();
+      });
     });
   }
 
-  _createClass(Level, [{
-    key: 'buildLevel',
-    value: function buildLevel() {
-      this.nodes = [];
-      this.title = new _pixi.Text("Level " + this.level, this.font);
-      if (this.level == 1) {
-        this.message = new _pixi.Text(Level1.message, this.font);
-        this.grid = Level1.grid;
-        this.stage = Level1.nodes;
-      } else if (this.level == 2) {
-        this.message = new _pixi.Text(Level2.message, this.font);
-        this.grid = Level2.grid;
-        this.stage = Level2.nodes;
-      } else if (this.level == 3) {
-        this.message = new _pixi.Text(Level3.message, this.font);
-        this.grid = Level3.grid;
-        this.stage = Level3.nodes;
-      } else if (this.level == 4) {
-        this.message = new _pixi.Text(Level4.message, this.font);
-        this.grid = Level4.grid;
-        this.stage = Level4.nodes;
-      } else if (this.level == 5) {
-        this.message = new _pixi.Text(Level5.message, this.font);
-        this.grid = Level5.grid;
-        this.stage = Level5.nodes;
-      }
-
-      this.title.position.set(20, 20);
-      this.message.anchor.set(0.5, 0.5);
-      this.message.position.set(_canvas.width / 2, _canvas.height / 6);
-      _canvas.app.stage.addChild(this.title);
-      _canvas.app.stage.addChild(this.message);
-
-      for (var i = 0; i < this.stage.length; i++) {
-        var type = this.stage[i].s;
-        var x = this.stage[i].x * (_canvas.width / (this.grid.w + 1));
-        var y = this.stage[i].y * (_canvas.height / (this.grid.h + 1));
-        this.nodes.push(new _node.Node(type, x, y));
-      }
-      this.nodes.forEach(function (x) {
-        return _canvas.app.stage.addChild(x.sprite);
-      });
-    }
-  }, {
-    key: 'checkWin',
-    value: function checkWin() {
-      for (var i = 0; i < this.nodes.length; i++) {
-        if (this.nodes[i].min != this.nodes[i].max) return false;
-      }return true;
+  _createClass(AssetManager, [{
+    key: 'loadProgressHandler',
+    value: function loadProgressHandler(loader, resource) {
+      console.log("progress: " + loader.progress + "%");
     }
   }]);
 
-  return Level;
+  return AssetManager;
 }();
 
 /***/ }),
 
-/***/ "./src/js/levels/level1.js":
-/*!*********************************!*\
-  !*** ./src/js/levels/level1.js ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-                       value: true
-});
-var nodes = exports.nodes = [{ s: 'A', x: 1, y: 1 }, { s: 'B', x: 1, y: 2 }, { s: 'B', x: 2, y: 2 }, { s: 'A', x: 2, y: 3 }];
-
-var grid = exports.grid = { w: 2, h: 3 };
-
-var message = exports.message = "Click two nodes to connect them...";
-
-/***/ }),
-
-/***/ "./src/js/levels/level2.js":
-/*!*********************************!*\
-  !*** ./src/js/levels/level2.js ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-                       value: true
-});
-var nodes = exports.nodes = [{ s: 'A', x: 2, y: 2 }, { s: 'B', x: 2, y: 3 }, { s: 'B', x: 3, y: 3 }, { s: 'B', x: 1, y: 2 }, { s: 'B', x: 5, y: 1 }, { s: 'B', x: 4, y: 3 }, { s: 'A', x: 4, y: 4 }];
-
-var grid = exports.grid = { w: 5, h: 4 };
-
-var message = exports.message = "Different nodes have different max connections";
-
-/***/ }),
-
-/***/ "./src/js/levels/level3.js":
-/*!*********************************!*\
-  !*** ./src/js/levels/level3.js ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-                       value: true
-});
-var nodes = exports.nodes = [{ s: 'A', x: 2, y: 2 }, { s: 'C', x: 2, y: 3 }, { s: 'B', x: 3, y: 3 }, { s: 'A', x: 1, y: 2 }, { s: 'B', x: 5, y: 1 }, { s: 'B', x: 4, y: 3 }, { s: 'A', x: 4, y: 4 }];
-
-var grid = exports.grid = { w: 5, h: 4 };
-
-var message = exports.message = "But they must all have hit their max connections...";
-
-/***/ }),
-
-/***/ "./src/js/levels/level4.js":
-/*!*********************************!*\
-  !*** ./src/js/levels/level4.js ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-                       value: true
-});
-var nodes = exports.nodes = [{ s: 'A', x: 1, y: 1 }, { s: 'B', x: 1, y: 2 }, { s: 'C', x: 1, y: 3 }, { s: 'A', x: 2, y: 3 }, { s: 'C', x: 3, y: 3 }, { s: 'A', x: 1, y: 4 }, { s: 'A', x: 2, y: 1 }, { s: 'B', x: 2, y: 4 }, { s: 'C', x: 1, y: 5 }, { s: 'A', x: 2, y: 2 }, { s: 'C', x: 4, y: 5 }, { s: 'B', x: 7, y: 3 }, { s: 'B', x: 7, y: 5 }, { s: 'A', x: 7, y: 1 }];
-
-var grid = exports.grid = { w: 7, h: 5 };
-
-var message = exports.message = "Don't want any crossing though";
-
-/***/ }),
-
-/***/ "./src/js/levels/level5.js":
-/*!*********************************!*\
-  !*** ./src/js/levels/level5.js ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-                       value: true
-});
-var nodes = exports.nodes = [{ s: 'A', x: 1, y: 1 }, { s: 'B', x: 2, y: 1 }, { s: 'B', x: 6, y: 1 }, { s: 'B', x: 7, y: 1 }, { s: 'B', x: 1, y: 2 }, { s: 'A', x: 2, y: 2 }, { s: 'B', x: 3, y: 2 }, { s: 'C', x: 4, y: 2 }, { s: 'B', x: 5, y: 2 }, { s: 'C', x: 6, y: 2 }, { s: 'B', x: 7, y: 2 }, { s: 'B', x: 1, y: 3 }, { s: 'A', x: 2, y: 3 }, { s: 'A', x: 3, y: 3 }, { s: 'C', x: 4, y: 3 }, { s: 'B', x: 5, y: 3 }, { s: 'C', x: 6, y: 3 }, { s: 'B', x: 7, y: 3 }, { s: 'B', x: 1, y: 4 }, { s: 'B', x: 2, y: 4 }, { s: 'C', x: 3, y: 4 }, { s: 'B', x: 4, y: 4 }, { s: 'B', x: 5, y: 4 }, { s: 'C', x: 6, y: 4 }, { s: 'B', x: 7, y: 4 }, { s: 'A', x: 1, y: 5 }, { s: 'B', x: 2, y: 5 }, { s: 'B', x: 3, y: 5 }, { s: 'A', x: 4, y: 5 }, { s: 'B', x: 5, y: 5 }, { s: 'B', x: 6, y: 5 }, { s: 'B', x: 7, y: 5 }];
-
-var grid = exports.grid = { w: 7, h: 5 };
-
-var message = exports.message = "What has happened here?";
-
-/***/ }),
-
-/***/ "./src/js/maths/utils.js":
-/*!*******************************!*\
-  !*** ./src/js/maths/utils.js ***!
-  \*******************************/
+/***/ "./src/js/Canvas.js":
+/*!**************************!*\
+  !*** ./src/js/Canvas.js ***!
+  \**************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -47461,53 +46668,40 @@ var message = exports.message = "What has happened here?";
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.crossLine = crossLine;
-exports.sameLine = sameLine;
-function crossLine(r1, r2) {
-  var a = r1[0],
-      b = r1[1],
-      c = r1[2],
-      d = r1[3];
-  var p = r2[0],
-      q = r2[1],
-      r = r2[2],
-      s = r2[3];
-  // check if cross
-  var det, gamma, lambda;
-  det = (c - a) * (s - q) - (r - p) * (d - b);
-  if (det === 0) {
-    return false;
-  } else {
-    lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
-    gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
-    return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
-  }
+exports.Canvas = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Canvas = exports.Canvas = function Canvas() {
+  var _this = this;
+
+  _classCallCheck(this, Canvas);
+
+  this.height = window.innerHeight;
+  this.width = window.innerWidth;
+
+  this.app = new _pixi.Application({
+    height: this.height,
+    width: this.width,
+    backgroundColor: 0x000034
+  });
+  document.body.appendChild(this.app.view);
+
+  window.addEventListener('resize', function () {
+    _this.width = window.innerWidth;
+    _this.height = window.innerHeight;
+    _this.app.renderer.resize(_this.width, _this.height);
+  });
 };
 
-function sameLine(r1, r2) {
-  var a = r1[0],
-      b = r1[1],
-      c = r1[2],
-      d = r1[3],
-      p = r2[0],
-      q = r2[1],
-      r = r2[2],
-      s = r2[3];
-  // check if same line
-  if (a == p && b == q && c == r & d == s) {
-    return true;
-  } else if (a == r && b == s && c == p & d == q) {
-    return true;
-  }
-  return false;
-}
-
 /***/ }),
 
-/***/ "./src/js/sprites/node.js":
-/*!********************************!*\
-  !*** ./src/js/sprites/node.js ***!
-  \********************************/
+/***/ "./src/js/GameController.js":
+/*!**********************************!*\
+  !*** ./src/js/GameController.js ***!
+  \**********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -47517,169 +46711,111 @@ function sameLine(r1, r2) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Node = undefined;
+exports.GameController = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Canvas = __webpack_require__(/*! ./Canvas.js */ "./src/js/Canvas.js");
+
+var _StatusDisplay = __webpack_require__(/*! ./StatusDisplay.js */ "./src/js/StatusDisplay.js");
+
+var _AssetManager = __webpack_require__(/*! ./AssetManager.js */ "./src/js/AssetManager.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var GameController = exports.GameController = function () {
+  function GameController() {
+    _classCallCheck(this, GameController);
+
+    console.log('Controller Constructor');
+    this.canvas = new _Canvas.Canvas();
+    this.statusDisplay = new _StatusDisplay.StatusDisplay(this);
+    this.canvas.app.stage.addChild(this.statusDisplay);
+
+    this.statusDisplay.setLabel("Loading...");
+  }
+
+  _createClass(GameController, [{
+    key: 'init',
+    value: function init() {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        _this.assets = new _AssetManager.AssetManager();
+        _this.assets.promise.then(function () {
+
+          resolve();
+        });
+      });
+    }
+  }]);
+
+  return GameController;
+}();
+
+/***/ }),
+
+/***/ "./src/js/StatusDisplay.js":
+/*!*********************************!*\
+  !*** ./src/js/StatusDisplay.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.StatusDisplay = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-var PIXI = _interopRequireWildcard(_pixi);
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
-var _nodes = __webpack_require__(/*! ../../images/nodes.png */ "./src/images/nodes.png");
-
-var _nodes2 = _interopRequireDefault(_nodes);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+var _GameController = __webpack_require__(/*! ./GameController.js */ "./src/js/GameController.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Node = exports.Node = function () {
-  function Node(type, x, y) {
-    _classCallCheck(this, Node);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    if (type == 'A') {
-      this.setA();
-    } else if (type == 'B') {
-      this.setB();
-    } else if (type == 'C') {
-      this.setC();
-    }
-    this.sprite = new PIXI.Sprite(_canvas.nodeTypes[this.min]);
-    this.sprite.buttonMode = true;
-    this.sprite.interactive = true;
-    this.sprite.anchor.set(0.5);
-    this.sprite.scale.set(0.5);
-    this.sprite.position.set(x, y);
-    this.sprite.tap = _canvas.nodeClick;
-    this.sprite.click = _canvas.nodeClick;
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var StatusDisplay = exports.StatusDisplay = function (_Container) {
+  _inherits(StatusDisplay, _Container);
+
+  function StatusDisplay(GameController) {
+    _classCallCheck(this, StatusDisplay);
+
+    return _possibleConstructorReturn(this, (StatusDisplay.__proto__ || Object.getPrototypeOf(StatusDisplay)).call(this));
   }
 
-  _createClass(Node, [{
-    key: 'setA',
-    value: function setA() {
-      this.min = 0;
-      this.max = 1;
-    }
-  }, {
-    key: 'setB',
-    value: function setB() {
-      this.min = 2;
-      this.max = 4;
-    }
-  }, {
-    key: 'setC',
-    value: function setC() {
-      this.min = 5;
-      this.max = 8;
-    }
-  }, {
-    key: 'connect',
-    value: function connect() {
-      if (this.min < this.max) {
-        this.min++;
-        this.sprite.texture = _canvas.nodeTypes[this.min];
-        return true;
-      } else {
-        return false;
+  _createClass(StatusDisplay, [{
+    key: 'setLabel',
+    value: function setLabel(message) {
+      if (this.textSprite === undefined) {
+        var style = new _pixi.TextStyle({
+          fontFamily: "Courier New",
+          fontSize: 50,
+          fill: "#FCBF49"
+        });
+
+        this.textSprite = new _pixi.Text();
+        this.textSprite.x = 30;
+        this.textSprite.y = 60;
+        this.textSprite.style = style;
+        this.addChild(this.textSprite);
       }
-    }
-  }, {
-    key: 'break',
-    value: function _break() {
-      this.min--;
-      this.sprite.texture = _canvas.nodeTypes[this.min];
+
+      this.textSprite.text = message;
+      this.textSprite.x = 10;
+      this.textSprite.y = 10;
     }
   }]);
 
-  return Node;
-}();
-
-/***/ }),
-
-/***/ "./src/js/states/game.js":
-/*!*******************************!*\
-  !*** ./src/js/states/game.js ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.gameMenuTransition = gameMenuTransition;
-exports.gameSetup = gameSetup;
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
-function gameMenuTransition() {
-  _canvas.transRectA.y = 0;
-  _canvas.transRectA.vy = 0.5;
-  _canvas.transRectA.visible = true;
-  _canvas.app.renderer.backgroundColor = 0x000034;
-}
-
-function gameSetup() {
-  (0, _canvas.clearChildren)();
-  _canvas.app.stage.addChild(_canvas.transRectA);
-  gameMenuTransition();
-}
-
-/***/ }),
-
-/***/ "./src/js/states/menu.js":
-/*!*******************************!*\
-  !*** ./src/js/states/menu.js ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.menuSetup = menuSetup;
-exports.menuGameTransition = menuGameTransition;
-
-var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
-
-var PIXI = _interopRequireWildcard(_pixi);
-
-var _canvas = __webpack_require__(/*! ../canvas.js */ "./src/js/canvas.js");
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function menuSetup() {
-  _canvas.buttons[0].visible = true;
-
-  var style = new PIXI.TextStyle({
-    fontFamily: "Courier New",
-    fontSize: 100,
-    fill: "#000034"
-  });
-
-  var message = new PIXI.Text(".Dot.", style);
-  message.anchor.set(0.5, 0.5);
-  message.position.set(_canvas.width / 2, _canvas.height / 3);
-  _canvas.app.stage.addChild(message);
-  _canvas.app.renderer.render(_canvas.app.stage);
-  _canvas.app.renderer.backgroundColor = 0xFCBF49;
-}
-
-function menuGameTransition() {
-  _canvas.transRectB.visible = true;
-  _canvas.transRectB.y = _canvas.height;
-  _canvas.transRectB.vy = 0;
-  _canvas.app.renderer.backgroundColor = 0x000034;
-}
+  return StatusDisplay;
+}(_pixi.Container);
 
 /***/ })
 
