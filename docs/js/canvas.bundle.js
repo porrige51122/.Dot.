@@ -46546,9 +46546,9 @@ new AppInit();
 
 /***/ }),
 
-/***/ "./src/app/core/display/button.js":
+/***/ "./src/app/core/display/Button.js":
 /*!****************************************!*\
-  !*** ./src/app/core/display/button.js ***!
+  !*** ./src/app/core/display/Button.js ***!
   \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -46580,11 +46580,7 @@ var Button = exports.Button = function (_Container) {
     var _this = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this));
 
     _this.bgColor = bgColor;
-    _this.style = new _pixi.TextStyle({
-      fontFamily: "Courier New",
-      fontSize: 75,
-      fill: textColor
-    });
+    _this.textColor = textColor;
     _this.label = label;
     _this.enabled = false;
     return _this;
@@ -46601,17 +46597,24 @@ var Button = exports.Button = function (_Container) {
       if (this.container !== undefined) {
         this.removeChild(this.container);
       }
+      this.style = new _pixi.TextStyle({
+        fontFamily: "Courier New",
+        fontSize: window.innerHeight / 14,
+        fill: this.textColor
+      });
+
+      this.boxX = this.style.fontSize * this.label.length * 0.8;
+      this.boxY = this.style.fontSize * 1.5;
+
       var container = new _pixi.Container();
 
       var box = new _pixi.Graphics();
       box.beginFill(this.bgColor);
-      box.drawRoundedRect(50, 50, 300, 100, 50);
+      box.drawRoundedRect(-this.boxX / 2, -this.boxY / 2, this.boxX, this.boxY, 20);
 
       var text = new _pixi.Text(this.label);
       text.style = this.style;
       text.anchor.set(0.5);
-      text.x = 200;
-      text.y = 100;
 
       container.addChild(box);
       container.addChild(text);
@@ -46622,6 +46625,78 @@ var Button = exports.Button = function (_Container) {
   }]);
 
   return Button;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/core/display/Title.js":
+/*!***************************************!*\
+  !*** ./src/app/core/display/Title.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Title = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Title = exports.Title = function (_Container) {
+  _inherits(Title, _Container);
+
+  function Title(textColor, label) {
+    _classCallCheck(this, Title);
+
+    var _this = _possibleConstructorReturn(this, (Title.__proto__ || Object.getPrototypeOf(Title)).call(this));
+
+    _this.style = new _pixi.TextStyle({
+      fontFamily: "Courier New",
+      fontSize: window.innerHeight / 3,
+      fill: textColor
+    });
+    _this.label = label;
+    _this.enabled = false;
+    return _this;
+  }
+
+  _createClass(Title, [{
+    key: "enable",
+    value: function enable() {
+      if (this.enabled) {
+        return;
+      }
+      this.enabled = true;
+
+      if (this.container !== undefined) {
+        this.removeChild(this.container);
+      }
+      var container = new _pixi.Container();
+
+      var text = new _pixi.Text(this.label);
+      text.style = this.style;
+      text.anchor.set(0.5);
+      text.position.set(0, 0);
+      container.addChild(text);
+
+      this.container = container;
+      this.addChild(this.container);
+    }
+  }]);
+
+  return Title;
 }(_pixi.Container);
 
 /***/ }),
@@ -46761,14 +46836,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-var _start = __webpack_require__(/*! ../../../assets/start.png */ "./src/assets/start.png");
-
-var _start2 = _interopRequireDefault(_start);
-
-var _next = __webpack_require__(/*! ../../../assets/next.png */ "./src/assets/next.png");
-
-var _next2 = _interopRequireDefault(_next);
-
 var _nodes = __webpack_require__(/*! ../../../assets/nodes.png */ "./src/assets/nodes.png");
 
 var _nodes2 = _interopRequireDefault(_nodes);
@@ -46790,7 +46857,7 @@ var AssetManager = exports.AssetManager = function () {
     this.promise = new Promise(function (resolve, reject) {
       _this.loader = new _pixi.Loader();
 
-      _this.loader.add(_next2.default).add(_start2.default).add(_nodes2.default);
+      _this.loader.add(_nodes2.default);
 
       _this.loader.on('progress', _this.loadProgressHandler);
       _this.loader.load(function () {
@@ -46862,7 +46929,7 @@ var LayerManager = exports.LayerManager = function (_Container) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.MenuManager = undefined;
 
@@ -46872,7 +46939,9 @@ var _AssetManager = __webpack_require__(/*! ../assets/AssetManager.js */ "./src/
 
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
 
-var _button = __webpack_require__(/*! ../../core/display/button.js */ "./src/app/core/display/button.js");
+var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
+
+var _Title = __webpack_require__(/*! ../../core/display/Title.js */ "./src/app/core/display/Title.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -46881,24 +46950,37 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var MenuManager = exports.MenuManager = function (_Container) {
-  _inherits(MenuManager, _Container);
+    _inherits(MenuManager, _Container);
 
-  function MenuManager(gameController) {
-    _classCallCheck(this, MenuManager);
+    function MenuManager(gameController) {
+        _classCallCheck(this, MenuManager);
 
-    var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
+        var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
 
-    var assets = gameController.assets;
-    _this.startButton = new _button.Button(0x000034, 0xFCBF49, 'Start');
-    _this.startButton.buttonMode = true;
-    _this.startButton.interactive = true;
+        _this.startButton = new _Button.Button(0x000034, 0xFCBF49, 'Level Select');
+        _this.startButton.x = window.innerWidth / 2;
+        _this.startButton.y = window.innerHeight / 8 * 5;
+        _this.startButton.buttonMode = true;
+        _this.startButton.interactive = true;
 
-    _this.startButton.enable();
-    _this.addChild(_this.startButton);
-    return _this;
-  }
+        _this.challengeButton = new _Button.Button(0x000034, 0xFCBF49, 'Daily Challenge');
+        _this.challengeButton.x = window.innerWidth / 2;
+        _this.challengeButton.y = window.innerHeight / 8 * 7;
+        _this.challengeButton.buttonMode = true;
+        _this.challengeButton.interactive = true;
 
-  return MenuManager;
+        _this.title = new _Title.Title(0x000034, '.Dot.');
+        _this.title.x = window.innerWidth / 2;
+        _this.title.y = window.innerHeight / 4;
+
+        _this.startButton.enable();
+        _this.challengeButton.enable();
+        _this.title.enable();
+        _this.addChild(_this.startButton, _this.challengeButton, _this.title);
+        return _this;
+    }
+
+    return MenuManager;
 }(_pixi.Container);
 
 /***/ }),
@@ -46967,19 +47049,6 @@ var StatusDisplay = exports.StatusDisplay = function (_Container) {
 
 /***/ }),
 
-/***/ "./src/assets/next.png":
-/*!*****************************!*\
-  !*** ./src/assets/next.png ***!
-  \*****************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "eebd13865c47d7f400d8408eaf620fcf.png");
-
-/***/ }),
-
 /***/ "./src/assets/nodes.png":
 /*!******************************!*\
   !*** ./src/assets/nodes.png ***!
@@ -46990,19 +47059,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "c3cbd35e75acc9c67b5a08fbb5b2150c.png");
-
-/***/ }),
-
-/***/ "./src/assets/start.png":
-/*!******************************!*\
-  !*** ./src/assets/start.png ***!
-  \******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "7b3c4474be21ca456c1e9bfde6aaa4f8.png");
 
 /***/ })
 

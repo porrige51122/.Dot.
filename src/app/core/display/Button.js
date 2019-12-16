@@ -4,11 +4,7 @@ export class Button extends Container {
   constructor(bgColor, textColor, label) {
     super();
     this.bgColor = bgColor;
-    this.style = new TextStyle({
-      fontFamily: "Courier New",
-      fontSize: 75,
-      fill: textColor
-    });
+    this.textColor = textColor
     this.label = label;
     this.enabled = false;
   }
@@ -22,17 +18,24 @@ export class Button extends Container {
     if (this.container !== undefined) {
       this.removeChild(this.container);
     }
+    this.style = new TextStyle({
+      fontFamily: "Courier New",
+      fontSize: window.innerHeight/14,
+      fill: this.textColor
+    });
+
+    this.boxX = this.style.fontSize * this.label.length * 0.8;
+    this.boxY = this.style.fontSize * 1.5;
+
     let container = new Container();
 
     let box = new Graphics();
     box.beginFill(this.bgColor);
-    box.drawRoundedRect(50, 50, 300, 100, 50);
+    box.drawRoundedRect(-this.boxX/2, -this.boxY/2, this.boxX, this.boxY, 20);
 
     let text = new Text(this.label);
     text.style = this.style;
     text.anchor.set(0.5);
-    text.x = 200;
-    text.y = 100;
 
     container.addChild(box);
     container.addChild(text);

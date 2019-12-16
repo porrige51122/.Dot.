@@ -1,7 +1,5 @@
 import { Loader } from 'pixi.js';
 
-import StartButton from '../../../assets/start.png';
-import NextButton from '../../../assets/next.png';
 import Nodes from '../../../assets/nodes.png';
 
 /**
@@ -13,9 +11,7 @@ export class AssetManager {
     this.promise = new Promise((resolve, reject) => {
       this.loader = new Loader();
 
-      this.loader.add(NextButton)
-                 .add(StartButton)
-                 .add(Nodes);
+      this.loader.add(Nodes);
 
       this.loader.on('progress', this.loadProgressHandler)
       this.loader.load(() => {
