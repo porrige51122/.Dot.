@@ -1,6 +1,6 @@
 import { utils } from 'pixi.js';
 
-import { GameController } from './js/GameController.js';
+import { GameController } from './game/GameController.js';
 
 /**
  * AppInit Class
@@ -12,7 +12,7 @@ class AppInit {
     let gameController = new GameController();
 
     gameController.init().then(() => {
-      console.log('Game Ready');
+      console.log("Game Loaded");
     })
   }
 

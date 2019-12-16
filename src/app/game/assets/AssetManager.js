@@ -1,8 +1,8 @@
 import { Loader } from 'pixi.js';
 
-import StartButton from '../images/start.png';
-import NextButton from '../images/next.png';
-import Nodes from '../images/nodes.png';
+import StartButton from '../../../assets/start.png';
+import NextButton from '../../../assets/next.png';
+import Nodes from '../../../assets/nodes.png';
 
 /**
  * Asset Manager class

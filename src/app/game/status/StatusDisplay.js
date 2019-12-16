@@ -1,6 +1,6 @@
 import { Container, Text, TextStyle } from 'pixi.js';
 
-import { GameController } from './GameController.js';
+import { GameController } from '../GameController.js';
 
 export class StatusDisplay extends Container {
   constructor(GameController) {
@@ -11,8 +11,8 @@ export class StatusDisplay extends Container {
     if (this.textSprite === undefined) {
       let style = new TextStyle({
         fontFamily: "Courier New",
-        fontSize: 50,
-        fill: "#FCBF49"
+        fontSize: 30,
+        fill: "#000034"
       });
 
       this.textSprite = new Text();

@@ -8,7 +8,7 @@ export class Canvas {
     this.app = new Application({
       height: this.height,
       width: this.width,
-      backgroundColor : 0x000034
+      backgroundColor : 0xFCBF49
     });
     document.body.appendChild(this.app.view)
 

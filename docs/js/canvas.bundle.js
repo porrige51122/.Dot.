@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/AppInit.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/app/AppInit.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -46507,10 +46507,10 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./src/AppInit.js":
-/*!************************!*\
-  !*** ./src/AppInit.js ***!
-  \************************/
+/***/ "./src/app/AppInit.js":
+/*!****************************!*\
+  !*** ./src/app/AppInit.js ***!
+  \****************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -46519,7 +46519,7 @@ module.exports = function(module) {
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-var _GameController = __webpack_require__(/*! ./js/GameController.js */ "./src/js/GameController.js");
+var _GameController = __webpack_require__(/*! ./game/GameController.js */ "./src/app/game/GameController.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -46534,7 +46534,7 @@ var AppInit = function AppInit() {
   var gameController = new _GameController.GameController();
 
   gameController.init().then(function () {
-    console.log('Game Ready');
+    console.log("Game Loaded");
   });
 };
 
@@ -46546,49 +46546,127 @@ new AppInit();
 
 /***/ }),
 
-/***/ "./src/images/next.png":
-/*!*****************************!*\
-  !*** ./src/images/next.png ***!
-  \*****************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/app/core/display/Canvas.js":
+/*!****************************************!*\
+  !*** ./src/app/core/display/Canvas.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "eebd13865c47d7f400d8408eaf620fcf.png");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Canvas = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Canvas = exports.Canvas = function Canvas() {
+  var _this = this;
+
+  _classCallCheck(this, Canvas);
+
+  this.height = window.innerHeight;
+  this.width = window.innerWidth;
+
+  this.app = new _pixi.Application({
+    height: this.height,
+    width: this.width,
+    backgroundColor: 0xFCBF49
+  });
+  document.body.appendChild(this.app.view);
+
+  window.addEventListener('resize', function () {
+    _this.width = window.innerWidth;
+    _this.height = window.innerHeight;
+    _this.app.renderer.resize(_this.width, _this.height);
+  });
+};
 
 /***/ }),
 
-/***/ "./src/images/nodes.png":
-/*!******************************!*\
-  !*** ./src/images/nodes.png ***!
-  \******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./src/app/game/GameController.js":
+/*!****************************************!*\
+  !*** ./src/app/game/GameController.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "c3cbd35e75acc9c67b5a08fbb5b2150c.png");
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.GameController = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Canvas = __webpack_require__(/*! ../core/display/Canvas.js */ "./src/app/core/display/Canvas.js");
+
+var _StatusDisplay = __webpack_require__(/*! ./status/StatusDisplay.js */ "./src/app/game/status/StatusDisplay.js");
+
+var _AssetManager = __webpack_require__(/*! ./assets/AssetManager.js */ "./src/app/game/assets/AssetManager.js");
+
+var _LayerManager = __webpack_require__(/*! ./layers/LayerManager.js */ "./src/app/game/layers/LayerManager.js");
+
+var _MenuManager = __webpack_require__(/*! ./menu/MenuManager.js */ "./src/app/game/menu/MenuManager.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var GameController = exports.GameController = function () {
+  function GameController() {
+    _classCallCheck(this, GameController);
+
+    console.log('Controller Constructor');
+    this.canvas = new _Canvas.Canvas();
+    this.statusDisplay = new _StatusDisplay.StatusDisplay(this);
+    this.canvas.app.stage.addChild(this.statusDisplay);
+
+    this.statusDisplay.setLabel("Loading...");
+  }
+
+  _createClass(GameController, [{
+    key: 'init',
+    value: function init() {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        _this.assets = new _AssetManager.AssetManager();
+        _this.assets.promise.then(function () {
+
+          _this.layers = new _LayerManager.LayerManager(_this);
+          _this.canvas.app.stage.addChild(_this.layers);
+
+          _this.menu = new _MenuManager.MenuManager(_this);
+          _this.canvas.app.stage.addChild(_this.menu);
+
+          _this.canvas.app.stage.setChildIndex(_this.statusDisplay, _this.canvas.app.stage.children.length - 1);
+          _pixi.Ticker.shared.add(function () {
+            var str = _pixi.Ticker.shared.FPS.toFixed(0).toString() + "FPS";
+            _this.statusDisplay.setLabel(str);
+          });
+          resolve();
+        });
+      });
+    }
+  }]);
+
+  return GameController;
+}();
 
 /***/ }),
 
-/***/ "./src/images/start.png":
-/*!******************************!*\
-  !*** ./src/images/start.png ***!
-  \******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "7b3c4474be21ca456c1e9bfde6aaa4f8.png");
-
-/***/ }),
-
-/***/ "./src/js/AssetManager.js":
-/*!********************************!*\
-  !*** ./src/js/AssetManager.js ***!
-  \********************************/
+/***/ "./src/app/game/assets/AssetManager.js":
+/*!*********************************************!*\
+  !*** ./src/app/game/assets/AssetManager.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -46604,15 +46682,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-var _start = __webpack_require__(/*! ../images/start.png */ "./src/images/start.png");
+var _start = __webpack_require__(/*! ../../../assets/start.png */ "./src/assets/start.png");
 
 var _start2 = _interopRequireDefault(_start);
 
-var _next = __webpack_require__(/*! ../images/next.png */ "./src/images/next.png");
+var _next = __webpack_require__(/*! ../../../assets/next.png */ "./src/assets/next.png");
 
 var _next2 = _interopRequireDefault(_next);
 
-var _nodes = __webpack_require__(/*! ../images/nodes.png */ "./src/images/nodes.png");
+var _nodes = __webpack_require__(/*! ../../../assets/nodes.png */ "./src/assets/nodes.png");
 
 var _nodes2 = _interopRequireDefault(_nodes);
 
@@ -46655,10 +46733,10 @@ var AssetManager = exports.AssetManager = function () {
 
 /***/ }),
 
-/***/ "./src/js/Canvas.js":
-/*!**************************!*\
-  !*** ./src/js/Canvas.js ***!
-  \**************************/
+/***/ "./src/app/game/layers/LayerManager.js":
+/*!*********************************************!*\
+  !*** ./src/app/game/layers/LayerManager.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -46668,40 +46746,36 @@ var AssetManager = exports.AssetManager = function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Canvas = undefined;
+exports.LayerManager = undefined;
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Canvas = exports.Canvas = function Canvas() {
-  var _this = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  _classCallCheck(this, Canvas);
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-  this.height = window.innerHeight;
-  this.width = window.innerWidth;
+var LayerManager = exports.LayerManager = function (_Container) {
+  _inherits(LayerManager, _Container);
 
-  this.app = new _pixi.Application({
-    height: this.height,
-    width: this.width,
-    backgroundColor: 0x000034
-  });
-  document.body.appendChild(this.app.view);
+  function LayerManager(GameController) {
+    _classCallCheck(this, LayerManager);
 
-  window.addEventListener('resize', function () {
-    _this.width = window.innerWidth;
-    _this.height = window.innerHeight;
-    _this.app.renderer.resize(_this.width, _this.height);
-  });
-};
+    return _possibleConstructorReturn(this, (LayerManager.__proto__ || Object.getPrototypeOf(LayerManager)).call(this));
+  }
+
+  return LayerManager;
+}(_pixi.Container);
 
 /***/ }),
 
-/***/ "./src/js/GameController.js":
-/*!**********************************!*\
-  !*** ./src/js/GameController.js ***!
-  \**********************************/
+/***/ "./src/app/game/menu/MenuManager.js":
+/*!******************************************!*\
+  !*** ./src/app/game/menu/MenuManager.js ***!
+  \******************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -46711,54 +46785,36 @@ var Canvas = exports.Canvas = function Canvas() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.GameController = undefined;
+exports.MenuManager = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-var _Canvas = __webpack_require__(/*! ./Canvas.js */ "./src/js/Canvas.js");
-
-var _StatusDisplay = __webpack_require__(/*! ./StatusDisplay.js */ "./src/js/StatusDisplay.js");
-
-var _AssetManager = __webpack_require__(/*! ./AssetManager.js */ "./src/js/AssetManager.js");
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GameController = exports.GameController = function () {
-  function GameController() {
-    _classCallCheck(this, GameController);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    console.log('Controller Constructor');
-    this.canvas = new _Canvas.Canvas();
-    this.statusDisplay = new _StatusDisplay.StatusDisplay(this);
-    this.canvas.app.stage.addChild(this.statusDisplay);
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-    this.statusDisplay.setLabel("Loading...");
+var MenuManager = exports.MenuManager = function (_Container) {
+  _inherits(MenuManager, _Container);
+
+  function MenuManager(GameController) {
+    _classCallCheck(this, MenuManager);
+
+    return _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
   }
 
-  _createClass(GameController, [{
-    key: 'init',
-    value: function init() {
-      var _this = this;
-
-      return new Promise(function (resolve, reject) {
-        _this.assets = new _AssetManager.AssetManager();
-        _this.assets.promise.then(function () {
-
-          resolve();
-        });
-      });
-    }
-  }]);
-
-  return GameController;
-}();
+  return MenuManager;
+}(_pixi.Container);
 
 /***/ }),
 
-/***/ "./src/js/StatusDisplay.js":
-/*!*********************************!*\
-  !*** ./src/js/StatusDisplay.js ***!
-  \*********************************/
+/***/ "./src/app/game/status/StatusDisplay.js":
+/*!**********************************************!*\
+  !*** ./src/app/game/status/StatusDisplay.js ***!
+  \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -46774,7 +46830,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-var _GameController = __webpack_require__(/*! ./GameController.js */ "./src/js/GameController.js");
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -46797,8 +46853,8 @@ var StatusDisplay = exports.StatusDisplay = function (_Container) {
       if (this.textSprite === undefined) {
         var style = new _pixi.TextStyle({
           fontFamily: "Courier New",
-          fontSize: 50,
-          fill: "#FCBF49"
+          fontSize: 30,
+          fill: "#000034"
         });
 
         this.textSprite = new _pixi.Text();
@@ -46816,6 +46872,45 @@ var StatusDisplay = exports.StatusDisplay = function (_Container) {
 
   return StatusDisplay;
 }(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/assets/next.png":
+/*!*****************************!*\
+  !*** ./src/assets/next.png ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "eebd13865c47d7f400d8408eaf620fcf.png");
+
+/***/ }),
+
+/***/ "./src/assets/nodes.png":
+/*!******************************!*\
+  !*** ./src/assets/nodes.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "c3cbd35e75acc9c67b5a08fbb5b2150c.png");
+
+/***/ }),
+
+/***/ "./src/assets/start.png":
+/*!******************************!*\
+  !*** ./src/assets/start.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "7b3c4474be21ca456c1e9bfde6aaa4f8.png");
 
 /***/ })
 
