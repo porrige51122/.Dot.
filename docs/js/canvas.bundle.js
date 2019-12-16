@@ -46546,9 +46546,89 @@ new AppInit();
 
 /***/ }),
 
-/***/ "./src/app/core/display/Canvas.js":
+/***/ "./src/app/core/display/button.js":
 /*!****************************************!*\
-  !*** ./src/app/core/display/Canvas.js ***!
+  !*** ./src/app/core/display/button.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Button = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Button = exports.Button = function (_Container) {
+  _inherits(Button, _Container);
+
+  function Button(bgColor, textColor, label) {
+    _classCallCheck(this, Button);
+
+    var _this = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this));
+
+    _this.bgColor = bgColor;
+    _this.style = new _pixi.TextStyle({
+      fontFamily: "Courier New",
+      fontSize: 75,
+      fill: textColor
+    });
+    _this.label = label;
+    _this.enabled = false;
+    return _this;
+  }
+
+  _createClass(Button, [{
+    key: "enable",
+    value: function enable() {
+      if (this.enabled) {
+        return;
+      }
+      this.enabled = true;
+
+      if (this.container !== undefined) {
+        this.removeChild(this.container);
+      }
+      var container = new _pixi.Container();
+
+      var box = new _pixi.Graphics();
+      box.beginFill(this.bgColor);
+      box.drawRoundedRect(50, 50, 300, 100, 50);
+
+      var text = new _pixi.Text(this.label);
+      text.style = this.style;
+      text.anchor.set(0.5);
+      text.x = 200;
+      text.y = 100;
+
+      container.addChild(box);
+      container.addChild(text);
+
+      this.container = container;
+      this.addChild(this.container);
+    }
+  }]);
+
+  return Button;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/core/helpers/Canvas.js":
+/*!****************************************!*\
+  !*** ./src/app/core/helpers/Canvas.js ***!
   \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -46608,7 +46688,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-var _Canvas = __webpack_require__(/*! ../core/display/Canvas.js */ "./src/app/core/display/Canvas.js");
+var _Canvas = __webpack_require__(/*! ../core/helpers/Canvas.js */ "./src/app/core/helpers/Canvas.js");
 
 var _StatusDisplay = __webpack_require__(/*! ./status/StatusDisplay.js */ "./src/app/game/status/StatusDisplay.js");
 
@@ -46624,7 +46704,6 @@ var GameController = exports.GameController = function () {
   function GameController() {
     _classCallCheck(this, GameController);
 
-    console.log('Controller Constructor');
     this.canvas = new _Canvas.Canvas();
     this.statusDisplay = new _StatusDisplay.StatusDisplay(this);
     this.canvas.app.stage.addChild(this.statusDisplay);
@@ -46789,7 +46868,11 @@ exports.MenuManager = undefined;
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
+var _AssetManager = __webpack_require__(/*! ../assets/AssetManager.js */ "./src/app/game/assets/AssetManager.js");
+
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+var _button = __webpack_require__(/*! ../../core/display/button.js */ "./src/app/core/display/button.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -46800,10 +46883,19 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MenuManager = exports.MenuManager = function (_Container) {
   _inherits(MenuManager, _Container);
 
-  function MenuManager(GameController) {
+  function MenuManager(gameController) {
     _classCallCheck(this, MenuManager);
 
-    return _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
+    var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
+
+    var assets = gameController.assets;
+    _this.startButton = new _button.Button(0x000034, 0xFCBF49, 'Start');
+    _this.startButton.buttonMode = true;
+    _this.startButton.interactive = true;
+
+    _this.startButton.enable();
+    _this.addChild(_this.startButton);
+    return _this;
   }
 
   return MenuManager;

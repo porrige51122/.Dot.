@@ -1,6 +1,6 @@
 import { Ticker } from 'pixi.js';
 
-import { Canvas } from '../core/display/Canvas.js';
+import { Canvas } from '../core/helpers/Canvas.js';
 import { StatusDisplay } from './status/StatusDisplay.js'
 import { AssetManager } from './assets/AssetManager.js';
 import { LayerManager } from './layers/LayerManager.js';
@@ -8,7 +8,6 @@ import { MenuManager } from './menu/MenuManager.js';
 
 export class GameController {
   constructor() {
-    console.log('Controller Constructor');
     this.canvas = new Canvas();
     this.statusDisplay = new StatusDisplay(this);
     this.canvas.app.stage.addChild(this.statusDisplay);
