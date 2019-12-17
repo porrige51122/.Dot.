@@ -46918,10 +46918,10 @@ var LayerManager = exports.LayerManager = function (_Container) {
 
 /***/ }),
 
-/***/ "./src/app/game/menu/MenuManager.js":
-/*!******************************************!*\
-  !*** ./src/app/game/menu/MenuManager.js ***!
-  \******************************************/
+/***/ "./src/app/game/menu/MainMenu.js":
+/*!***************************************!*\
+  !*** ./src/app/game/menu/MainMenu.js ***!
+  \***************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -46931,7 +46931,7 @@ var LayerManager = exports.LayerManager = function (_Container) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.MenuManager = undefined;
+exports.MainMenu = undefined;
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
@@ -46949,13 +46949,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MenuManager = exports.MenuManager = function (_Container) {
-    _inherits(MenuManager, _Container);
+var MainMenu = exports.MainMenu = function (_Container) {
+    _inherits(MainMenu, _Container);
 
-    function MenuManager(gameController) {
-        _classCallCheck(this, MenuManager);
+    function MainMenu(gameController) {
+        _classCallCheck(this, MainMenu);
 
-        var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
+        var _this = _possibleConstructorReturn(this, (MainMenu.__proto__ || Object.getPrototypeOf(MainMenu)).call(this));
 
         _this.startButton = new _Button.Button(0x000034, 0xFCBF49, 'Level Select');
         _this.startButton.x = window.innerWidth / 2;
@@ -46980,7 +46980,52 @@ var MenuManager = exports.MenuManager = function (_Container) {
         return _this;
     }
 
-    return MenuManager;
+    return MainMenu;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/menu/MenuManager.js":
+/*!******************************************!*\
+  !*** ./src/app/game/menu/MenuManager.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MenuManager = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _MainMenu = __webpack_require__(/*! ./MainMenu.js */ "./src/app/game/menu/MainMenu.js");
+
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MenuManager = exports.MenuManager = function (_Container) {
+  _inherits(MenuManager, _Container);
+
+  function MenuManager(gameController) {
+    _classCallCheck(this, MenuManager);
+
+    var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
+
+    _this.mainMenu = new _MainMenu.MainMenu(gameController);
+    _this.addChild(_this.mainMenu);
+    return _this;
+  }
+
+  return MenuManager;
 }(_pixi.Container);
 
 /***/ }),
