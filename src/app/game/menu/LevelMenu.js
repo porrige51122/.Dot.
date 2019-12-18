@@ -5,10 +5,10 @@ import { Button } from '../../core/display/Button.js';
 import { Title } from '../../core/display/Title.js'
 
 export class LevelMenu extends Container {
-  constructor(gameController) {
+  constructor(controller) {
     super();
-    let w = gameController.canvas.width;
-    let h = gameController.canvas.height;
+    let w = controller.canvas.width;
+    let h = controller.canvas.height;
 
     this.buttons = [];
 
@@ -22,5 +22,16 @@ export class LevelMenu extends Container {
       this.buttons.push(but);
       this.addChild(but);
     }
+
+    this.back = new Button(0x000034, 0xFCBF49, "Back", w, h);
+    this.back.x = w - (w / 10);
+    this.back.y = h / 8;
+    this.back.buttonMode = true;
+    this.back.interactive = true;
+    this.back.enable();
+    this.addChild(this.back);
+    this.back.on('pointertap', () => {
+      controller.menu.transition(controller.menu.levelMenu, controller.menu.mainMenu);
+    });
   }
 }

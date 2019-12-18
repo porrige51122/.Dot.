@@ -15,10 +15,7 @@ export class MainMenu extends Container {
     this.startButton.y = (h/8 * 5);
     this.startButton.buttonMode = true;
     this.startButton.interactive = true;
-    this.startButton.on('click', () => {
-      controller.menu.transition(controller.menu.mainMenu, controller.menu.levelMenu);
-    });
-    this.startButton.on('tap', () => {
+    this.startButton.on('pointertap', () => {
       controller.menu.transition(controller.menu.mainMenu, controller.menu.levelMenu);
     });
 

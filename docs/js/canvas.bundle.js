@@ -46972,13 +46972,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LevelMenu = exports.LevelMenu = function (_Container) {
   _inherits(LevelMenu, _Container);
 
-  function LevelMenu(gameController) {
+  function LevelMenu(controller) {
     _classCallCheck(this, LevelMenu);
 
     var _this = _possibleConstructorReturn(this, (LevelMenu.__proto__ || Object.getPrototypeOf(LevelMenu)).call(this));
 
-    var w = gameController.canvas.width;
-    var h = gameController.canvas.height;
+    var w = controller.canvas.width;
+    var h = controller.canvas.height;
 
     _this.buttons = [];
 
@@ -46992,6 +46992,17 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       _this.buttons.push(but);
       _this.addChild(but);
     }
+
+    _this.back = new _Button.Button(0x000034, 0xFCBF49, "Back", w, h);
+    _this.back.x = w - w / 10;
+    _this.back.y = h / 8;
+    _this.back.buttonMode = true;
+    _this.back.interactive = true;
+    _this.back.enable();
+    _this.addChild(_this.back);
+    _this.back.on('pointertap', function () {
+      controller.menu.transition(controller.menu.levelMenu, controller.menu.mainMenu);
+    });
     return _this;
   }
 
@@ -47045,10 +47056,7 @@ var MainMenu = exports.MainMenu = function (_Container) {
     _this.startButton.y = h / 8 * 5;
     _this.startButton.buttonMode = true;
     _this.startButton.interactive = true;
-    _this.startButton.on('click', function () {
-      controller.menu.transition(controller.menu.mainMenu, controller.menu.levelMenu);
-    });
-    _this.startButton.on('tap', function () {
+    _this.startButton.on('pointertap', function () {
       controller.menu.transition(controller.menu.mainMenu, controller.menu.levelMenu);
     });
 
