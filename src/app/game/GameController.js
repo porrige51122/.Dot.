@@ -3,7 +3,7 @@ import { Ticker } from 'pixi.js';
 import { Canvas } from '../core/helpers/Canvas.js';
 import { StatusDisplay } from './status/StatusDisplay.js'
 import { AssetManager } from './assets/AssetManager.js';
-import { LayerManager } from './layers/LayerManager.js';
+import { LevelManager } from './levels/LevelManager.js';
 import { MenuManager } from './menu/MenuManager.js';
 
 export class GameController {
@@ -19,8 +19,8 @@ export class GameController {
       this.assets = new AssetManager();
       this.assets.promise.then(() => {
 
-        this.layers = new LayerManager(this);
-        this.canvas.app.stage.addChild(this.layers);
+        this.levels = new LevelManager(this);
+        this.canvas.app.stage.addChild(this.levels);
 
         this.menu = new MenuManager(this);
         this.canvas.app.stage.addChild(this.menu);

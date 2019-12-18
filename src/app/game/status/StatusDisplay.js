@@ -11,13 +11,13 @@ export class StatusDisplay extends Container {
     if (this.textSprite === undefined) {
       let style = new TextStyle({
         fontFamily: "Courier New",
-        fontSize: 30,
+        fontSize: 15,
         fill: "#000034"
       });
 
       this.textSprite = new Text();
-      this.textSprite.x = 30;
-      this.textSprite.y = 60;
+      this.textSprite.x = 20;
+      this.textSprite.y = 20;
       this.textSprite.style = style;
       this.addChild(this.textSprite);
     }
