@@ -46647,7 +46647,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 var mainBG = exports.mainBG = 0xFCBF49,
     mainFG = exports.mainFG = 0x000034,
-    mainText = exports.mainText = 0xFCBF49;
+    mainText = exports.mainText = 0xFCBF49,
+    secondaryBG = exports.secondaryBG = 0x00034,
+    secondaryTitle = exports.secondaryTitle = 0xFcBF49;
 
 /***/ }),
 
@@ -46992,6 +46994,132 @@ var AssetManager = exports.AssetManager = function () {
 
 /***/ }),
 
+/***/ "./src/app/game/levels/LevelBackground.js":
+/*!************************************************!*\
+  !*** ./src/app/game/levels/LevelBackground.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LevelBackground = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var colors = _interopRequireWildcard(_Colors);
+
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LevelBackground = exports.LevelBackground = function (_Container) {
+  _inherits(LevelBackground, _Container);
+
+  function LevelBackground(GameController) {
+    _classCallCheck(this, LevelBackground);
+
+    var _this = _possibleConstructorReturn(this, (LevelBackground.__proto__ || Object.getPrototypeOf(LevelBackground)).call(this));
+
+    var w = GameController.canvas.width;
+    var h = GameController.canvas.height;
+
+    _this.background = new _pixi.Graphics();
+    _this.background.beginFill(colors.secondaryBG);
+    _this.background.drawRect(0, 0, w, h);
+    _this.addChild(_this.background);
+    return _this;
+  }
+
+  return LevelBackground;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/levels/LevelForeground.js":
+/*!************************************************!*\
+  !*** ./src/app/game/levels/LevelForeground.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LevelForeground = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var colors = _interopRequireWildcard(_Colors);
+
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
+
+var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LevelForeground = exports.LevelForeground = function (_Container) {
+  _inherits(LevelForeground, _Container);
+
+  function LevelForeground(GameController) {
+    _classCallCheck(this, LevelForeground);
+
+    var _this = _possibleConstructorReturn(this, (LevelForeground.__proto__ || Object.getPrototypeOf(LevelForeground)).call(this));
+
+    var w = GameController.canvas.width;
+    var h = GameController.canvas.height;
+
+    _this.title = new _Heading.Heading(colors.secondaryTitle, 'Level ' + (GameController.levels.level + 1), w, h);
+    _this.title.x = w / 2;
+    _this.title.y = h / 10;
+    _this.title.enable();
+    _this.addChild(_this.title);
+
+    _this.back = new _Button.Button(colors.mainText, colors.mainFG, "Back", w, h);
+    _this.back.x = w - w / 10;
+    _this.back.y = h / 8;
+    _this.back.buttonMode = true;
+    _this.back.interactive = true;
+    _this.back.enable();
+    _this.addChild(_this.back);
+    _this.back.on('pointertap', function () {
+      GameController.menu.transitionFade(GameController.levels, GameController.menu.levelMenu);
+    });
+    return _this;
+  }
+
+  return LevelForeground;
+}(_pixi.Container);
+
+/***/ }),
+
 /***/ "./src/app/game/levels/LevelManager.js":
 /*!*********************************************!*\
   !*** ./src/app/game/levels/LevelManager.js ***!
@@ -47013,6 +47141,10 @@ var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.
 
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
 
+var _LevelBackground = __webpack_require__(/*! ./LevelBackground.js */ "./src/app/game/levels/LevelBackground.js");
+
+var _LevelForeground = __webpack_require__(/*! ./LevelForeground.js */ "./src/app/game/levels/LevelForeground.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -47028,14 +47160,21 @@ var LevelManager = exports.LevelManager = function (_Container) {
     var _this = _possibleConstructorReturn(this, (LevelManager.__proto__ || Object.getPrototypeOf(LevelManager)).call(this));
 
     _this.level = 0;
+    _this.gt = GameController;
+    _this.background = new _LevelBackground.LevelBackground(GameController);
+    _this.background.visible = false;
+    _this.addChild(_this.background);
     return _this;
   }
 
   _createClass(LevelManager, [{
-    key: 'startLevel',
-    value: function startLevel(level) {
-      this.level = level;
-      console.log(this.level);
+    key: 'buildLevel',
+    value: function buildLevel() {
+      this.removeChild(this.fg);
+      this.fg = new _LevelForeground.LevelForeground(this.gt);
+      this.background.visible = true;
+      this.fg.visible = true;
+      this.addChild(this.fg);
     }
   }]);
 
@@ -47170,8 +47309,9 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       but.interactive = true;
       but.enable();
       but.on('pointertap', function () {
-        controller.menu.transitionFade(controller.menu.levelMenu);
-        controller.levels.startLevel(i);
+        controller.levels.level = i;
+        controller.levels.buildLevel();
+        controller.menu.transitionFade(controller.menu.levelMenu, controller.levels);
       });
 
       _this.buttons.push(but);
@@ -47331,14 +47471,15 @@ var MenuManager = exports.MenuManager = function (_Container) {
     _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
     _this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
 
-    _this.mainMenu.visible = true;
-    _this.levelMenu.visible = false;
+    _this.mainMenu.visible = false;
+    _this.levelMenu.visible = true;
     _this.dailyMenu.visible = false;
 
     _this.a;
     _this.b;
     _this.slide = false;
-    _this.fade = false;
+    _this.fadein = false;
+    _this.fadeout = false;
 
     _pixi.Ticker.shared.add(_this.ticker, _this);
 
@@ -47360,12 +47501,23 @@ var MenuManager = exports.MenuManager = function (_Container) {
           this.a.y += this.a.vy;
           this.b.y += this.a.vy;
         }
-      } else if (this.fade) {
+      }
+      if (this.fadeout) {
         this.a.alpha -= 0.01;
+        if (!this.fadein && this.a.alpha < 0.25) {
+          this.fadein = true;
+        }
         if (this.a.alpha < 0) {
           this.a.visible = false;
           this.a.alpha = 1;
-          this.fade = false;
+          this.fadeout = false;
+        }
+      }
+      if (this.fadein) {
+        this.b.alpha += 0.01;
+        if (this.b.alpha > 1) {
+          this.b.alpha = 1;
+          this.fadein = false;
         }
       }
     }
@@ -47384,12 +47536,17 @@ var MenuManager = exports.MenuManager = function (_Container) {
     }
   }, {
     key: 'transitionFade',
-    value: function transitionFade(a) {
+    value: function transitionFade(a, b) {
       a.vy = 0;
       a.y = 0;
       a.alpha = 1;
+      b.vy = 0;
+      b.y = 0;
+      b.alpha = 0;
+      b.visible = true;
       this.a = a;
-      this.fade = true;
+      this.b = b;
+      this.fadeout = true;
     }
   }]);
 

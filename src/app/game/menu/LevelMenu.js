@@ -21,8 +21,9 @@ export class LevelMenu extends Container {
       but.interactive = true;
       but.enable();
       but.on('pointertap', () => {
-        controller.menu.transitionFade(controller.menu.levelMenu);
-        controller.levels.startLevel(i);
+        controller.levels.level = i;
+        controller.levels.buildLevel();
+        controller.menu.transitionFade(controller.menu.levelMenu, controller.levels);
       });
 
       this.buttons.push(but);

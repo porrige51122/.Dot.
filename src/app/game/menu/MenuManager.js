@@ -14,14 +14,15 @@ export class MenuManager extends Container {
     this.levelMenu = new LevelMenu(gameController);
     this.dailyMenu = new DailyMenu(gameController);
 
-    this.mainMenu.visible = true;
-    this.levelMenu.visible = false;
+    this.mainMenu.visible = false;
+    this.levelMenu.visible = true;
     this.dailyMenu.visible = false;
 
     this.a;
     this.b;
     this.slide = false;
-    this.fade = false;
+    this.fadein = false;
+    this.fadeout = false;
 
     Ticker.shared.add(this.ticker, this);
 
@@ -40,13 +41,23 @@ export class MenuManager extends Container {
         this.a.y += this.a.vy;
         this.b.y += this.a.vy;
       }
-
-    } else if (this.fade) {
+    }
+    if (this.fadeout) {
       this.a.alpha -= 0.01;
+      if (!this.fadein && this.a.alpha < 0.25) {
+        this.fadein = true;
+      }
       if (this.a.alpha < 0) {
-        this.a.visible = false
+        this.a.visible = false;
         this.a.alpha = 1;
-        this.fade = false;
+        this.fadeout = false;
+      }
+    }
+    if (this.fadein) {
+      this.b.alpha += 0.01;
+      if (this.b.alpha > 1) {
+        this.b.alpha = 1;
+        this.fadein = false;
       }
     }
   }
@@ -63,11 +74,16 @@ export class MenuManager extends Container {
     this.slide = true;
   }
 
-  transitionFade(a) {
+  transitionFade(a, b) {
     a.vy = 0;
     a.y = 0;
     a.alpha = 1;
+    b.vy = 0;
+    b.y = 0
+    b.alpha = 0;
+    b.visible = true;
     this.a = a;
-    this.fade = true;
+    this.b = b;
+    this.fadeout = true;
   }
 }
