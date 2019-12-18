@@ -46557,7 +46557,7 @@ new AppInit();
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.Button = undefined;
 
@@ -46572,59 +46572,62 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Button = exports.Button = function (_Container) {
-  _inherits(Button, _Container);
+    _inherits(Button, _Container);
 
-  function Button(bgColor, textColor, label) {
-    _classCallCheck(this, Button);
+    function Button(bgColor, textColor, label, w, h) {
+        _classCallCheck(this, Button);
 
-    var _this = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this));
+        var _this = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this));
 
-    _this.bgColor = bgColor;
-    _this.textColor = textColor;
-    _this.label = label;
-    _this.enabled = false;
-    return _this;
-  }
-
-  _createClass(Button, [{
-    key: "enable",
-    value: function enable() {
-      if (this.enabled) {
-        return;
-      }
-      this.enabled = true;
-
-      if (this.container !== undefined) {
-        this.removeChild(this.container);
-      }
-      this.style = new _pixi.TextStyle({
-        fontFamily: "Courier New",
-        fontSize: window.innerHeight / 14,
-        fill: this.textColor
-      });
-
-      this.boxX = this.style.fontSize * this.label.length * 0.8;
-      this.boxY = this.style.fontSize * 1.5;
-
-      var container = new _pixi.Container();
-
-      var box = new _pixi.Graphics();
-      box.beginFill(this.bgColor);
-      box.drawRoundedRect(-this.boxX / 2, -this.boxY / 2, this.boxX, this.boxY, 20);
-
-      var text = new _pixi.Text(this.label);
-      text.style = this.style;
-      text.anchor.set(0.5);
-
-      container.addChild(box);
-      container.addChild(text);
-
-      this.container = container;
-      this.addChild(this.container);
+        _this.bgColor = bgColor;
+        _this.textColor = textColor;
+        _this.label = label;
+        _this.enabled = false;
+        _this.w = w;
+        _this.h = h;
+        return _this;
     }
-  }]);
 
-  return Button;
+    _createClass(Button, [{
+        key: "enable",
+        value: function enable() {
+            if (this.enabled) {
+                return;
+            }
+            this.enabled = true;
+
+            if (this.container !== undefined) {
+                this.removeChild(this.container);
+            }
+
+            this.style = new _pixi.TextStyle({
+                fontFamily: "Courier New",
+                fontSize: this.h / 14,
+                fill: this.textColor
+            });
+
+            this.boxX = this.style.fontSize * this.label.length * 0.8;
+            this.boxY = this.style.fontSize * 1.5;
+
+            var container = new _pixi.Container();
+
+            var box = new _pixi.Graphics();
+            box.beginFill(this.bgColor);
+            box.drawRoundedRect(-this.boxX / 2, -this.boxY / 2, this.boxX, this.boxY, this.boxY / 4);
+
+            var text = new _pixi.Text(this.label);
+            text.style = this.style;
+            text.anchor.set(0.5);
+
+            container.addChild(box);
+            container.addChild(text);
+
+            this.container = container;
+            this.addChild(this.container);
+        }
+    }]);
+
+    return Button;
 }(_pixi.Container);
 
 /***/ }),
@@ -46657,14 +46660,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Title = exports.Title = function (_Container) {
   _inherits(Title, _Container);
 
-  function Title(textColor, label) {
+  function Title(textColor, label, w, h) {
     _classCallCheck(this, Title);
 
     var _this = _possibleConstructorReturn(this, (Title.__proto__ || Object.getPrototypeOf(Title)).call(this));
 
     _this.style = new _pixi.TextStyle({
       fontFamily: "Courier New",
-      fontSize: window.innerHeight / 3,
+      fontSize: h / 3,
       fill: textColor
     });
     _this.label = label;
@@ -46716,31 +46719,51 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Canvas = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Canvas = exports.Canvas = function Canvas() {
-  var _this = this;
+var Canvas = exports.Canvas = function () {
+  function Canvas() {
+    var _this = this;
 
-  _classCallCheck(this, Canvas);
+    _classCallCheck(this, Canvas);
 
-  this.height = window.innerHeight;
-  this.width = window.innerWidth;
+    this.r = { w: 16, h: 9 };
+    this.height = window.innerHeight;
+    this.width = window.innerWidth;
+    this.resize();
 
-  this.app = new _pixi.Application({
-    height: this.height,
-    width: this.width,
-    backgroundColor: 0xFCBF49
-  });
-  document.body.appendChild(this.app.view);
+    this.app = new _pixi.Application({
+      height: this.height,
+      width: this.width,
+      backgroundColor: 0xFCBF49
+    });
+    document.body.appendChild(this.app.view);
 
-  window.addEventListener('resize', function () {
-    _this.width = window.innerWidth;
-    _this.height = window.innerHeight;
-    _this.app.renderer.resize(_this.width, _this.height);
-  });
-};
+    window.addEventListener('resize', function () {
+      _this.width = window.innerWidth;
+      _this.height = window.innerHeight;
+      _this.resize();
+      _this.app.renderer.resize(_this.width, _this.height);
+    });
+  }
+
+  _createClass(Canvas, [{
+    key: 'resize',
+    value: function resize() {
+      if (this.height * this.r.w > this.width * this.r.h) {
+        this.height = this.width * (this.r.h / this.r.w);
+      } else {
+        this.width = this.height * (this.r.w / this.r.h);
+      }
+    }
+  }]);
+
+  return Canvas;
+}();
 
 /***/ }),
 
@@ -46782,7 +46805,6 @@ var GameController = exports.GameController = function () {
     this.canvas = new _Canvas.Canvas();
     this.statusDisplay = new _StatusDisplay.StatusDisplay(this);
     this.canvas.app.stage.addChild(this.statusDisplay);
-
     this.statusDisplay.setLabel("Loading...");
   }
 
@@ -46918,6 +46940,66 @@ var LayerManager = exports.LayerManager = function (_Container) {
 
 /***/ }),
 
+/***/ "./src/app/game/menu/LevelMenu.js":
+/*!****************************************!*\
+  !*** ./src/app/game/menu/LevelMenu.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LevelMenu = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
+
+var _Title = __webpack_require__(/*! ../../core/display/Title.js */ "./src/app/core/display/Title.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LevelMenu = exports.LevelMenu = function (_Container) {
+  _inherits(LevelMenu, _Container);
+
+  function LevelMenu(gameController) {
+    _classCallCheck(this, LevelMenu);
+
+    var _this = _possibleConstructorReturn(this, (LevelMenu.__proto__ || Object.getPrototypeOf(LevelMenu)).call(this));
+
+    var w = gameController.canvas.width;
+    var h = gameController.canvas.height;
+
+    _this.buttons = [];
+
+    for (var i = 0; i < 24; i++) {
+      var but = new _Button.Button(0x000034, 0xFCBF49, "." + (i + 1) + ".", w, h);
+      but.x = w / 7 + w / 7 * (i % 6);
+      but.y = h / 3 + h / 6 * Math.floor(i / 6);
+      but.buttonMode = true;
+      but.interactive = true;
+      but.enable();
+      _this.buttons.push(but);
+      _this.addChild(but);
+    }
+    return _this;
+  }
+
+  return LevelMenu;
+}(_pixi.Container);
+
+/***/ }),
+
 /***/ "./src/app/game/menu/MainMenu.js":
 /*!***************************************!*\
   !*** ./src/app/game/menu/MainMenu.js ***!
@@ -46929,13 +47011,11 @@ var LayerManager = exports.LayerManager = function (_Container) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.MainMenu = undefined;
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
-
-var _AssetManager = __webpack_require__(/*! ../assets/AssetManager.js */ "./src/app/game/assets/AssetManager.js");
 
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
 
@@ -46950,37 +47030,45 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var MainMenu = exports.MainMenu = function (_Container) {
-    _inherits(MainMenu, _Container);
+  _inherits(MainMenu, _Container);
 
-    function MainMenu(gameController) {
-        _classCallCheck(this, MainMenu);
+  function MainMenu(controller) {
+    _classCallCheck(this, MainMenu);
 
-        var _this = _possibleConstructorReturn(this, (MainMenu.__proto__ || Object.getPrototypeOf(MainMenu)).call(this));
+    var _this = _possibleConstructorReturn(this, (MainMenu.__proto__ || Object.getPrototypeOf(MainMenu)).call(this));
 
-        _this.startButton = new _Button.Button(0x000034, 0xFCBF49, 'Level Select');
-        _this.startButton.x = window.innerWidth / 2;
-        _this.startButton.y = window.innerHeight / 8 * 5;
-        _this.startButton.buttonMode = true;
-        _this.startButton.interactive = true;
+    var w = controller.canvas.width;
+    var h = controller.canvas.height;
 
-        _this.challengeButton = new _Button.Button(0x000034, 0xFCBF49, 'Daily Challenge');
-        _this.challengeButton.x = window.innerWidth / 2;
-        _this.challengeButton.y = window.innerHeight / 8 * 7;
-        _this.challengeButton.buttonMode = true;
-        _this.challengeButton.interactive = true;
+    _this.startButton = new _Button.Button(0x000034, 0xFCBF49, 'Level Select', w, h);
+    _this.startButton.x = w / 2;
+    _this.startButton.y = h / 8 * 5;
+    _this.startButton.buttonMode = true;
+    _this.startButton.interactive = true;
+    _this.startButton.on('click', function () {
+      controller.menu.transition(controller.menu.mainMenu, controller.menu.levelMenu);
+    });
+    _this.startButton.on('tap', function () {
+      controller.menu.transition(controller.menu.mainMenu, controller.menu.levelMenu);
+    });
 
-        _this.title = new _Title.Title(0x000034, '.Dot.');
-        _this.title.x = window.innerWidth / 2;
-        _this.title.y = window.innerHeight / 4;
+    _this.challengeButton = new _Button.Button(0x000034, 0xFCBF49, 'Daily Challenge', w, h);
+    _this.challengeButton.x = w / 2;
+    _this.challengeButton.y = h / 8 * 7;
+    _this.challengeButton.buttonMode = true;
+    _this.challengeButton.interactive = true;
 
-        _this.startButton.enable();
-        _this.challengeButton.enable();
-        _this.title.enable();
-        _this.addChild(_this.startButton, _this.challengeButton, _this.title);
-        return _this;
-    }
+    _this.title = new _Title.Title(0x000034, '.Dot.', w, h);
+    _this.title.x = w / 2;
+    _this.title.y = h / 4;
+    _this.startButton.enable();
+    _this.challengeButton.enable();
+    _this.title.enable();
+    _this.addChild(_this.startButton, _this.challengeButton, _this.title);
+    return _this;
+  }
 
-    return MainMenu;
+  return MainMenu;
 }(_pixi.Container);
 
 /***/ }),
@@ -47000,9 +47088,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.MenuManager = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var _MainMenu = __webpack_require__(/*! ./MainMenu.js */ "./src/app/game/menu/MainMenu.js");
+
+var _LevelMenu = __webpack_require__(/*! ./LevelMenu.js */ "./src/app/game/menu/LevelMenu.js");
 
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
 
@@ -47021,9 +47113,21 @@ var MenuManager = exports.MenuManager = function (_Container) {
     var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
 
     _this.mainMenu = new _MainMenu.MainMenu(gameController);
-    _this.addChild(_this.mainMenu);
+    _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
+    _this.mainMenu.visible = true;
+    _this.levelMenu.visible = false;
+
+    _this.addChild(_this.mainMenu, _this.levelMenu);
     return _this;
   }
+
+  _createClass(MenuManager, [{
+    key: 'transition',
+    value: function transition(a, b) {
+      a.visible = false;
+      b.visible = true;
+    }
+  }]);
 
   return MenuManager;
 }(_pixi.Container);

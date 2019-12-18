@@ -1,12 +1,14 @@
 import { Container, Graphics, Text, TextStyle } from 'pixi.js';
 
 export class Button extends Container {
-  constructor(bgColor, textColor, label) {
+  constructor(bgColor, textColor, label, w, h) {
     super();
     this.bgColor = bgColor;
     this.textColor = textColor
     this.label = label;
     this.enabled = false;
+    this.w = w;
+    this.h = h;
   }
 
   enable() {
@@ -18,9 +20,10 @@ export class Button extends Container {
     if (this.container !== undefined) {
       this.removeChild(this.container);
     }
+
     this.style = new TextStyle({
       fontFamily: "Courier New",
-      fontSize: window.innerHeight/14,
+      fontSize: this.h/14,
       fill: this.textColor
     });
 
@@ -31,7 +34,7 @@ export class Button extends Container {
 
     let box = new Graphics();
     box.beginFill(this.bgColor);
-    box.drawRoundedRect(-this.boxX/2, -this.boxY/2, this.boxX, this.boxY, 20);
+    box.drawRoundedRect(-this.boxX/2, -this.boxY/2, this.boxX, this.boxY, this.boxY/4);
 
     let text = new Text(this.label);
     text.style = this.style;

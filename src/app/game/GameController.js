@@ -11,7 +11,6 @@ export class GameController {
     this.canvas = new Canvas();
     this.statusDisplay = new StatusDisplay(this);
     this.canvas.app.stage.addChild(this.statusDisplay);
-
     this.statusDisplay.setLabel("Loading...");
   }
 

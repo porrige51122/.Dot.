@@ -1,11 +1,11 @@
 import { Container, Graphics, Text, TextStyle } from 'pixi.js';
 
 export class Title extends Container {
-  constructor(textColor, label) {
+  constructor(textColor, label, w, h) {
     super();
     this.style = new TextStyle({
       fontFamily: "Courier New",
-      fontSize: window.innerHeight/3,
+      fontSize: h/3,
       fill: textColor
     });
     this.label = label;
