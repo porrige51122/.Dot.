@@ -19,6 +19,10 @@ export class LevelMenu extends Container {
       but.buttonMode = true;
       but.interactive = true;
       but.enable();
+      but.on('pointertap', () => {
+        console.log("You selected Level " + (i + 1));
+      });
+
       this.buttons.push(but);
       this.addChild(but);
     }

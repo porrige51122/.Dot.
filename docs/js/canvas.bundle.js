@@ -46982,15 +46982,23 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
 
     _this.buttons = [];
 
-    for (var i = 0; i < 24; i++) {
+    var _loop = function _loop(i) {
       var but = new _Button.Button(0x000034, 0xFCBF49, "." + (i + 1) + ".", w, h);
       but.x = w / 7 + w / 7 * (i % 6);
       but.y = h / 3 + h / 6 * Math.floor(i / 6);
       but.buttonMode = true;
       but.interactive = true;
       but.enable();
+      but.on('pointertap', function () {
+        console.log("You selected Level " + (i + 1));
+      });
+
       _this.buttons.push(but);
       _this.addChild(but);
+    };
+
+    for (var i = 0; i < 24; i++) {
+      _loop(i);
     }
 
     _this.back = new _Button.Button(0x000034, 0xFCBF49, "Back", w, h);
@@ -47120,6 +47128,8 @@ var MenuManager = exports.MenuManager = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
 
+    _this.gc = gameController;
+
     _this.mainMenu = new _MainMenu.MainMenu(gameController);
     _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
     _this.mainMenu.visible = true;
@@ -47132,8 +47142,25 @@ var MenuManager = exports.MenuManager = function (_Container) {
   _createClass(MenuManager, [{
     key: 'transition',
     value: function transition(a, b) {
-      a.visible = false;
+      var h = this.gc.canvas.height;
+      a.vy = 0.5;
+      a.y = 0;
+      b.vy = 0;
+      b.y = -h;
       b.visible = true;
+      var end = true;
+      _pixi.Ticker.shared.add(tr);
+      function tr() {
+        if (end) {
+          a.vy += 0.2;
+          a.y += a.vy;
+          b.y += a.vy;
+          if (h < a.y) {
+            a.visible = false;
+            end = false;
+          }
+        }
+      }
     }
   }]);
 
