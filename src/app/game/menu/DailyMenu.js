@@ -23,7 +23,7 @@ export class DailyMenu extends Container {
     this.back.interactive = true;
     this.back.enable();
     this.back.on('pointertap', () => {
-      controller.menu.transitionSlide(controller.menu.dailyMenu, controller.menu.mainMenu);
+      controller.transitions.transitionSlide(controller.menu.dailyMenu, controller.menu.mainMenu);
     });
 
     this.addChild(this.back, this.title);

@@ -17,7 +17,7 @@ export class MainMenu extends Container {
     this.startButton.buttonMode = true;
     this.startButton.interactive = true;
     this.startButton.on('pointertap', () => {
-      controller.menu.transitionSlide(controller.menu.mainMenu, controller.menu.levelMenu);
+      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.levelMenu);
     });
 
     this.challengeButton = new Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);
@@ -26,7 +26,7 @@ export class MainMenu extends Container {
     this.challengeButton.buttonMode = true;
     this.challengeButton.interactive = true;
     this.challengeButton.on('pointertap', () => {
-      controller.menu.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
+      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
     });
 
     this.title = new Title(0x000034, '.Dot.', w, h);

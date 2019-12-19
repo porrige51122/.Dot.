@@ -2,6 +2,7 @@ import { Ticker } from 'pixi.js';
 
 import { Canvas } from '../core/helpers/Canvas.js';
 import { StatusDisplay } from './status/StatusDisplay.js'
+import { Transitions } from '../core/transitions/transitions.js'
 import { AssetManager } from './assets/AssetManager.js';
 import { LevelManager } from './levels/LevelManager.js';
 import { MenuManager } from './menu/MenuManager.js';
@@ -18,6 +19,8 @@ export class GameController {
     return new Promise((resolve, reject) => {
       this.assets = new AssetManager();
       this.assets.promise.then(() => {
+
+        this.transitions = new Transitions(this);
 
         this.levels = new LevelManager(this);
         this.canvas.app.stage.addChild(this.levels);

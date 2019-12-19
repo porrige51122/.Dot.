@@ -26,7 +26,7 @@ export class LevelForeground extends Container {
     this.back.enable();
     this.addChild(this.back);
     this.back.on('pointertap', () => {
-      GameController.menu.transitionFade(GameController.levels, GameController.menu.levelMenu);
+      GameController.transitions.transitionFade(GameController.levels, GameController.menu.levelMenu);
     });
   }
 

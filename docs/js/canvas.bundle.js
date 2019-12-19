@@ -40963,7 +40963,7 @@ module.exports = function parseURI (str, opts) {
 /*!*********************************************!*\
   !*** ./node_modules/pixi.js/lib/pixi.es.js ***!
   \*********************************************/
-/*! exports provided: accessibility, extract, interaction, prepare, utils, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings, VERSION, filters, useDeprecated */
+/*! exports provided: accessibility, extract, interaction, prepare, utils, VERSION, filters, useDeprecated, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46860,6 +46860,111 @@ var Canvas = exports.Canvas = function () {
 
 /***/ }),
 
+/***/ "./src/app/core/transitions/transitions.js":
+/*!*************************************************!*\
+  !*** ./src/app/core/transitions/transitions.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Transitions = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Transitions = exports.Transitions = function () {
+  function Transitions(GameController) {
+    _classCallCheck(this, Transitions);
+
+    this.width = GameController.canvas.width;
+    this.height = GameController.canvas.height;
+
+    this.a;
+    this.b;
+    this.slide = false;
+    this.fadein = false;
+    this.fadeout = false;
+
+    _pixi.Ticker.shared.add(this.loop, this);
+  }
+
+  _createClass(Transitions, [{
+    key: 'loop',
+    value: function loop() {
+      if (this.slide) {
+        if (this.height < this.a.y) {
+          this.a.y = 0;
+          this.b.y = 0;
+          this.a.visible = false;
+          this.slide = false;
+        } else {
+          this.a.vy += 0.3;
+          this.a.y += this.a.vy;
+          this.b.y += this.a.vy;
+        }
+      }
+      if (this.fadeout) {
+        this.a.alpha -= 0.01;
+        if (!this.fadein && this.a.alpha < 0.25) {
+          this.fadein = true;
+        }
+        if (this.a.alpha < 0) {
+          this.a.visible = false;
+          this.a.alpha = 1;
+          this.fadeout = false;
+        }
+      }
+      if (this.fadein) {
+        this.b.alpha += 0.01;
+        if (this.b.alpha > 1) {
+          this.b.alpha = 1;
+          this.fadein = false;
+        }
+      }
+    }
+  }, {
+    key: 'transitionSlide',
+    value: function transitionSlide(a, b) {
+      var h = this.height;
+      a.vy = 1;
+      a.y = 0;
+      b.vy = 0;
+      b.y = -h;
+      b.visible = true;
+      this.a = a;
+      this.b = b;
+      this.slide = true;
+    }
+  }, {
+    key: 'transitionFade',
+    value: function transitionFade(a, b) {
+      a.vy = 0;
+      a.y = 0;
+      a.alpha = 1;
+      b.vy = 0;
+      b.y = 0;
+      b.alpha = 0;
+      b.visible = true;
+      this.a = a;
+      this.b = b;
+      this.fadeout = true;
+    }
+  }]);
+
+  return Transitions;
+}();
+
+/***/ }),
+
 /***/ "./src/app/game/GameController.js":
 /*!****************************************!*\
   !*** ./src/app/game/GameController.js ***!
@@ -46882,6 +46987,8 @@ var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.
 var _Canvas = __webpack_require__(/*! ../core/helpers/Canvas.js */ "./src/app/core/helpers/Canvas.js");
 
 var _StatusDisplay = __webpack_require__(/*! ./status/StatusDisplay.js */ "./src/app/game/status/StatusDisplay.js");
+
+var _transitions = __webpack_require__(/*! ../core/transitions/transitions.js */ "./src/app/core/transitions/transitions.js");
 
 var _AssetManager = __webpack_require__(/*! ./assets/AssetManager.js */ "./src/app/game/assets/AssetManager.js");
 
@@ -46909,6 +47016,8 @@ var GameController = exports.GameController = function () {
       return new Promise(function (resolve, reject) {
         _this.assets = new _AssetManager.AssetManager();
         _this.assets.promise.then(function () {
+
+          _this.transitions = new _transitions.Transitions(_this);
 
           _this.levels = new _LevelManager.LevelManager(_this);
           _this.canvas.app.stage.addChild(_this.levels);
@@ -47110,7 +47219,7 @@ var LevelForeground = exports.LevelForeground = function (_Container) {
     _this.back.enable();
     _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
-      GameController.menu.transitionFade(GameController.levels, GameController.menu.levelMenu);
+      GameController.transitions.transitionFade(GameController.levels, GameController.menu.levelMenu);
     });
     return _this;
   }
@@ -47241,7 +47350,7 @@ var DailyMenu = exports.DailyMenu = function (_Container) {
     _this.back.interactive = true;
     _this.back.enable();
     _this.back.on('pointertap', function () {
-      controller.menu.transitionSlide(controller.menu.dailyMenu, controller.menu.mainMenu);
+      controller.transitions.transitionSlide(controller.menu.dailyMenu, controller.menu.mainMenu);
     });
 
     _this.addChild(_this.back, _this.title);
@@ -47311,7 +47420,7 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       but.on('pointertap', function () {
         controller.levels.level = i;
         controller.levels.buildLevel();
-        controller.menu.transitionFade(controller.menu.levelMenu, controller.levels);
+        controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
       });
 
       _this.buttons.push(but);
@@ -47335,7 +47444,7 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
     _this.back.enable();
     _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
-      controller.menu.transitionSlide(controller.menu.levelMenu, controller.menu.mainMenu);
+      controller.transitions.transitionSlide(controller.menu.levelMenu, controller.menu.mainMenu);
     });
     return _this;
   }
@@ -47397,7 +47506,7 @@ var MainMenu = exports.MainMenu = function (_Container) {
     _this.startButton.buttonMode = true;
     _this.startButton.interactive = true;
     _this.startButton.on('pointertap', function () {
-      controller.menu.transitionSlide(controller.menu.mainMenu, controller.menu.levelMenu);
+      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.levelMenu);
     });
 
     _this.challengeButton = new _Button.Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);
@@ -47406,7 +47515,7 @@ var MainMenu = exports.MainMenu = function (_Container) {
     _this.challengeButton.buttonMode = true;
     _this.challengeButton.interactive = true;
     _this.challengeButton.on('pointertap', function () {
-      controller.menu.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
+      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
     });
 
     _this.title = new _Title.Title(0x000034, '.Dot.', w, h);
@@ -47435,11 +47544,9 @@ var MainMenu = exports.MainMenu = function (_Container) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.MenuManager = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
@@ -47458,99 +47565,28 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var MenuManager = exports.MenuManager = function (_Container) {
-  _inherits(MenuManager, _Container);
+    _inherits(MenuManager, _Container);
 
-  function MenuManager(gameController) {
-    _classCallCheck(this, MenuManager);
+    function MenuManager(gameController) {
+        _classCallCheck(this, MenuManager);
 
-    var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
+        var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
 
-    _this.gc = gameController;
+        _this.gc = gameController;
 
-    _this.mainMenu = new _MainMenu.MainMenu(gameController);
-    _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
-    _this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
+        _this.mainMenu = new _MainMenu.MainMenu(gameController);
+        _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
+        _this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
 
-    _this.mainMenu.visible = false;
-    _this.levelMenu.visible = true;
-    _this.dailyMenu.visible = false;
+        _this.mainMenu.visible = false;
+        _this.levelMenu.visible = true;
+        _this.dailyMenu.visible = false;
 
-    _this.a;
-    _this.b;
-    _this.slide = false;
-    _this.fadein = false;
-    _this.fadeout = false;
-
-    _pixi.Ticker.shared.add(_this.ticker, _this);
-
-    _this.addChild(_this.mainMenu, _this.levelMenu, _this.dailyMenu);
-    return _this;
-  }
-
-  _createClass(MenuManager, [{
-    key: 'ticker',
-    value: function ticker() {
-      if (this.slide) {
-        if (this.gc.canvas.height < this.a.y) {
-          this.a.y = 0;
-          this.b.y = 0;
-          this.a.visible = false;
-          this.slide = false;
-        } else {
-          this.a.vy += 0.3;
-          this.a.y += this.a.vy;
-          this.b.y += this.a.vy;
-        }
-      }
-      if (this.fadeout) {
-        this.a.alpha -= 0.01;
-        if (!this.fadein && this.a.alpha < 0.25) {
-          this.fadein = true;
-        }
-        if (this.a.alpha < 0) {
-          this.a.visible = false;
-          this.a.alpha = 1;
-          this.fadeout = false;
-        }
-      }
-      if (this.fadein) {
-        this.b.alpha += 0.01;
-        if (this.b.alpha > 1) {
-          this.b.alpha = 1;
-          this.fadein = false;
-        }
-      }
+        _this.addChild(_this.mainMenu, _this.levelMenu, _this.dailyMenu);
+        return _this;
     }
-  }, {
-    key: 'transitionSlide',
-    value: function transitionSlide(a, b) {
-      var h = this.gc.canvas.height;
-      a.vy = 1;
-      a.y = 0;
-      b.vy = 0;
-      b.y = -h;
-      b.visible = true;
-      this.a = a;
-      this.b = b;
-      this.slide = true;
-    }
-  }, {
-    key: 'transitionFade',
-    value: function transitionFade(a, b) {
-      a.vy = 0;
-      a.y = 0;
-      a.alpha = 1;
-      b.vy = 0;
-      b.y = 0;
-      b.alpha = 0;
-      b.visible = true;
-      this.a = a;
-      this.b = b;
-      this.fadeout = true;
-    }
-  }]);
 
-  return MenuManager;
+    return MenuManager;
 }(_pixi.Container);
 
 /***/ }),

@@ -23,7 +23,7 @@ export class LevelMenu extends Container {
       but.on('pointertap', () => {
         controller.levels.level = i;
         controller.levels.buildLevel();
-        controller.menu.transitionFade(controller.menu.levelMenu, controller.levels);
+        controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
       });
 
       this.buttons.push(but);
@@ -43,7 +43,7 @@ export class LevelMenu extends Container {
     this.back.enable();
     this.addChild(this.back);
     this.back.on('pointertap', () => {
-      controller.menu.transitionSlide(controller.menu.levelMenu, controller.menu.mainMenu);
+      controller.transitions.transitionSlide(controller.menu.levelMenu, controller.menu.mainMenu);
     });
   }
 }
