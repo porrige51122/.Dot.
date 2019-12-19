@@ -15,7 +15,6 @@ class AppInit {
       console.log("Game Loaded");
     })
   }
-
 }
 
 let type = "WebGL";

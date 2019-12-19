@@ -22,7 +22,7 @@ export class Button extends Container {
     }
 
     this.style = new TextStyle({
-      fontFamily: "Courier New",
+      fontFamily: 'Text Me One',
       fontSize: this.h/14,
       fill: this.textColor
     });

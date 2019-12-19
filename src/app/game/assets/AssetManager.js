@@ -1,6 +1,7 @@
 import { Loader } from 'pixi.js';
 
 import Nodes from '../../../assets/nodes.png';
+import '../../../app.css';
 
 /**
  * Asset Manager class

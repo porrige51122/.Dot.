@@ -40963,7 +40963,7 @@ module.exports = function parseURI (str, opts) {
 /*!*********************************************!*\
   !*** ./node_modules/pixi.js/lib/pixi.es.js ***!
   \*********************************************/
-/*! exports provided: accessibility, extract, interaction, prepare, utils, VERSION, filters, useDeprecated, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings */
+/*! exports provided: accessibility, extract, interaction, prepare, utils, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings, VERSION, filters, useDeprecated */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -46507,6 +46507,19 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./src/app.css":
+/*!*********************!*\
+  !*** ./src/app.css ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
+    if(false) { var cssReload; }
+  
+
+/***/ }),
+
 /***/ "./src/app/AppInit.js":
 /*!****************************!*\
   !*** ./src/app/AppInit.js ***!
@@ -46589,7 +46602,7 @@ var Button = exports.Button = function (_Container) {
     }
 
     _createClass(Button, [{
-        key: "enable",
+        key: 'enable',
         value: function enable() {
             if (this.enabled) {
                 return;
@@ -46601,7 +46614,7 @@ var Button = exports.Button = function (_Container) {
             }
 
             this.style = new _pixi.TextStyle({
-                fontFamily: "Courier New",
+                fontFamily: 'Text Me One',
                 fontSize: this.h / 14,
                 fill: this.textColor
             });
@@ -46687,7 +46700,7 @@ var Heading = exports.Heading = function (_Container) {
     var _this = _possibleConstructorReturn(this, (Heading.__proto__ || Object.getPrototypeOf(Heading)).call(this));
 
     _this.style = new _pixi.TextStyle({
-      fontFamily: "Courier New",
+      fontFamily: 'Text Me One',
       fontSize: h / 8,
       fill: textColor
     });
@@ -46697,7 +46710,7 @@ var Heading = exports.Heading = function (_Container) {
   }
 
   _createClass(Heading, [{
-    key: "enable",
+    key: 'enable',
     value: function enable() {
       if (this.enabled) {
         return;
@@ -46759,7 +46772,7 @@ var Title = exports.Title = function (_Container) {
     var _this = _possibleConstructorReturn(this, (Title.__proto__ || Object.getPrototypeOf(Title)).call(this));
 
     _this.style = new _pixi.TextStyle({
-      fontFamily: "Courier New",
+      fontFamily: 'Text Me One',
       fontSize: h / 3,
       fill: textColor
     });
@@ -46769,7 +46782,7 @@ var Title = exports.Title = function (_Container) {
   }
 
   _createClass(Title, [{
-    key: "enable",
+    key: 'enable',
     value: function enable() {
       if (this.enabled) {
         return;
@@ -47063,6 +47076,8 @@ var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.
 var _nodes = __webpack_require__(/*! ../../../assets/nodes.png */ "./src/assets/nodes.png");
 
 var _nodes2 = _interopRequireDefault(_nodes);
+
+__webpack_require__(/*! ../../../app.css */ "./src/app.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47578,8 +47593,8 @@ var MenuManager = exports.MenuManager = function (_Container) {
         _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
         _this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
 
-        _this.mainMenu.visible = false;
-        _this.levelMenu.visible = true;
+        // this.mainMenu.visible = false;
+        _this.levelMenu.visible = false;
         _this.dailyMenu.visible = false;
 
         _this.addChild(_this.mainMenu, _this.levelMenu, _this.dailyMenu);
@@ -47669,4 +47684,4 @@ __webpack_require__.r(__webpack_exports__);
 /***/ })
 
 /******/ });
-//# sourceMappingURL=canvas.bundle.js.map
+//# sourceMappingURL=index.js.map

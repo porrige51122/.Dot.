@@ -4,7 +4,7 @@ export class Title extends Container {
   constructor(textColor, label, w, h) {
     super();
     this.style = new TextStyle({
-      fontFamily: "Courier New",
+      fontFamily: 'Text Me One',
       fontSize: h/3,
       fill: textColor
     });
