@@ -11,10 +11,11 @@ export class Transitions {
     this.fadein = false;
     this.fadeout = false;
 
-    Ticker.shared.add(this.loop, this);
+    Ticker.shared.add(this.slideloop, this);
+    Ticker.shared.add(this.fadeloop, this);
   }
 
-  loop() {
+  slideloop() {
     if (this.slide) {
       if (this.height < this.a.y) {
         this.a.y = 0;
@@ -27,6 +28,9 @@ export class Transitions {
         this.b.y += this.a.vy;
       }
     }
+  }
+  
+  fadeloop() {
     if (this.fadeout) {
       this.a.alpha -= 0.01;
       if (!this.fadein && this.a.alpha < 0.25) {

@@ -17,14 +17,18 @@ export class LevelMenu extends Container {
       let but = new Button(colors.mainFG, colors.mainText, "." + (i + 1) + ".", w, h);
       but.x = w / 7 + ((w / 7) * (i % 6));
       but.y = h / 3 + ((h / 6) * Math.floor(i / 6));
-      but.buttonMode = true;
-      but.interactive = true;
       but.enable();
-      but.on('pointertap', () => {
-        controller.levels.level = i;
-        controller.levels.buildLevel();
-        controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
-      });
+      if (i < controller.assets.levels.length) {
+        but.buttonMode = true;
+        but.interactive = true;
+        but.on('pointertap', () => {
+          controller.levels.level = i;
+          controller.levels.buildLevel();
+          controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
+        });
+      } else {
+        but.alpha = 0.75;
+      }
 
       this.buttons.push(but);
       this.addChild(but);

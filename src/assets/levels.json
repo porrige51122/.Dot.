@@ -1,0 +1,74 @@
+[
+  {
+    "level": 0,
+    "x":     2,
+    "y":     3,
+    "nodes": [{
+        "type": 0,
+        "x":    1,
+        "y":    1
+      },
+      {
+        "type": 1,
+        "x":    1,
+        "y":    2
+      },
+      {
+        "type": 1,
+        "x":    2,
+        "y":    2
+      },
+      {
+        "type": 0,
+        "x":    2,
+        "y":    3
+      }
+    ],
+    "message": "Click two nodes to connect them..."
+  },
+
+
+  {
+    "level": 1,
+    "x":     5,
+    "y":     4,
+    "nodes": [{
+        "type": 0,
+        "x":    2,
+        "y":    2
+      },
+      {
+        "type": 1,
+        "x":    2,
+        "y":    3
+      },
+      {
+        "type": 1,
+        "x":    3,
+        "y":    3
+      },
+      {
+        "type": 1,
+        "x":    1,
+        "y":    2
+      },
+      {
+        "type": 1,
+        "x":    5,
+        "y":    1
+      },
+      {
+        "type": 1,
+        "x":    4,
+        "y":    3
+      },
+      {
+        "type": 0,
+        "x":    4,
+        "y":    4
+      }
+    ],
+    "message": "Some nodes have different max connections..."
+  }
+
+]
