@@ -46873,10 +46873,10 @@ var Canvas = exports.Canvas = function () {
 
 /***/ }),
 
-/***/ "./src/app/core/transitions/transitions.js":
-/*!*************************************************!*\
-  !*** ./src/app/core/transitions/transitions.js ***!
-  \*************************************************/
+/***/ "./src/app/core/helpers/transitions.js":
+/*!*********************************************!*\
+  !*** ./src/app/core/helpers/transitions.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -46950,6 +46950,8 @@ var Transitions = exports.Transitions = function () {
       var h = this.height;
       a.vy = 1;
       a.y = 0;
+      a.alpha = 1;
+      b.alpha = 1;
       b.vy = 0;
       b.y = -h;
       b.visible = true;
@@ -47001,7 +47003,7 @@ var _Canvas = __webpack_require__(/*! ../core/helpers/Canvas.js */ "./src/app/co
 
 var _StatusDisplay = __webpack_require__(/*! ./status/StatusDisplay.js */ "./src/app/game/status/StatusDisplay.js");
 
-var _transitions = __webpack_require__(/*! ../core/transitions/transitions.js */ "./src/app/core/transitions/transitions.js");
+var _transitions = __webpack_require__(/*! ../core/helpers/transitions.js */ "./src/app/core/helpers/transitions.js");
 
 var _AssetManager = __webpack_require__(/*! ./assets/AssetManager.js */ "./src/app/game/assets/AssetManager.js");
 

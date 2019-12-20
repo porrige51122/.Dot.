@@ -51,6 +51,8 @@ export class Transitions {
     let h = this.height;
     a.vy = 1;
     a.y = 0;
+    a.alpha = 1;
+    b.alpha = 1;
     b.vy = 0;
     b.y = -h;
     b.visible = true;
