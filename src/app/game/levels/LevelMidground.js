@@ -13,7 +13,7 @@ export class LevelMidground extends Container {
 
     let lvl = GameController.levels.level;
     lvl = GameController.assets.levels[lvl];
-    //x y nodes message
+    
     this.message = new Subtitle(colors.secondaryTitle, lvl.message, w, h);
     this.message.x = w / 2;
     this.message.y = h / 10 * 2;

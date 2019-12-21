@@ -47565,7 +47565,7 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
 
     var lvl = GameController.levels.level;
     lvl = GameController.assets.levels[lvl];
-    //x y nodes message
+
     _this.message = new _Subtitle.Subtitle(colors.secondaryTitle, lvl.message, w, h);
     _this.message.x = w / 2;
     _this.message.y = h / 10 * 2;
