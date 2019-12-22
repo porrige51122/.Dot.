@@ -18,7 +18,7 @@ export class Node extends Container {
     }
     this.halo = new Graphics();
     this.halo.beginFill(0xFCBF49);
-    this.halo.drawCircle(0, 0, 100);
+    this.halo.drawStar(0, 0, 8, 100);
     this.halo.alpha = 0.25;
     this.halo.visible = false;
 
@@ -63,5 +63,9 @@ export class Node extends Container {
   decrease() {
     this.min--;
     this.node.texture = this.nodeTypes[this.min];
+  }
+
+  complete() {
+    return this.min == this.max;
   }
 }

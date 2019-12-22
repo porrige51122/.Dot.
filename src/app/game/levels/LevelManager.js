@@ -1,6 +1,7 @@
 import { Container, Ticker } from 'pixi.js';
 
 import { GameController } from '../GameController.js';
+import { LevelBackend } from './LevelBackend.js';
 import { LevelBackground } from './LevelBackground.js';
 import { LevelMidground } from './LevelMidground.js';
 import { LevelForeground } from './LevelForeground.js';
@@ -10,13 +11,15 @@ export class LevelManager extends Container {
     super();
     this.level = 0;
     this.gt = GameController;
-    this.background = new LevelBackground(GameController);
-    this.background.visible = false;
-    this.addChild(this.background);
+    this.bg = new LevelBackground(GameController);
+    this.bg.visible = false;
+    this.addChild(this.bg);
+
+    this.game = new LevelBackend();
   }
 
   buildLevel() {
-    this.background.visible = true;
+    this.bg.visible = true;
 
     this.removeChild(this.mg);
     this.mg = new LevelMidground(this.gt);
@@ -27,5 +30,8 @@ export class LevelManager extends Container {
     this.fg = new LevelForeground(this.gt);
     this.fg.visible = true;
     this.addChild(this.fg);
+
+    this.game.nodes = this.gt.levels.mg.nodes;
+
   }
 }

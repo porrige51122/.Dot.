@@ -13,7 +13,7 @@ export class LevelMidground extends Container {
 
     let lvl = GameController.levels.level;
     lvl = GameController.assets.levels[lvl];
-    
+
     this.message = new Subtitle(colors.secondaryTitle, lvl.message, w, h);
     this.message.x = w / 2;
     this.message.y = h / 10 * 2;
@@ -21,7 +21,8 @@ export class LevelMidground extends Container {
     this.addChild(this.message);
 
     this.nodes = [];
-
+    this.lines = [];
+    
     for (let i = 0; i < lvl.nodes.length; i++) {
       let node = new Node(GameController.assets, lvl.nodes[i].type);
       node.x = w / (lvl.x + 1) * lvl.nodes[i].x;
@@ -32,18 +33,8 @@ export class LevelMidground extends Container {
       node.interactive = true;
 
       node.on('pointertap', () => {
-        if (!node.selected)
-          for (let j = 0; j < this.nodes.length; j++)
-            if (this.nodes[j].selected)
-              this.nodes[j].select();
-
-        node.select();
+        GameController.levels.game.nodeSelect(this, node);
       });
-      node.on('rightclick', () => {
-        if (!node.increase()) {
-          console.log("Max Connections!");
-        };
-      })
 
       this.addChild(node);
       this.nodes.push(node);

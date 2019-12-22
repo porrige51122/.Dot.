@@ -46666,6 +46666,68 @@ var mainBG = exports.mainBG = 0xFCBF49,
 
 /***/ }),
 
+/***/ "./src/app/core/display/Connector.js":
+/*!*******************************************!*\
+  !*** ./src/app/core/display/Connector.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Connector = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Connector = exports.Connector = function (_Container) {
+  _inherits(Connector, _Container);
+
+  function Connector(a, b) {
+    _classCallCheck(this, Connector);
+
+    var _this = _possibleConstructorReturn(this, (Connector.__proto__ || Object.getPrototypeOf(Connector)).call(this));
+
+    _this.a = a;
+    _this.b = b;
+
+    var dis = Math.pow(Math.pow(_this.a.x - _this.b.x, 2) + Math.pow(_this.a.y - _this.b.y, 2), 0.5);
+    var angle = Math.atan2(_this.b.y - _this.a.y, _this.b.x - _this.a.x);
+
+    _this.line = new _pixi.Graphics();
+    _this.line.beginFill(0xFFFFFF);
+    _this.line.drawRoundedRect(0, -4, dis, 8, 4);
+    _this.line.rotation = angle;
+    _this.line.x = _this.a.x;
+    _this.line.y = _this.a.y;
+    _this.line.interactive = true;
+    _this.line.buttonMode = true;
+
+    _this.line.on('mouseover', function () {
+      _this.line.tint = 0xFF5555;
+    });
+    _this.line.on('mouseout', function () {
+      _this.line.tint = 0xFFFFFF;
+    });
+
+    _this.addChild(_this.line);
+    return _this;
+  }
+
+  return Connector;
+}(_pixi.Container);
+
+/***/ }),
+
 /***/ "./src/app/core/display/Heading.js":
 /*!*****************************************!*\
   !*** ./src/app/core/display/Heading.js ***!
@@ -46786,7 +46848,7 @@ var Node = exports.Node = function (_Container) {
     }
     _this.halo = new _pixi.Graphics();
     _this.halo.beginFill(0xFCBF49);
-    _this.halo.drawCircle(0, 0, 100);
+    _this.halo.drawStar(0, 0, 8, 100);
     _this.halo.alpha = 0.25;
     _this.halo.visible = false;
 
@@ -46838,6 +46900,11 @@ var Node = exports.Node = function (_Container) {
     value: function decrease() {
       this.min--;
       this.node.texture = this.nodeTypes[this.min];
+    }
+  }, {
+    key: "complete",
+    value: function complete() {
+      return this.min == this.max;
     }
   }]);
 
@@ -47053,9 +47120,9 @@ var Canvas = exports.Canvas = function () {
 
 /***/ }),
 
-/***/ "./src/app/core/helpers/transitions.js":
+/***/ "./src/app/core/helpers/Transitions.js":
 /*!*********************************************!*\
-  !*** ./src/app/core/helpers/transitions.js ***!
+  !*** ./src/app/core/helpers/Transitions.js ***!
   \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -47188,7 +47255,7 @@ var _Canvas = __webpack_require__(/*! ../core/helpers/Canvas.js */ "./src/app/co
 
 var _StatusDisplay = __webpack_require__(/*! ./status/StatusDisplay.js */ "./src/app/game/status/StatusDisplay.js");
 
-var _transitions = __webpack_require__(/*! ../core/helpers/transitions.js */ "./src/app/core/helpers/transitions.js");
+var _Transitions = __webpack_require__(/*! ../core/helpers/Transitions.js */ "./src/app/core/helpers/Transitions.js");
 
 var _AssetManager = __webpack_require__(/*! ./assets/AssetManager.js */ "./src/app/game/assets/AssetManager.js");
 
@@ -47217,7 +47284,7 @@ var GameController = exports.GameController = function () {
         _this.assets = new _AssetManager.AssetManager();
         _this.assets.promise.then(function () {
 
-          _this.transitions = new _transitions.Transitions(_this);
+          _this.transitions = new _Transitions.Transitions(_this);
 
           _this.levels = new _LevelManager.LevelManager(_this);
           _this.canvas.app.stage.addChild(_this.levels);
@@ -47316,6 +47383,118 @@ var AssetManager = exports.AssetManager = function () {
   }]);
 
   return AssetManager;
+}();
+
+/***/ }),
+
+/***/ "./src/app/game/levels/LevelBackend.js":
+/*!*********************************************!*\
+  !*** ./src/app/game/levels/LevelBackend.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LevelBackend = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Connector = __webpack_require__(/*! ../../core/display/Connector.js */ "./src/app/core/display/Connector.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LevelBackend = exports.LevelBackend = function () {
+  function LevelBackend() {
+    _classCallCheck(this, LevelBackend);
+  }
+
+  _createClass(LevelBackend, [{
+    key: 'checkWin',
+    value: function checkWin() {
+      var check = true;
+      for (var i = 0; i < this.nodes.length; i++) {
+        if (!this.nodes[i].complete()) {
+          check = false;
+        }
+      }
+      return check;
+    }
+  }, {
+    key: 'nodeSelect',
+    value: function nodeSelect(ctx, node) {
+      var prevNode = void 0;
+      for (var i = 0; i < this.nodes.length; i++) {
+        if (this.nodes[i].selected) prevNode = this.nodes[i];
+      }if (prevNode === undefined || prevNode === node) {
+        node.select();
+      } else {
+        prevNode.select();
+        var result = this.checkLines(ctx, node, prevNode);
+        switch (result) {
+          case -1:
+            if (!node.complete() && !prevNode.complete()) {
+              this.addLine(ctx, node, prevNode);
+              if (this.checkWin()) {
+                console.log('WIN');
+              }
+            } else {
+              console.log('Max connections');
+            }
+            break;
+          case -2:
+            console.log('ERROR');
+          default:
+            console.log('remove Line');
+            this.removeLine(ctx, node, prevNode, result);
+            break;
+        }
+        prevNode = undefined;
+      }
+    }
+  }, {
+    key: 'checkLines',
+    value: function checkLines(ctx, a, b) {
+      for (var i = 0; i < ctx.lines.length; i++) {
+        if (ctx.lines[i].a === a && ctx.lines[i].b === b || ctx.lines[i].b === a && ctx.lines[i].a === b) {
+          return i;
+        }
+      }
+      return -1;
+    }
+  }, {
+    key: 'removeLine',
+    value: function removeLine(ctx, a, b, index, value) {
+      if (value !== undefined) index = ctx.lines.indexOf(value);
+      console.log(index);
+      a.decrease();
+      b.decrease();
+      ctx.removeChild(ctx.lines[index]);
+      ctx.lines.splice(index, 1);
+    }
+  }, {
+    key: 'addLine',
+    value: function addLine(ctx, a, b) {
+      var _this = this;
+
+      var line = new _Connector.Connector(a, b);
+      line.buttonMode = true;
+      line.interactive = true;
+      line.on('pointertap', function () {
+        _this.removeLine(ctx, a, b, undefined, line);
+      });
+      ctx.lines.push(line);
+      ctx.addChild(line);
+      a.increase();
+      b.increase();
+    }
+  }]);
+
+  return LevelBackend;
 }();
 
 /***/ }),
@@ -47457,7 +47636,7 @@ var LevelForeground = exports.LevelForeground = function (_Container) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.LevelManager = undefined;
 
@@ -47466,6 +47645,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+var _LevelBackend = __webpack_require__(/*! ./LevelBackend.js */ "./src/app/game/levels/LevelBackend.js");
 
 var _LevelBackground = __webpack_require__(/*! ./LevelBackground.js */ "./src/app/game/levels/LevelBackground.js");
 
@@ -47480,39 +47661,43 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var LevelManager = exports.LevelManager = function (_Container) {
-  _inherits(LevelManager, _Container);
+    _inherits(LevelManager, _Container);
 
-  function LevelManager(GameController) {
-    _classCallCheck(this, LevelManager);
+    function LevelManager(GameController) {
+        _classCallCheck(this, LevelManager);
 
-    var _this = _possibleConstructorReturn(this, (LevelManager.__proto__ || Object.getPrototypeOf(LevelManager)).call(this));
+        var _this = _possibleConstructorReturn(this, (LevelManager.__proto__ || Object.getPrototypeOf(LevelManager)).call(this));
 
-    _this.level = 0;
-    _this.gt = GameController;
-    _this.background = new _LevelBackground.LevelBackground(GameController);
-    _this.background.visible = false;
-    _this.addChild(_this.background);
-    return _this;
-  }
+        _this.level = 0;
+        _this.gt = GameController;
+        _this.bg = new _LevelBackground.LevelBackground(GameController);
+        _this.bg.visible = false;
+        _this.addChild(_this.bg);
 
-  _createClass(LevelManager, [{
-    key: 'buildLevel',
-    value: function buildLevel() {
-      this.background.visible = true;
-
-      this.removeChild(this.mg);
-      this.mg = new _LevelMidground.LevelMidground(this.gt);
-      this.mg.visible = true;
-      this.addChild(this.mg);
-
-      this.removeChild(this.fg);
-      this.fg = new _LevelForeground.LevelForeground(this.gt);
-      this.fg.visible = true;
-      this.addChild(this.fg);
+        _this.game = new _LevelBackend.LevelBackend();
+        return _this;
     }
-  }]);
 
-  return LevelManager;
+    _createClass(LevelManager, [{
+        key: 'buildLevel',
+        value: function buildLevel() {
+            this.bg.visible = true;
+
+            this.removeChild(this.mg);
+            this.mg = new _LevelMidground.LevelMidground(this.gt);
+            this.mg.visible = true;
+            this.addChild(this.mg);
+
+            this.removeChild(this.fg);
+            this.fg = new _LevelForeground.LevelForeground(this.gt);
+            this.fg.visible = true;
+            this.addChild(this.fg);
+
+            this.game.nodes = this.gt.levels.mg.nodes;
+        }
+    }]);
+
+    return LevelManager;
 }(_pixi.Container);
 
 /***/ }),
@@ -47573,6 +47758,7 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
     _this.addChild(_this.message);
 
     _this.nodes = [];
+    _this.lines = [];
 
     var _loop = function _loop(i) {
       var node = new _Node.Node(GameController.assets, lvl.nodes[i].type);
@@ -47584,14 +47770,7 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
       node.interactive = true;
 
       node.on('pointertap', function () {
-        if (!node.selected) for (var j = 0; j < _this.nodes.length; j++) {
-          if (_this.nodes[j].selected) _this.nodes[j].select();
-        }node.select();
-      });
-      node.on('rightclick', function () {
-        if (!node.increase()) {
-          console.log("Max Connections!");
-        };
+        GameController.levels.game.nodeSelect(_this, node);
       });
 
       _this.addChild(node);

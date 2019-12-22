@@ -2,7 +2,7 @@ import { Ticker } from 'pixi.js';
 
 import { Canvas } from '../core/helpers/Canvas.js';
 import { StatusDisplay } from './status/StatusDisplay.js'
-import { Transitions } from '../core/helpers/transitions.js'
+import { Transitions } from '../core/helpers/Transitions.js'
 import { AssetManager } from './assets/AssetManager.js';
 import { LevelManager } from './levels/LevelManager.js';
 import { MenuManager } from './menu/MenuManager.js';
