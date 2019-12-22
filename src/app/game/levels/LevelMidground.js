@@ -8,11 +8,12 @@ import { Node } from '../../core/display/Node.js';
 export class LevelMidground extends Container {
   constructor(GameController) {
     super();
-    let w = GameController.canvas.width;
-    let h = GameController.canvas.height;
+    this.gt = GameController;
+    let w = this.gt.canvas.width;
+    let h = this.gt.canvas.height;
+    this.sortableChildren = true;
 
-    let lvl = GameController.levels.level;
-    lvl = GameController.assets.levels[lvl];
+    let lvl = this.gt.assets.levels[this.gt.levels.level];
 
     this.message = new Subtitle(colors.secondaryTitle, lvl.message, w, h);
     this.message.x = w / 2;
@@ -22,16 +23,16 @@ export class LevelMidground extends Container {
 
     this.nodes = [];
     this.lines = [];
-    
+
     for (let i = 0; i < lvl.nodes.length; i++) {
-      let node = new Node(GameController.assets, lvl.nodes[i].type);
+      let node = new Node(this.gt.assets, lvl.nodes[i].type);
       node.x = w / (lvl.x + 1) * lvl.nodes[i].x;
       node.y = h / (lvl.y + 2) * (lvl.nodes[i].y + 1);
       node.scale.set(1/(lvl.y + 1) * 2);
 
       node.buttonMode = true;
       node.interactive = true;
-
+      node.zIndex = 2;
       node.on('pointertap', () => {
         GameController.levels.game.nodeSelect(this, node);
       });

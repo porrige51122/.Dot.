@@ -5,13 +5,13 @@ export class Connector extends Container {
     super();
     this.a = a;
     this.b = b;
-
-    let dis = Math.pow(Math.pow(this.a.x - this.b.x, 2) + Math.pow(this.a.y - this.b.y, 2), 0.5);
+    let nodeRad = 16;
+    let dis = Math.pow(Math.pow(this.a.x - this.b.x, 2) + Math.pow(this.a.y - this.b.y, 2), 0.5) - (nodeRad * 2);
     let angle = Math.atan2(this.b.y - this.a.y, this.b.x - this.a.x);
 
     this.line = new Graphics();
     this.line.beginFill(0xFFFFFF);
-    this.line.drawRoundedRect(0, -4, dis, 8, 4);
+    this.line.drawRoundedRect(nodeRad, -4, dis, 8, 4);
     this.line.rotation = angle;
     this.line.x = this.a.x;
     this.line.y = this.a.y;

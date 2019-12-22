@@ -9,6 +9,8 @@ export class Button extends Container {
     this.enabled = false;
     this.w = w;
     this.h = h;
+
+    this.sortableChildren = true;
   }
 
   enable() {
@@ -32,18 +34,22 @@ export class Button extends Container {
 
     let container = new Container();
 
-    let box = new Graphics();
-    box.beginFill(this.bgColor);
-    box.drawRoundedRect(-this.boxX/2, -this.boxY/2, this.boxX, this.boxY, this.boxY/4);
+    this.createBox(this.bgColor);
 
-    let text = new Text(this.label);
-    text.style = this.style;
-    text.anchor.set(0.5);
+    this.text = new Text(this.label);
+    this.text.style = this.style;
+    this.text.anchor.set(0.5);
+    this.text.zIndex = 2;
 
-    container.addChild(box);
-    container.addChild(text);
+    this.addChild(this.text);
+  }
 
-    this.container = container;
-    this.addChild(this.container);
+  createBox(color) {
+    this.removeChild(this.box);
+    this.box = new Graphics();
+    this.box.beginFill(color);
+    this.box.drawRoundedRect(-this.boxX/2, -this.boxY/2, this.boxX, this.boxY, this.boxY/4);
+    this.box.zIndex = 1;
+    this.addChild(this.box);
   }
 }

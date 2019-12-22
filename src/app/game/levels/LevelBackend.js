@@ -10,6 +10,7 @@ export class LevelBackend {
     }
     return check;
   }
+
   nodeSelect(ctx, node) {
     let prevNode;
     for (let i = 0; i < this.nodes.length; i++)
@@ -21,23 +22,27 @@ export class LevelBackend {
     } else {
       prevNode.select();
       let result = this.checkLines(ctx, node, prevNode);
+
       switch (result) {
         case -1:
           if (!node.complete() && !prevNode.complete()) {
             this.addLine(ctx, node, prevNode);
             if (this.checkWin()) {
-              console.log('WIN');
+              ctx.gt.levels.levelComplete(ctx.gt);
             }
           } else {
             console.log('Max connections');
           }
           break;
+
         case -2:
           console.log('ERROR');
+
         default:
           console.log('remove Line')
           this.removeLine(ctx, node, prevNode, result);
           break;
+
       }
       prevNode = undefined;
     }
@@ -70,6 +75,7 @@ export class LevelBackend {
     line.on('pointertap', () => {
       this.removeLine(ctx, a, b, undefined, line);
     });
+    line.zIndex = 1;
     ctx.lines.push(line);
     ctx.addChild(line);
     a.increase();

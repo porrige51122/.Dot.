@@ -34,4 +34,9 @@ export class LevelManager extends Container {
     this.game.nodes = this.gt.levels.mg.nodes;
 
   }
+
+  levelComplete(gt) {
+    gt.menu.levelMenu.buttons[gt.levels.level].createBox(0x00441B);
+    gt.transitions.transitionFade(gt.levels, gt.menu.levelMenu);
+  }
 }

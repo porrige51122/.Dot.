@@ -46570,7 +46570,7 @@ new AppInit();
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.Button = undefined;
 
@@ -46585,62 +46585,69 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Button = exports.Button = function (_Container) {
-    _inherits(Button, _Container);
+  _inherits(Button, _Container);
 
-    function Button(bgColor, textColor, label, w, h) {
-        _classCallCheck(this, Button);
+  function Button(bgColor, textColor, label, w, h) {
+    _classCallCheck(this, Button);
 
-        var _this = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this));
+    var _this = _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this));
 
-        _this.bgColor = bgColor;
-        _this.textColor = textColor;
-        _this.label = label;
-        _this.enabled = false;
-        _this.w = w;
-        _this.h = h;
-        return _this;
+    _this.bgColor = bgColor;
+    _this.textColor = textColor;
+    _this.label = label;
+    _this.enabled = false;
+    _this.w = w;
+    _this.h = h;
+
+    _this.sortableChildren = true;
+    return _this;
+  }
+
+  _createClass(Button, [{
+    key: 'enable',
+    value: function enable() {
+      if (this.enabled) {
+        return;
+      }
+      this.enabled = true;
+
+      if (this.container !== undefined) {
+        this.removeChild(this.container);
+      }
+
+      this.style = new _pixi.TextStyle({
+        fontFamily: 'Text Me One',
+        fontSize: this.h / 14,
+        fill: this.textColor
+      });
+
+      this.boxX = this.style.fontSize * this.label.length * 0.8;
+      this.boxY = this.style.fontSize * 1.5;
+
+      var container = new _pixi.Container();
+
+      this.createBox(this.bgColor);
+
+      this.text = new _pixi.Text(this.label);
+      this.text.style = this.style;
+      this.text.anchor.set(0.5);
+      this.text.zIndex = 2;
+
+      this.addChild(this.text);
     }
+  }, {
+    key: 'createBox',
+    value: function createBox(color) {
+      this.removeChild(this.box);
+      this.box = new _pixi.Graphics();
+      this.box.beginFill(color);
+      this.box.drawRoundedRect(-this.boxX / 2, -this.boxY / 2, this.boxX, this.boxY, this.boxY / 4);
+      this.box.zIndex = 1;
+      this.addChild(this.box);
+    }
+  }]);
 
-    _createClass(Button, [{
-        key: 'enable',
-        value: function enable() {
-            if (this.enabled) {
-                return;
-            }
-            this.enabled = true;
-
-            if (this.container !== undefined) {
-                this.removeChild(this.container);
-            }
-
-            this.style = new _pixi.TextStyle({
-                fontFamily: 'Text Me One',
-                fontSize: this.h / 14,
-                fill: this.textColor
-            });
-
-            this.boxX = this.style.fontSize * this.label.length * 0.8;
-            this.boxY = this.style.fontSize * 1.5;
-
-            var container = new _pixi.Container();
-
-            var box = new _pixi.Graphics();
-            box.beginFill(this.bgColor);
-            box.drawRoundedRect(-this.boxX / 2, -this.boxY / 2, this.boxX, this.boxY, this.boxY / 4);
-
-            var text = new _pixi.Text(this.label);
-            text.style = this.style;
-            text.anchor.set(0.5);
-
-            container.addChild(box);
-            container.addChild(text);
-
-            this.container = container;
-            this.addChild(this.container);
-        }
-    }]);
-
-    return Button;
+  return Button;
 }(_pixi.Container);
 
 /***/ }),
@@ -46699,13 +46706,13 @@ var Connector = exports.Connector = function (_Container) {
 
     _this.a = a;
     _this.b = b;
-
-    var dis = Math.pow(Math.pow(_this.a.x - _this.b.x, 2) + Math.pow(_this.a.y - _this.b.y, 2), 0.5);
+    var nodeRad = 16;
+    var dis = Math.pow(Math.pow(_this.a.x - _this.b.x, 2) + Math.pow(_this.a.y - _this.b.y, 2), 0.5) - nodeRad * 2;
     var angle = Math.atan2(_this.b.y - _this.a.y, _this.b.x - _this.a.x);
 
     _this.line = new _pixi.Graphics();
     _this.line.beginFill(0xFFFFFF);
-    _this.line.drawRoundedRect(0, -4, dis, 8, 4);
+    _this.line.drawRoundedRect(nodeRad, -4, dis, 8, 4);
     _this.line.rotation = angle;
     _this.line.x = _this.a.x;
     _this.line.y = _this.a.y;
@@ -47435,23 +47442,27 @@ var LevelBackend = exports.LevelBackend = function () {
       } else {
         prevNode.select();
         var result = this.checkLines(ctx, node, prevNode);
+
         switch (result) {
           case -1:
             if (!node.complete() && !prevNode.complete()) {
               this.addLine(ctx, node, prevNode);
               if (this.checkWin()) {
-                console.log('WIN');
+                ctx.gt.levels.levelComplete(ctx.gt);
               }
             } else {
               console.log('Max connections');
             }
             break;
+
           case -2:
             console.log('ERROR');
+
           default:
             console.log('remove Line');
             this.removeLine(ctx, node, prevNode, result);
             break;
+
         }
         prevNode = undefined;
       }
@@ -47487,6 +47498,7 @@ var LevelBackend = exports.LevelBackend = function () {
       line.on('pointertap', function () {
         _this.removeLine(ctx, a, b, undefined, line);
       });
+      line.zIndex = 1;
       ctx.lines.push(line);
       ctx.addChild(line);
       a.increase();
@@ -47636,7 +47648,7 @@ var LevelForeground = exports.LevelForeground = function (_Container) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.LevelManager = undefined;
 
@@ -47661,43 +47673,49 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var LevelManager = exports.LevelManager = function (_Container) {
-    _inherits(LevelManager, _Container);
+  _inherits(LevelManager, _Container);
 
-    function LevelManager(GameController) {
-        _classCallCheck(this, LevelManager);
+  function LevelManager(GameController) {
+    _classCallCheck(this, LevelManager);
 
-        var _this = _possibleConstructorReturn(this, (LevelManager.__proto__ || Object.getPrototypeOf(LevelManager)).call(this));
+    var _this = _possibleConstructorReturn(this, (LevelManager.__proto__ || Object.getPrototypeOf(LevelManager)).call(this));
 
-        _this.level = 0;
-        _this.gt = GameController;
-        _this.bg = new _LevelBackground.LevelBackground(GameController);
-        _this.bg.visible = false;
-        _this.addChild(_this.bg);
+    _this.level = 0;
+    _this.gt = GameController;
+    _this.bg = new _LevelBackground.LevelBackground(GameController);
+    _this.bg.visible = false;
+    _this.addChild(_this.bg);
 
-        _this.game = new _LevelBackend.LevelBackend();
-        return _this;
+    _this.game = new _LevelBackend.LevelBackend();
+    return _this;
+  }
+
+  _createClass(LevelManager, [{
+    key: 'buildLevel',
+    value: function buildLevel() {
+      this.bg.visible = true;
+
+      this.removeChild(this.mg);
+      this.mg = new _LevelMidground.LevelMidground(this.gt);
+      this.mg.visible = true;
+      this.addChild(this.mg);
+
+      this.removeChild(this.fg);
+      this.fg = new _LevelForeground.LevelForeground(this.gt);
+      this.fg.visible = true;
+      this.addChild(this.fg);
+
+      this.game.nodes = this.gt.levels.mg.nodes;
     }
+  }, {
+    key: 'levelComplete',
+    value: function levelComplete(gt) {
+      gt.menu.levelMenu.buttons[gt.levels.level].createBox(0x00441B);
+      gt.transitions.transitionFade(gt.levels, gt.menu.levelMenu);
+    }
+  }]);
 
-    _createClass(LevelManager, [{
-        key: 'buildLevel',
-        value: function buildLevel() {
-            this.bg.visible = true;
-
-            this.removeChild(this.mg);
-            this.mg = new _LevelMidground.LevelMidground(this.gt);
-            this.mg.visible = true;
-            this.addChild(this.mg);
-
-            this.removeChild(this.fg);
-            this.fg = new _LevelForeground.LevelForeground(this.gt);
-            this.fg.visible = true;
-            this.addChild(this.fg);
-
-            this.game.nodes = this.gt.levels.mg.nodes;
-        }
-    }]);
-
-    return LevelManager;
+  return LevelManager;
 }(_pixi.Container);
 
 /***/ }),
@@ -47745,11 +47763,12 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (LevelMidground.__proto__ || Object.getPrototypeOf(LevelMidground)).call(this));
 
-    var w = GameController.canvas.width;
-    var h = GameController.canvas.height;
+    _this.gt = GameController;
+    var w = _this.gt.canvas.width;
+    var h = _this.gt.canvas.height;
+    _this.sortableChildren = true;
 
-    var lvl = GameController.levels.level;
-    lvl = GameController.assets.levels[lvl];
+    var lvl = _this.gt.assets.levels[_this.gt.levels.level];
 
     _this.message = new _Subtitle.Subtitle(colors.secondaryTitle, lvl.message, w, h);
     _this.message.x = w / 2;
@@ -47761,14 +47780,14 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
     _this.lines = [];
 
     var _loop = function _loop(i) {
-      var node = new _Node.Node(GameController.assets, lvl.nodes[i].type);
+      var node = new _Node.Node(_this.gt.assets, lvl.nodes[i].type);
       node.x = w / (lvl.x + 1) * lvl.nodes[i].x;
       node.y = h / (lvl.y + 2) * (lvl.nodes[i].y + 1);
       node.scale.set(1 / (lvl.y + 1) * 2);
 
       node.buttonMode = true;
       node.interactive = true;
-
+      node.zIndex = 2;
       node.on('pointertap', function () {
         GameController.levels.game.nodeSelect(_this, node);
       });
