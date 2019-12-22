@@ -3,6 +3,7 @@ import { Container, Ticker } from 'pixi.js';
 import { MainMenu } from './MainMenu.js';
 import { LevelMenu } from './LevelMenu.js';
 import { DailyMenu } from './DailyMenu.js';
+import { LevelCompleteMenu } from './LevelCompleteMenu.js';
 import { GameController } from '../GameController.js';
 
 export class MenuManager extends Container {
@@ -13,12 +14,18 @@ export class MenuManager extends Container {
     this.mainMenu = new MainMenu(gameController);
     this.levelMenu = new LevelMenu(gameController);
     this.dailyMenu = new DailyMenu(gameController);
+    this.levelCompleteMenu = new LevelCompleteMenu(gameController);
 
     this.mainMenu.visible = false;
     // this.levelMenu.visible = false;
     this.dailyMenu.visible = false;
+    this.levelCompleteMenu.visible = false;
 
-    this.addChild(this.mainMenu, this.levelMenu, this.dailyMenu);
+    this.addChild(this.mainMenu,
+                   this.levelMenu,
+                   this.dailyMenu,
+                   this.levelCompleteMenu
+                  );
   }
 
 }

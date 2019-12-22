@@ -47666,6 +47666,8 @@ var _LevelMidground = __webpack_require__(/*! ./LevelMidground.js */ "./src/app/
 
 var _LevelForeground = __webpack_require__(/*! ./LevelForeground.js */ "./src/app/game/levels/LevelForeground.js");
 
+var _LevelCompleteMenu = __webpack_require__(/*! ../menu/LevelCompleteMenu.js */ "./src/app/game/menu/LevelCompleteMenu.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -47711,7 +47713,10 @@ var LevelManager = exports.LevelManager = function (_Container) {
     key: 'levelComplete',
     value: function levelComplete(gt) {
       gt.menu.levelMenu.buttons[gt.levels.level].createBox(0x00441B);
-      gt.transitions.transitionFade(gt.levels, gt.menu.levelMenu);
+      gt.menu.removeChild(gt.menu.levelCompleteMenu);
+      gt.menu.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gt);
+      gt.menu.addChild(gt.menu.levelCompleteMenu);
+      gt.transitions.transitionFade(gt.levels, gt.menu.levelCompleteMenu);
     }
   }]);
 
@@ -47874,6 +47879,101 @@ var DailyMenu = exports.DailyMenu = function (_Container) {
   }
 
   return DailyMenu;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/menu/LevelCompleteMenu.js":
+/*!************************************************!*\
+  !*** ./src/app/game/menu/LevelCompleteMenu.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LevelCompleteMenu = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var colors = _interopRequireWildcard(_Colors);
+
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
+
+var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
+  _inherits(LevelCompleteMenu, _Container);
+
+  function LevelCompleteMenu(controller) {
+    _classCallCheck(this, LevelCompleteMenu);
+
+    var _this = _possibleConstructorReturn(this, (LevelCompleteMenu.__proto__ || Object.getPrototypeOf(LevelCompleteMenu)).call(this));
+
+    var w = controller.canvas.width;
+    var h = controller.canvas.height;
+
+    _this.back = new _Button.Button(colors.mainFG, colors.mainText, 'Back', w, h);
+    _this.back.x = w - w / 10;
+    _this.back.y = h / 8;
+    _this.back.buttonMode = true;
+    _this.back.interactive = true;
+    _this.back.enable();
+    _this.back.on('pointertap', function () {
+      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu);
+    });
+    _this.addChild(_this.back);
+
+    if (controller.levels.level < controller.assets.levels.length - 1) {
+      _this.title = new _Heading.Heading(0x000034, 'Level ' + (controller.levels.level + 1) + ' Complete!', w, h);
+      _this.title.x = w / 2;
+      _this.title.y = h / 8;
+      _this.title.enable();
+
+      _this.next = new _Button.Button(colors.mainFG, colors.mainText, 'Level ' + (controller.levels.level + 2), w, h);
+      _this.next.x = w / 2;
+      _this.next.y = h / 2;
+      _this.next.buttonMode = true;
+      _this.next.interactive = true;
+      _this.next.enable();
+      _this.next.on('pointertap', function () {
+        controller.levels.level++;
+        controller.levels.buildLevel();
+        controller.transitions.transitionFade(controller.menu.levelCompleteMenu, controller.levels);
+      });
+      _this.addChild(_this.title, _this.next);
+    } else {
+      _this.endMessageA = new _Heading.Heading(0x000034, 'All Levels Complete!', w, h);
+      _this.endMessageA.x = w / 2;
+      _this.endMessageA.y = h / 3;
+      _this.endMessageA.enable();
+      _this.endMessageB = new _Heading.Heading(0x000034, 'Thanks for Playing!', w, h);
+      _this.endMessageB.x = w / 2;
+      _this.endMessageB.y = h / 3 * 2;
+      _this.endMessageB.enable();
+
+      _this.addChild(_this.endMessageA, _this.endMessageB);
+    }
+    return _this;
+  }
+
+  return LevelCompleteMenu;
 }(_pixi.Container);
 
 /***/ }),
@@ -48076,6 +48176,8 @@ var _LevelMenu = __webpack_require__(/*! ./LevelMenu.js */ "./src/app/game/menu/
 
 var _DailyMenu = __webpack_require__(/*! ./DailyMenu.js */ "./src/app/game/menu/DailyMenu.js");
 
+var _LevelCompleteMenu = __webpack_require__(/*! ./LevelCompleteMenu.js */ "./src/app/game/menu/LevelCompleteMenu.js");
+
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -48097,12 +48199,14 @@ var MenuManager = exports.MenuManager = function (_Container) {
         _this.mainMenu = new _MainMenu.MainMenu(gameController);
         _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
         _this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
+        _this.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gameController);
 
         _this.mainMenu.visible = false;
         // this.levelMenu.visible = false;
         _this.dailyMenu.visible = false;
+        _this.levelCompleteMenu.visible = false;
 
-        _this.addChild(_this.mainMenu, _this.levelMenu, _this.dailyMenu);
+        _this.addChild(_this.mainMenu, _this.levelMenu, _this.dailyMenu, _this.levelCompleteMenu);
         return _this;
     }
 

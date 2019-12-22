@@ -5,6 +5,7 @@ import { LevelBackend } from './LevelBackend.js';
 import { LevelBackground } from './LevelBackground.js';
 import { LevelMidground } from './LevelMidground.js';
 import { LevelForeground } from './LevelForeground.js';
+import { LevelCompleteMenu } from '../menu/LevelCompleteMenu.js';
 
 export class LevelManager extends Container {
   constructor(GameController) {
@@ -37,6 +38,9 @@ export class LevelManager extends Container {
 
   levelComplete(gt) {
     gt.menu.levelMenu.buttons[gt.levels.level].createBox(0x00441B);
-    gt.transitions.transitionFade(gt.levels, gt.menu.levelMenu);
+    gt.menu.removeChild(gt.menu.levelCompleteMenu);
+    gt.menu.levelCompleteMenu = new LevelCompleteMenu(gt);
+    gt.menu.addChild(gt.menu.levelCompleteMenu);
+    gt.transitions.transitionFade(gt.levels, gt.menu.levelCompleteMenu);
   }
 }
