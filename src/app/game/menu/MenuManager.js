@@ -16,8 +16,8 @@ export class MenuManager extends Container {
     this.dailyMenu = new DailyMenu(gameController);
     this.levelCompleteMenu = new LevelCompleteMenu(gameController);
 
-    this.mainMenu.visible = false;
-    // this.levelMenu.visible = false;
+    // this.mainMenu.visible = false;
+    this.levelMenu.visible = false;
     this.dailyMenu.visible = false;
     this.levelCompleteMenu.visible = false;
 
