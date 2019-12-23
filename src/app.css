@@ -14,3 +14,11 @@ canvas {
   margin-right: auto;
   display: block;
 }
+
+.toastify {
+  font-family: "Text Me One";
+  font-size: 30px;
+  duration: 3000;
+  color: #000034;
+  background: #FCBF49;
+}

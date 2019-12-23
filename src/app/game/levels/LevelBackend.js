@@ -1,3 +1,5 @@
+import Toastify from 'toastify-js';
+
 import { Connector } from '../../core/display/Connector.js';
 import * as Utils from '../../core/utils/Utils.js';
 
@@ -32,12 +34,18 @@ export class LevelBackend {
               ctx.gt.levels.levelComplete(ctx.gt);
             }
           } else {
-            console.log('Max connections');
+            Toastify({
+              text: "Max connections reached...",
+              position: 'left'
+            }).showToast();
           }
           break;
 
         case -2:
-          console.log('Lines Cannot cross');
+          Toastify({
+            text: "Lines are crossing...",
+            position: 'left'
+          }).showToast();
           break;
         default:
           this.removeLine(ctx, node, prevNode, result);
