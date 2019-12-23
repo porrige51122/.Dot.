@@ -1,16 +1,16 @@
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/js/canvas.js',
+  entry: './src/app/AppInit.js',
   output: {
     path: __dirname + '/docs/',
-    filename: './js/canvas.bundle.js'
+    filename: './js/index.js'
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
@@ -21,26 +21,56 @@ module.exports = {
         }
       },
       {
-         test: /\.(png|svg|jpg|gif)$/,
-         use: [
-           'file-loader',
-         ],
-       },
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'file-loader',
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+              hmr: true,
+            },
+          },
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'fonts/'
+          }
+        }]
+      }
     ]
   },
   plugins: [
     new BrowserSyncPlugin({
       host: 'localhost',
       port: 3000,
-      server: { baseDir: ['docs'] },
+      server: {
+        baseDir: ['docs']
+      },
       files: ['./docs/*'],
       notify: false
     }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+      ignoreOrder: false,
+    }),
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      favicon: 'favicon.ico',
-      template: 'src/index.html'
-    })
+      filename: './index.html',
+      favicon: './src/assets/favicon.ico',
+      template: './src/index.html'
+    }),
   ],
   watch: true,
   devtool: 'source-map'
