@@ -14,25 +14,22 @@ export class Button extends Container {
   }
 
   enable() {
-    if (this.enabled) {
+    if (this.enabled)
       return;
-    }
+
     this.enabled = true;
 
-    if (this.container !== undefined) {
+    if (this.container !== undefined)
       this.removeChild(this.container);
-    }
 
     this.style = new TextStyle({
       fontFamily: 'Text Me One',
-      fontSize: this.h/14,
+      fontSize: this.h / 14,
       fill: this.textColor
     });
 
     this.boxX = this.style.fontSize * this.label.length * 0.8;
     this.boxY = this.style.fontSize * 1.5;
-
-    let container = new Container();
 
     this.createBox(this.bgColor);
 
@@ -48,7 +45,7 @@ export class Button extends Container {
     this.removeChild(this.box);
     this.box = new Graphics();
     this.box.beginFill(color);
-    this.box.drawRoundedRect(-this.boxX/2, -this.boxY/2, this.boxX, this.boxY, this.boxY/4);
+    this.box.drawRoundedRect(-this.boxX / 2, -this.boxY / 2, this.boxX, this.boxY, this.boxY / 4);
     this.box.zIndex = 1;
     this.addChild(this.box);
   }

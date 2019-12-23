@@ -1,28 +1,28 @@
 import { Container, Graphics } from 'pixi.js';
 
+import * as Color from './Colors.js';
+import * as Utils from '../utils/Utils.js';
+
 export class Connector extends Container {
   constructor(a, b) {
     super();
     this.a = a;
     this.b = b;
-    let nodeRad = 16;
-    let dis = Math.pow(Math.pow(this.a.x - this.b.x, 2) + Math.pow(this.a.y - this.b.y, 2), 0.5) - (nodeRad * 2);
-    let angle = Math.atan2(this.b.y - this.a.y, this.b.x - this.a.x);
+    let nodeRad = 16; // TODO: Set the value related to actual node radius
+    let dis = Utils.dist(a.x, a.y, b.x, b.y) - (nodeRad * 2);
 
     this.line = new Graphics();
-    this.line.beginFill(0xFFFFFF);
+    this.line.beginFill(Color.connector);
     this.line.drawRoundedRect(nodeRad, -4, dis, 8, 4);
-    this.line.rotation = angle;
-    this.line.x = this.a.x;
-    this.line.y = this.a.y;
-    this.line.interactive = true;
-    this.line.buttonMode = true;
+    this.line.rotation = Utils.angle(a.x, a.y, b.x, b.y);
+    this.line.position.set(a.x, a.y);
+    this.line.interactive = this.line.buttonMode = true;
 
     this.line.on('mouseover', () => {
-      this.line.tint = 0xFF5555;
+      this.line.tint = Color.connectorHover;
     })
     this.line.on('mouseout', () => {
-      this.line.tint = 0xFFFFFF;
+      this.line.tint = 0xFFFFFF; // Clears tints
     })
 
     this.addChild(this.line);

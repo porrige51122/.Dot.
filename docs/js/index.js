@@ -46606,14 +46606,11 @@ var Button = exports.Button = function (_Container) {
   _createClass(Button, [{
     key: 'enable',
     value: function enable() {
-      if (this.enabled) {
-        return;
-      }
+      if (this.enabled) return;
+
       this.enabled = true;
 
-      if (this.container !== undefined) {
-        this.removeChild(this.container);
-      }
+      if (this.container !== undefined) this.removeChild(this.container);
 
       this.style = new _pixi.TextStyle({
         fontFamily: 'Text Me One',
@@ -46623,8 +46620,6 @@ var Button = exports.Button = function (_Container) {
 
       this.boxX = this.style.fontSize * this.label.length * 0.8;
       this.boxY = this.style.fontSize * 1.5;
-
-      var container = new _pixi.Container();
 
       this.createBox(this.bgColor);
 
@@ -46669,7 +46664,9 @@ var mainBG = exports.mainBG = 0xFCBF49,
     mainFG = exports.mainFG = 0x000034,
     mainText = exports.mainText = 0xFCBF49,
     secondaryBG = exports.secondaryBG = 0x00034,
-    secondaryTitle = exports.secondaryTitle = 0xFcBF49;
+    secondaryTitle = exports.secondaryTitle = 0xFCBF49,
+    connector = exports.connector = 0xFFFFFF,
+    connectorHover = exports.connectorHover = 0xFF5555;
 
 /***/ }),
 
@@ -46690,6 +46687,16 @@ exports.Connector = undefined;
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
+var _Colors = __webpack_require__(/*! ./Colors.js */ "./src/app/core/display/Colors.js");
+
+var Color = _interopRequireWildcard(_Colors);
+
+var _Utils = __webpack_require__(/*! ../utils/Utils.js */ "./src/app/core/utils/Utils.js");
+
+var Utils = _interopRequireWildcard(_Utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -46706,24 +46713,21 @@ var Connector = exports.Connector = function (_Container) {
 
     _this.a = a;
     _this.b = b;
-    var nodeRad = 16;
-    var dis = Math.pow(Math.pow(_this.a.x - _this.b.x, 2) + Math.pow(_this.a.y - _this.b.y, 2), 0.5) - nodeRad * 2;
-    var angle = Math.atan2(_this.b.y - _this.a.y, _this.b.x - _this.a.x);
+    var nodeRad = 16; // TODO: Set the value related to actual node radius
+    var dis = Utils.dist(a.x, a.y, b.x, b.y) - nodeRad * 2;
 
     _this.line = new _pixi.Graphics();
-    _this.line.beginFill(0xFFFFFF);
+    _this.line.beginFill(Color.connector);
     _this.line.drawRoundedRect(nodeRad, -4, dis, 8, 4);
-    _this.line.rotation = angle;
-    _this.line.x = _this.a.x;
-    _this.line.y = _this.a.y;
-    _this.line.interactive = true;
-    _this.line.buttonMode = true;
+    _this.line.rotation = Utils.angle(a.x, a.y, b.x, b.y);
+    _this.line.position.set(a.x, a.y);
+    _this.line.interactive = _this.line.buttonMode = true;
 
     _this.line.on('mouseover', function () {
-      _this.line.tint = 0xFF5555;
+      _this.line.tint = Color.connectorHover;
     });
     _this.line.on('mouseout', function () {
-      _this.line.tint = 0xFFFFFF;
+      _this.line.tint = 0xFFFFFF; // Clears tints
     });
 
     _this.addChild(_this.line);
@@ -46842,17 +46846,20 @@ var Node = exports.Node = function (_Container) {
 
     switch (type) {
       case 0:
-        _this.setA();
+        _this.textures = assets.nodeA;
         break;
       case 1:
-        _this.setB();
+        _this.textures = assets.nodeB;
         break;
       case 2:
-        _this.setC();
+        _this.textures = assets.nodeC;
         break;
       default:
         console.log("JSON ERROR");
     }
+    _this.min = 0;
+    _this.max = _this.textures.length - 1;
+
     _this.halo = new _pixi.Graphics();
     _this.halo.beginFill(0xFCBF49);
     _this.halo.drawStar(0, 0, 8, 100);
@@ -46860,7 +46867,7 @@ var Node = exports.Node = function (_Container) {
     _this.halo.visible = false;
 
     _this.nodeTypes = assets.nodeTypes;
-    _this.node = new _pixi.Sprite(_this.nodeTypes[_this.min]);
+    _this.node = new _pixi.Sprite(_this.textures[_this.min]);
     _this.node.anchor.set(0.5);
     _this.selected = false;
     _this.addChild(_this.halo, _this.node);
@@ -46868,24 +46875,6 @@ var Node = exports.Node = function (_Container) {
   }
 
   _createClass(Node, [{
-    key: "setA",
-    value: function setA() {
-      this.min = 0;
-      this.max = 1;
-    }
-  }, {
-    key: "setB",
-    value: function setB() {
-      this.min = 2;
-      this.max = 4;
-    }
-  }, {
-    key: "setC",
-    value: function setC() {
-      this.min = 5;
-      this.max = 8;
-    }
-  }, {
     key: "select",
     value: function select() {
       this.selected = !this.selected;
@@ -46896,7 +46885,7 @@ var Node = exports.Node = function (_Container) {
     value: function increase() {
       if (this.min < this.max) {
         this.min++;
-        this.node.texture = this.nodeTypes[this.min];
+        this.node.texture = this.textures[this.min];
         return true;
       } else {
         return false;
@@ -46906,12 +46895,12 @@ var Node = exports.Node = function (_Container) {
     key: "decrease",
     value: function decrease() {
       this.min--;
-      this.node.texture = this.nodeTypes[this.min];
+      this.node.texture = this.textures[this.min];
     }
   }, {
     key: "complete",
     value: function complete() {
-      return this.min == this.max;
+      return this.min === this.max;
     }
   }]);
 
@@ -47239,6 +47228,78 @@ var Transitions = exports.Transitions = function () {
 
 /***/ }),
 
+/***/ "./src/app/core/utils/Utils.js":
+/*!*************************************!*\
+  !*** ./src/app/core/utils/Utils.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.dist = dist;
+exports.angle = angle;
+exports.checkDuplicate = checkDuplicate;
+exports.sameLine = sameLine;
+exports.checkCross = checkCross;
+exports.crossLine = crossLine;
+function dist(x1, y1, x2, y2) {
+  return Math.pow(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2), 0.5);
+}
+
+function angle(x1, y1, x2, y2) {
+  return Math.atan2(y2 - y1, x2 - x1);
+}
+
+function checkDuplicate(array, line) {
+  for (var i = 0; i < array.length; i++) {
+    if (this.sameLine(array[i], line)) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function sameLine(a, b) {
+  return a.a === b.a && a.b === b.b || a.b === b.a && a.a === b.b;
+}
+
+function checkCross(array, line) {
+  for (var i = 0; i < array.length; i++) {
+    if (this.crossLine(array[i], line)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function crossLine(la, lb) {
+  var a = la.a.x;
+  var b = la.a.y;
+  var c = la.b.x;
+  var d = la.b.y;
+  var p = lb.a.x;
+  var q = lb.a.y;
+  var r = lb.b.x;
+  var s = lb.b.y;
+
+  var det, gamma, lambda;
+  det = (c - a) * (s - q) - (r - p) * (d - b);
+  if (det === 0) {
+    return false;
+  } else {
+    lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
+    gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
+    return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
+  }
+}
+
+/***/ }),
+
 /***/ "./src/app/game/GameController.js":
 /*!****************************************!*\
   !*** ./src/app/game/GameController.js ***!
@@ -47334,9 +47395,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
-var _nodes = __webpack_require__(/*! ../../../assets/nodes.png */ "./src/assets/nodes.png");
+var _nodeA = __webpack_require__(/*! ../../../assets/nodeA.png */ "./src/assets/nodeA.png");
 
-var _nodes2 = _interopRequireDefault(_nodes);
+var _nodeA2 = _interopRequireDefault(_nodeA);
+
+var _nodeB = __webpack_require__(/*! ../../../assets/nodeB.png */ "./src/assets/nodeB.png");
+
+var _nodeB2 = _interopRequireDefault(_nodeB);
+
+var _nodeC = __webpack_require__(/*! ../../../assets/nodeC.png */ "./src/assets/nodeC.png");
+
+var _nodeC2 = _interopRequireDefault(_nodeC);
 
 var _levels = __webpack_require__(/*! ../../../assets/levels.json */ "./src/assets/levels.json");
 
@@ -47361,21 +47430,18 @@ var AssetManager = exports.AssetManager = function () {
     this.promise = new Promise(function (resolve, reject) {
       _this.loader = new _pixi.Loader();
 
-      _this.loader.add(_nodes2.default);
+      _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default);
 
       _this.levels = _levels2.default;
-      _this.nodeTypes = [];
+      _this.nodeA = [];
+      _this.nodeB = [];
+      _this.nodeC = [];
 
       _this.loader.on('progress', _this.loadProgressHandler);
       _this.loader.load(function () {
-
-        var nodeSheet = _this.loader.resources[_nodes2.default].texture;
-        for (var x = 0; x < 900; x += 100) {
-          var sprite = new _pixi.Texture(nodeSheet);
-          sprite.frame = new _pixi.Rectangle(x, 0, 100, 100);
-          _this.nodeTypes.push(sprite);
-        }
-
+        _this.nodeA = _this.split(_nodeA2.default, 100);
+        _this.nodeB = _this.split(_nodeB2.default, 100);
+        _this.nodeC = _this.split(_nodeC2.default, 100);
         console.log('All Assets Loaded');
         resolve();
       });
@@ -47383,6 +47449,18 @@ var AssetManager = exports.AssetManager = function () {
   }
 
   _createClass(AssetManager, [{
+    key: 'split',
+    value: function split(id, width) {
+      var output = [];
+      var sheet = this.loader.resources[id].texture;
+      for (var x = 0; x < sheet.width; x += width) {
+        var sprite = new _pixi.Texture(sheet);
+        sprite.frame = new _pixi.Rectangle(x, 0, 100, 100);
+        output.push(sprite);
+      }
+      return output;
+    }
+  }, {
     key: 'loadProgressHandler',
     value: function loadProgressHandler(loader, resource) {
       console.log("progress: " + loader.progress + "%");
@@ -47412,6 +47490,12 @@ exports.LevelBackend = undefined;
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _Connector = __webpack_require__(/*! ../../core/display/Connector.js */ "./src/app/core/display/Connector.js");
+
+var _Utils = __webpack_require__(/*! ../../core/utils/Utils.js */ "./src/app/core/utils/Utils.js");
+
+var Utils = _interopRequireWildcard(_Utils);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -47456,10 +47540,9 @@ var LevelBackend = exports.LevelBackend = function () {
             break;
 
           case -2:
-            console.log('ERROR');
-
+            console.log('Lines Cannot cross');
+            break;
           default:
-            console.log('remove Line');
             this.removeLine(ctx, node, prevNode, result);
             break;
 
@@ -47470,18 +47553,15 @@ var LevelBackend = exports.LevelBackend = function () {
   }, {
     key: 'checkLines',
     value: function checkLines(ctx, a, b) {
-      for (var i = 0; i < ctx.lines.length; i++) {
-        if (ctx.lines[i].a === a && ctx.lines[i].b === b || ctx.lines[i].b === a && ctx.lines[i].a === b) {
-          return i;
-        }
-      }
-      return -1;
+      var output = Utils.checkDuplicate(ctx.lines, { a: a, b: b });
+      if (output !== -1) return output;
+      output = Utils.checkCross(ctx.lines, { a: a, b: b });
+      return output ? -2 : -1;
     }
   }, {
     key: 'removeLine',
     value: function removeLine(ctx, a, b, index, value) {
       if (value !== undefined) index = ctx.lines.indexOf(value);
-      console.log(index);
       a.decrease();
       b.decrease();
       ctx.removeChild(ctx.lines[index]);
@@ -47716,7 +47796,7 @@ var LevelManager = exports.LevelManager = function (_Container) {
       gt.menu.removeChild(gt.menu.levelCompleteMenu);
       gt.menu.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gt);
       gt.menu.addChild(gt.menu.levelCompleteMenu);
-      gt.transitions.transitionFade(gt.levels, gt.menu.levelCompleteMenu);
+      gt.transitions.transitionSlide(gt.levels, gt.menu.levelCompleteMenu);
     }
   }]);
 
@@ -47786,8 +47866,8 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
 
     var _loop = function _loop(i) {
       var node = new _Node.Node(_this.gt.assets, lvl.nodes[i].type);
-      node.x = w / (lvl.x + 1) * lvl.nodes[i].x;
-      node.y = h / (lvl.y + 2) * (lvl.nodes[i].y + 1);
+      node.x = Math.floor(w / (lvl.x + 1) * lvl.nodes[i].x);
+      node.y = Math.floor(h / (lvl.y + 2) * (lvl.nodes[i].y + 1));
       node.scale.set(1 / (lvl.y + 1) * 2);
 
       node.buttonMode = true;
@@ -48283,23 +48363,49 @@ var StatusDisplay = exports.StatusDisplay = function (_Container) {
 /*!********************************!*\
   !*** ./src/assets/levels.json ***!
   \********************************/
-/*! exports provided: 0, 1, default */
+/*! exports provided: 0, 1, 2, 3, 4, 5, 6, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"level\":0,\"x\":2,\"y\":3,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":3}],\"message\":\"Click two nodes to connect them...\"},{\"level\":1,\"x\":5,\"y\":4,\"nodes\":[{\"type\":0,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3},{\"type\":0,\"x\":4,\"y\":4}],\"message\":\"Some nodes have different max connections...\"}]");
+module.exports = JSON.parse("[{\"level\":0,\"x\":2,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"Click two nodes to connect them...\"},{\"level\":1,\"x\":2,\"y\":3,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":3}],\"message\":\"Different nodes can have different numbers of connections...\"},{\"level\":2,\"x\":2,\"y\":2,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":1,\"y\":2},{\"type\":0,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"The connections don't have to be in one loop...\"},{\"level\":3,\"x\":2,\"y\":2,\"nodes\":[{\"type\":1,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":1}],\"message\":\"But sometimes it's impossible without...\"},{\"level\":4,\"x\":5,\"y\":3,\"nodes\":[{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3}],\"message\":\"No crossing lines though...\"},{\"level\":5,\"x\":5,\"y\":4,\"nodes\":[{\"type\":0,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3},{\"type\":0,\"x\":4,\"y\":4}],\"message\":\"All nodes must hit their max to continue...\"},{\"level\":6,\"x\":4,\"y\":5,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":2,\"x\":1,\"y\":3},{\"type\":0,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":4},{\"type\":1,\"x\":2,\"y\":4},{\"type\":2,\"x\":1,\"y\":5},{\"type\":0,\"x\":2,\"y\":2},{\"type\":2,\"x\":3,\"y\":5},{\"type\":1,\"x\":4,\"y\":3},{\"type\":1,\"x\":4,\"y\":5},{\"type\":1,\"x\":4,\"y\":1}],\"message\":\"Try this one on for size...\"}]");
 
 /***/ }),
 
-/***/ "./src/assets/nodes.png":
+/***/ "./src/assets/nodeA.png":
 /*!******************************!*\
-  !*** ./src/assets/nodes.png ***!
+  !*** ./src/assets/nodeA.png ***!
   \******************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "c3cbd35e75acc9c67b5a08fbb5b2150c.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "35dbf10119500d20c0f08646ea4d7ebd.png");
+
+/***/ }),
+
+/***/ "./src/assets/nodeB.png":
+/*!******************************!*\
+  !*** ./src/assets/nodeB.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "9e775437fb05bc41d481c5ecca50528e.png");
+
+/***/ }),
+
+/***/ "./src/assets/nodeC.png":
+/*!******************************!*\
+  !*** ./src/assets/nodeC.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "aeb8b59b5d11c575054da181648b60b7.png");
 
 /***/ })
 

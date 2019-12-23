@@ -1,4 +1,5 @@
 import { Connector } from '../../core/display/Connector.js';
+import * as Utils from '../../core/utils/Utils.js';
 
 export class LevelBackend {
   checkWin() {
@@ -36,10 +37,9 @@ export class LevelBackend {
           break;
 
         case -2:
-          console.log('ERROR');
-
+          console.log('Lines Cannot cross');
+          break;
         default:
-          console.log('remove Line')
           this.removeLine(ctx, node, prevNode, result);
           break;
 
@@ -49,19 +49,15 @@ export class LevelBackend {
   }
 
   checkLines(ctx, a, b) {
-    for (let i = 0; i < ctx.lines.length; i++) {
-      if ((ctx.lines[i].a === a && ctx.lines[i].b === b)
-       || (ctx.lines[i].b === a && ctx.lines[i].a === b)) {
-        return i;
-      }
-    }
-    return -1;
+    let output = Utils.checkDuplicate(ctx.lines, {a: a, b: b});
+    if (output !== -1) return output;
+    output = Utils.checkCross(ctx.lines, {a: a, b: b});
+    return output ? -2 : -1;
   }
 
   removeLine(ctx, a, b, index, value) {
     if (value !== undefined)
       index = ctx.lines.indexOf(value);
-    console.log(index);
     a.decrease();
     b.decrease();
     ctx.removeChild(ctx.lines[index]);

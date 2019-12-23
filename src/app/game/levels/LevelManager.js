@@ -41,6 +41,6 @@ export class LevelManager extends Container {
     gt.menu.removeChild(gt.menu.levelCompleteMenu);
     gt.menu.levelCompleteMenu = new LevelCompleteMenu(gt);
     gt.menu.addChild(gt.menu.levelCompleteMenu);
-    gt.transitions.transitionFade(gt.levels, gt.menu.levelCompleteMenu);
+    gt.transitions.transitionSlide(gt.levels, gt.menu.levelCompleteMenu);
   }
 }

@@ -5,17 +5,20 @@ export class Node extends Container {
     super();
     switch (type) {
       case 0:
-        this.setA();
+        this.textures = assets.nodeA;
         break;
       case 1:
-        this.setB();
+        this.textures = assets.nodeB;
         break;
       case 2:
-        this.setC();
+        this.textures = assets.nodeC;
         break;
       default:
         console.log("JSON ERROR");
     }
+    this.min = 0;
+    this.max = this.textures.length - 1;
+
     this.halo = new Graphics();
     this.halo.beginFill(0xFCBF49);
     this.halo.drawStar(0, 0, 8, 100);
@@ -23,25 +26,10 @@ export class Node extends Container {
     this.halo.visible = false;
 
     this.nodeTypes = assets.nodeTypes;
-    this.node = new Sprite(this.nodeTypes[this.min]);
+    this.node = new Sprite(this.textures[this.min]);
     this.node.anchor.set(0.5);
     this.selected = false;
     this.addChild(this.halo, this.node);
-  }
-
-  setA() {
-    this.min = 0;
-    this.max = 1;
-  }
-
-  setB() {
-    this.min = 2;
-    this.max = 4;
-  }
-
-  setC() {
-    this.min = 5;
-    this.max = 8;
   }
 
   select() {
@@ -53,7 +41,7 @@ export class Node extends Container {
   increase() {
     if (this.min < this.max) {
       this.min++;
-      this.node.texture = this.nodeTypes[this.min];
+      this.node.texture = this.textures[this.min];
       return true;
     } else {
       return false;
@@ -62,10 +50,10 @@ export class Node extends Container {
 
   decrease() {
     this.min--;
-    this.node.texture = this.nodeTypes[this.min];
+    this.node.texture = this.textures[this.min];
   }
 
   complete() {
-    return this.min == this.max;
+    return this.min === this.max;
   }
 }

@@ -26,8 +26,8 @@ export class LevelMidground extends Container {
 
     for (let i = 0; i < lvl.nodes.length; i++) {
       let node = new Node(this.gt.assets, lvl.nodes[i].type);
-      node.x = w / (lvl.x + 1) * lvl.nodes[i].x;
-      node.y = h / (lvl.y + 2) * (lvl.nodes[i].y + 1);
+      node.x = Math.floor(w / (lvl.x + 1) * lvl.nodes[i].x);
+      node.y = Math.floor(h / (lvl.y + 2) * (lvl.nodes[i].y + 1));
       node.scale.set(1/(lvl.y + 1) * 2);
 
       node.buttonMode = true;
