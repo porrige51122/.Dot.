@@ -47781,7 +47781,6 @@ var AssetManager = exports.AssetManager = function () {
 
       _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default);
 
-<<<<<<< HEAD:docs/js/index.js
       _this.levels = _levels2.default;
       _this.nodeA = [];
       _this.nodeB = [];
@@ -47795,13 +47794,6 @@ var AssetManager = exports.AssetManager = function () {
         console.log('All Assets Loaded');
         resolve();
       });
-=======
-    this.level = 1;
-    this.font = new _pixi.TextStyle({
-      fontFamily: 'Courier New',
-      fontSize: 20,
-      fill: '#FCBF49'
->>>>>>> master:docs/js/canvas.bundle.js
     });
   }
 
