@@ -47206,7 +47206,7 @@ var Node = exports.Node = function (_Container) {
       default:
         console.log("JSON ERROR");
     }
-    _this.min = 0;
+    _this.cur = 0;
     _this.max = _this.textures.length - 1;
 
     _this.halo = new _pixi.Graphics();
@@ -47216,7 +47216,7 @@ var Node = exports.Node = function (_Container) {
     _this.halo.visible = false;
 
     _this.nodeTypes = assets.nodeTypes;
-    _this.node = new _pixi.Sprite(_this.textures[_this.min]);
+    _this.node = new _pixi.Sprite(_this.textures[_this.cur]);
     _this.node.anchor.set(0.5);
     _this.selected = false;
     _this.addChild(_this.halo, _this.node);
@@ -47232,9 +47232,9 @@ var Node = exports.Node = function (_Container) {
   }, {
     key: "increase",
     value: function increase() {
-      if (this.min < this.max) {
-        this.min++;
-        this.node.texture = this.textures[this.min];
+      if (this.cur < this.max) {
+        this.cur++;
+        this.node.texture = this.textures[this.cur];
         return true;
       } else {
         return false;
@@ -47243,13 +47243,13 @@ var Node = exports.Node = function (_Container) {
   }, {
     key: "decrease",
     value: function decrease() {
-      this.min--;
-      this.node.texture = this.textures[this.min];
+      this.cur--;
+      this.node.texture = this.textures[this.cur];
     }
   }, {
     key: "complete",
     value: function complete() {
-      return this.min === this.max;
+      return this.cur === this.max;
     }
   }]);
 
@@ -48235,7 +48235,7 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
       var node = new _Node.Node(_this.gt.assets, lvl.nodes[i].type);
       node.x = Math.floor(w / (lvl.x + 1) * lvl.nodes[i].x);
       node.y = Math.floor(h / (lvl.y + 2) * (lvl.nodes[i].y + 1));
-      node.scale.set(1 / (lvl.y + 1) * 2);
+      node.scale.set(w / 1400);
 
       node.buttonMode = true;
       node.interactive = true;
