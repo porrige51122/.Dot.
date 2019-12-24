@@ -13,23 +13,22 @@ export class LevelMenu extends Container {
 
     this.buttons = [];
 
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < controller.assets.levels.length; i++) {
       let but = new Button(colors.mainFG, colors.mainText, "." + (i + 1) + ".", w, h);
       but.x = w / 7 + ((w / 7) * (i % 6));
       but.y = h / 3 + ((h / 6) * Math.floor(i / 6));
       but.enable();
-      if (i < controller.assets.levels.length) {
+      if (i < 1) {
         but.buttonMode = true;
         but.interactive = true;
-        but.on('pointertap', () => {
-          controller.levels.level = i;
-          controller.levels.buildLevel();
-          controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
-        });
       } else {
         but.alpha = 0.75;
       }
-
+      but.on('pointertap', () => {
+        controller.levels.level = i;
+        controller.levels.buildLevel();
+        controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
+      });
       this.buttons.push(but);
       this.addChild(but);
     }

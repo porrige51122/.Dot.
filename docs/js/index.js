@@ -48154,6 +48154,12 @@ var LevelManager = exports.LevelManager = function (_Container) {
     key: 'levelComplete',
     value: function levelComplete(gt) {
       gt.menu.levelMenu.buttons[gt.levels.level].createBox(0x00441B);
+      if (gt.menu.levelMenu.buttons[gt.levels.level + 1] !== undefined) {
+        gt.menu.levelMenu.buttons[gt.levels.level + 1].alpha = 1;
+        gt.menu.levelMenu.buttons[gt.levels.level + 1].buttonMode = true;
+        gt.menu.levelMenu.buttons[gt.levels.level + 1].interactive = true;
+      }
+
       gt.menu.removeChild(gt.menu.levelCompleteMenu);
       gt.menu.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gt);
       gt.menu.addChild(gt.menu.levelCompleteMenu);
@@ -48373,8 +48379,7 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
     _this.back = new _Button.Button(colors.mainFG, colors.mainText, 'Back', w, h);
     _this.back.x = w - w / 10;
     _this.back.y = h / 8;
-    _this.back.buttonMode = true;
-    _this.back.interactive = true;
+    _this.back.buttonMode = _this.back.interactive = true;
     _this.back.enable();
     _this.back.on('pointertap', function () {
       controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu);
@@ -48390,11 +48395,11 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
       _this.next = new _Button.Button(colors.mainFG, colors.mainText, 'Level ' + (controller.levels.level + 2), w, h);
       _this.next.x = w / 2;
       _this.next.y = h / 2;
-      _this.next.buttonMode = true;
-      _this.next.interactive = true;
+      _this.next.buttonMode = _this.next.interactive = true;
       _this.next.enable();
       _this.next.on('pointertap', function () {
         controller.levels.level++;
+        _this.next.buttonMode = _this.next.interactive = false;
         controller.levels.buildLevel();
         controller.transitions.transitionFade(controller.menu.levelCompleteMenu, controller.levels);
       });
@@ -48472,23 +48477,22 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       but.x = w / 7 + w / 7 * (i % 6);
       but.y = h / 3 + h / 6 * Math.floor(i / 6);
       but.enable();
-      if (i < controller.assets.levels.length) {
+      if (i < 1) {
         but.buttonMode = true;
         but.interactive = true;
-        but.on('pointertap', function () {
-          controller.levels.level = i;
-          controller.levels.buildLevel();
-          controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
-        });
       } else {
         but.alpha = 0.75;
       }
-
+      but.on('pointertap', function () {
+        controller.levels.level = i;
+        controller.levels.buildLevel();
+        controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
+      });
       _this.buttons.push(but);
       _this.addChild(but);
     };
 
-    for (var i = 0; i < 24; i++) {
+    for (var i = 0; i < controller.assets.levels.length; i++) {
       _loop(i);
     }
     _this.title = new _Heading.Heading(0x000034, 'Select Level', w, h);

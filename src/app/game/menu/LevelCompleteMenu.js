@@ -14,8 +14,7 @@ export class LevelCompleteMenu extends Container {
     this.back = new Button(colors.mainFG, colors.mainText, 'Back', w, h);
     this.back.x = w - (w / 10);
     this.back.y = h / 8;
-    this.back.buttonMode = true;
-    this.back.interactive = true;
+    this.back.buttonMode = this.back.interactive = true;
     this.back.enable();
     this.back.on('pointertap', () => {
       controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu);
@@ -31,11 +30,11 @@ export class LevelCompleteMenu extends Container {
       this.next = new Button(colors.mainFG, colors.mainText, 'Level ' + (controller.levels.level + 2), w, h);
       this.next.x = w / 2;
       this.next.y = h / 2;
-      this.next.buttonMode = true;
-      this.next.interactive = true;
+      this.next.buttonMode = this.next.interactive = true;
       this.next.enable();
       this.next.on('pointertap', () => {
         controller.levels.level++;
+        this.next.buttonMode = this.next.interactive = false;
         controller.levels.buildLevel();
         controller.transitions.transitionFade(controller.menu.levelCompleteMenu, controller.levels);
       });

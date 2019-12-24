@@ -38,6 +38,12 @@ export class LevelManager extends Container {
 
   levelComplete(gt) {
     gt.menu.levelMenu.buttons[gt.levels.level].createBox(0x00441B);
+    if (gt.menu.levelMenu.buttons[gt.levels.level + 1] !== undefined) {
+      gt.menu.levelMenu.buttons[gt.levels.level + 1].alpha = 1;
+      gt.menu.levelMenu.buttons[gt.levels.level + 1].buttonMode = true;
+      gt.menu.levelMenu.buttons[gt.levels.level + 1].interactive = true;
+    }
+    
     gt.menu.removeChild(gt.menu.levelCompleteMenu);
     gt.menu.levelCompleteMenu = new LevelCompleteMenu(gt);
     gt.menu.addChild(gt.menu.levelCompleteMenu);
