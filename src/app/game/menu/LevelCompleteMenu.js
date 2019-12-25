@@ -6,8 +6,11 @@ import { Button } from '../../core/display/Button.js';
 import { Heading } from '../../core/display/Heading.js';
 
 export class LevelCompleteMenu extends Container {
-  constructor(controller) {
+  constructor(controller, world) {
     super();
+    if (world == undefined) {
+      world = 0;
+    }
     let w = controller.canvas.width;
     let h = controller.canvas.height;
 
@@ -21,7 +24,7 @@ export class LevelCompleteMenu extends Container {
     });
     this.addChild(this.back);
 
-    if (controller.levels.level < controller.assets.levels.length - 1) {
+    if (controller.levels.level < controller.assets.levels[world].length - 1) {
       this.title = new Heading(0x000034, 'Level ' + (controller.levels.level + 1) + ' Complete!', w, h);
       this.title.x = w / 2;
       this.title.y = h / 8;

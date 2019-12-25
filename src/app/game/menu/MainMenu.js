@@ -11,13 +11,13 @@ export class MainMenu extends Container {
     let w = controller.canvas.width;
     let h = controller.canvas.height;
 
-    this.startButton = new Button(colors.mainFG, colors.mainText, 'Level Select', w, h);
+    this.startButton = new Button(colors.mainFG, colors.mainText, 'Start', w, h);
     this.startButton.x = (w/2);
     this.startButton.y = (h/8 * 5);
     this.startButton.buttonMode = true;
     this.startButton.interactive = true;
     this.startButton.on('pointertap', () => {
-      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.levelMenu);
+      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.worldMenu);
     });
 
     this.challengeButton = new Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);

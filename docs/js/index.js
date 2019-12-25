@@ -47014,8 +47014,10 @@ var mainBG = exports.mainBG = 0xFCBF49,
     mainText = exports.mainText = 0xFCBF49,
     secondaryBG = exports.secondaryBG = 0x00034,
     secondaryTitle = exports.secondaryTitle = 0xFCBF49,
-    connector = exports.connector = 0xFFFFFF,
-    connectorHover = exports.connectorHover = 0xFF5555;
+    connector = exports.connector = 0xEDF7F6,
+    connectorHover = exports.connectorHover = 0xFF5555,
+    blue = exports.blue = 0x2660A4,
+    red = exports.red = 0xFE4A49;
 
 /***/ }),
 
@@ -47157,6 +47159,83 @@ var Heading = exports.Heading = function (_Container) {
 
   return Heading;
 }(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/core/display/LargeButton.js":
+/*!*********************************************!*\
+  !*** ./src/app/core/display/LargeButton.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.LargeButton = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Button2 = __webpack_require__(/*! ./Button.js */ "./src/app/core/display/Button.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LargeButton = exports.LargeButton = function (_Button) {
+    _inherits(LargeButton, _Button);
+
+    function LargeButton(bgColor, textColor, label, sublabel, w, h) {
+        _classCallCheck(this, LargeButton);
+
+        var _this = _possibleConstructorReturn(this, (LargeButton.__proto__ || Object.getPrototypeOf(LargeButton)).call(this, bgColor, textColor, label, w, h));
+
+        _this.sublabel = sublabel;
+        return _this;
+    }
+
+    _createClass(LargeButton, [{
+        key: 'enable',
+        value: function enable() {
+            if (this.enabled) return;
+
+            this.enabled = true;
+
+            if (this.container !== undefined) this.removeChild(this.container);
+
+            this.style = new _pixi.TextStyle({
+                fontFamily: 'Text Me One',
+                fontSize: this.h / 14,
+                fill: this.textColor
+            });
+
+            this.boxX = this.style.fontSize * this.sublabel.length * 0.5;
+            this.boxY = this.style.fontSize * 4;
+
+            this.createBox(this.bgColor);
+
+            this.text = new _pixi.Text(this.label);
+            this.text.style = this.style;
+            this.text.anchor.set(0.5, 1);
+            this.text.zIndex = 2;
+            this.text2 = new _pixi.Text(this.sublabel);
+            this.text2.style = this.style;
+            this.text2.anchor.set(0.5, 0);
+            this.text2.zIndex = 2;
+
+            this.addChild(this.text, this.text2);
+        }
+    }]);
+
+    return LargeButton;
+}(_Button2.Button);
 
 /***/ }),
 
@@ -47756,9 +47835,9 @@ var _nodeC = __webpack_require__(/*! ../../../assets/nodeC.png */ "./src/assets/
 
 var _nodeC2 = _interopRequireDefault(_nodeC);
 
-var _levels = __webpack_require__(/*! ../../../assets/levels.json */ "./src/assets/levels.json");
+var _world = __webpack_require__(/*! ../../../assets/world1.json */ "./src/assets/world1.json");
 
-var _levels2 = _interopRequireDefault(_levels);
+var _world2 = _interopRequireDefault(_world);
 
 __webpack_require__(/*! ../../../app.css */ "./src/app.css");
 
@@ -47781,7 +47860,7 @@ var AssetManager = exports.AssetManager = function () {
 
       _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default);
 
-      _this.levels = _levels2.default;
+      _this.levels = [_world2.default];
       _this.nodeA = [];
       _this.nodeB = [];
       _this.nodeC = [];
@@ -48210,17 +48289,20 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LevelMidground = exports.LevelMidground = function (_Container) {
   _inherits(LevelMidground, _Container);
 
-  function LevelMidground(GameController) {
+  function LevelMidground(GameController, world) {
     _classCallCheck(this, LevelMidground);
 
     var _this = _possibleConstructorReturn(this, (LevelMidground.__proto__ || Object.getPrototypeOf(LevelMidground)).call(this));
 
+    if (world == undefined) {
+      world = 0;
+    }
     _this.gt = GameController;
     var w = _this.gt.canvas.width;
     var h = _this.gt.canvas.height;
     _this.sortableChildren = true;
 
-    var lvl = _this.gt.assets.levels[_this.gt.levels.level];
+    var lvl = _this.gt.assets.levels[world][_this.gt.levels.level];
 
     _this.message = new _Subtitle.Subtitle(colors.secondaryTitle, lvl.message, w, h);
     _this.message.x = w / 2;
@@ -48368,11 +48450,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
   _inherits(LevelCompleteMenu, _Container);
 
-  function LevelCompleteMenu(controller) {
+  function LevelCompleteMenu(controller, world) {
     _classCallCheck(this, LevelCompleteMenu);
 
     var _this = _possibleConstructorReturn(this, (LevelCompleteMenu.__proto__ || Object.getPrototypeOf(LevelCompleteMenu)).call(this));
 
+    if (world == undefined) {
+      world = 0;
+    }
     var w = controller.canvas.width;
     var h = controller.canvas.height;
 
@@ -48386,7 +48471,7 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
     });
     _this.addChild(_this.back);
 
-    if (controller.levels.level < controller.assets.levels.length - 1) {
+    if (controller.levels.level < controller.assets.levels[world].length - 1) {
       _this.title = new _Heading.Heading(0x000034, 'Level ' + (controller.levels.level + 1) + ' Complete!', w, h);
       _this.title.x = w / 2;
       _this.title.y = h / 8;
@@ -48462,7 +48547,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LevelMenu = exports.LevelMenu = function (_Container) {
   _inherits(LevelMenu, _Container);
 
-  function LevelMenu(controller) {
+  function LevelMenu(controller, world) {
     _classCallCheck(this, LevelMenu);
 
     var _this = _possibleConstructorReturn(this, (LevelMenu.__proto__ || Object.getPrototypeOf(LevelMenu)).call(this));
@@ -48471,6 +48556,10 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
     var h = controller.canvas.height;
 
     _this.buttons = [];
+    if (world == undefined) {
+      console.log('world undefined');
+      world = 0;
+    }
 
     var _loop = function _loop(i) {
       var but = new _Button.Button(colors.mainFG, colors.mainText, "." + (i + 1) + ".", w, h);
@@ -48492,10 +48581,10 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       _this.addChild(but);
     };
 
-    for (var i = 0; i < controller.assets.levels.length; i++) {
+    for (var i = 0; i < controller.assets.levels[world].length; i++) {
       _loop(i);
     }
-    _this.title = new _Heading.Heading(0x000034, 'Select Level', w, h);
+    _this.title = new _Heading.Heading(colors.mainFG, 'Select Level', w, h);
     _this.title.x = w / 2;
     _this.title.y = h / 8;
     _this.title.enable();
@@ -48509,7 +48598,7 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
     _this.back.enable();
     _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
-      controller.transitions.transitionSlide(controller.menu.levelMenu, controller.menu.mainMenu);
+      controller.transitions.transitionSlide(controller.menu.levelMenu, controller.menu.worldMenu);
     });
     return _this;
   }
@@ -48565,13 +48654,13 @@ var MainMenu = exports.MainMenu = function (_Container) {
     var w = controller.canvas.width;
     var h = controller.canvas.height;
 
-    _this.startButton = new _Button.Button(colors.mainFG, colors.mainText, 'Level Select', w, h);
+    _this.startButton = new _Button.Button(colors.mainFG, colors.mainText, 'Start', w, h);
     _this.startButton.x = w / 2;
     _this.startButton.y = h / 8 * 5;
     _this.startButton.buttonMode = true;
     _this.startButton.interactive = true;
     _this.startButton.on('pointertap', function () {
-      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.levelMenu);
+      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.worldMenu);
     });
 
     _this.challengeButton = new _Button.Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);
@@ -48619,6 +48708,8 @@ var _MainMenu = __webpack_require__(/*! ./MainMenu.js */ "./src/app/game/menu/Ma
 
 var _LevelMenu = __webpack_require__(/*! ./LevelMenu.js */ "./src/app/game/menu/LevelMenu.js");
 
+var _WorldMenu = __webpack_require__(/*! ./WorldMenu.js */ "./src/app/game/menu/WorldMenu.js");
+
 var _DailyMenu = __webpack_require__(/*! ./DailyMenu.js */ "./src/app/game/menu/DailyMenu.js");
 
 var _LevelCompleteMenu = __webpack_require__(/*! ./LevelCompleteMenu.js */ "./src/app/game/menu/LevelCompleteMenu.js");
@@ -48644,18 +48735,110 @@ var MenuManager = exports.MenuManager = function (_Container) {
         _this.mainMenu = new _MainMenu.MainMenu(gameController);
         _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
         _this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
+        _this.worldMenu = new _WorldMenu.WorldMenu(gameController);
         _this.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gameController);
 
         // this.mainMenu.visible = false;
         _this.levelMenu.visible = false;
         _this.dailyMenu.visible = false;
+        _this.worldMenu.visible = false;
         _this.levelCompleteMenu.visible = false;
 
-        _this.addChild(_this.mainMenu, _this.levelMenu, _this.dailyMenu, _this.levelCompleteMenu);
+        _this.addChild(_this.mainMenu, _this.levelMenu, _this.dailyMenu, _this.worldMenu, _this.levelCompleteMenu);
         return _this;
     }
 
     return MenuManager;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/menu/WorldMenu.js":
+/*!****************************************!*\
+  !*** ./src/app/game/menu/WorldMenu.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.WorldMenu = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var colors = _interopRequireWildcard(_Colors);
+
+var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+var _LargeButton = __webpack_require__(/*! ../../core/display/LargeButton.js */ "./src/app/core/display/LargeButton.js");
+
+var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
+
+var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var WorldMenu = exports.WorldMenu = function (_Container) {
+  _inherits(WorldMenu, _Container);
+
+  function WorldMenu(controller, world) {
+    _classCallCheck(this, WorldMenu);
+
+    var _this = _possibleConstructorReturn(this, (WorldMenu.__proto__ || Object.getPrototypeOf(WorldMenu)).call(this));
+
+    var w = controller.canvas.width;
+    var h = controller.canvas.height;
+
+    _this.buttons = [];
+
+    for (var i = 0; i < controller.assets.levels.length; i++) {
+      var but = new _LargeButton.LargeButton(colors.mainFG, colors.mainText, "." + (i + 1) + ".", "0 / " + controller.assets.levels[i].length, w, h);
+      but.x = w / 4 + w / 4 * (i % 3);
+      but.y = h / 3 + h / 6 * Math.floor(i / 3);
+      but.enable();
+      if (i < 1) {
+        but.buttonMode = but.interactive = true;
+      } else {
+        but.alpha = 0.75;
+      }
+      but.on('pointertap', function () {
+        controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu);
+      });
+      _this.buttons.push(but);
+      _this.addChild(but);
+    }
+    _this.title = new _Heading.Heading(colors.mainFG, 'Select World', w, h);
+    _this.title.x = w / 2;
+    _this.title.y = h / 8;
+    _this.title.enable();
+    _this.addChild(_this.title);
+
+    _this.back = new _Button.Button(colors.mainFG, colors.mainText, "Back", w, h);
+    _this.back.x = w - w / 10;
+    _this.back.y = h / 8;
+    _this.back.buttonMode = true;
+    _this.back.interactive = true;
+    _this.back.enable();
+    _this.addChild(_this.back);
+    _this.back.on('pointertap', function () {
+      controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.mainMenu);
+    });
+    return _this;
+  }
+
+  return WorldMenu;
 }(_pixi.Container);
 
 /***/ }),
@@ -48724,17 +48907,6 @@ var StatusDisplay = exports.StatusDisplay = function (_Container) {
 
 /***/ }),
 
-/***/ "./src/assets/levels.json":
-/*!********************************!*\
-  !*** ./src/assets/levels.json ***!
-  \********************************/
-/*! exports provided: 0, 1, 2, 3, 4, 5, 6, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("[{\"level\":0,\"x\":2,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"Click two nodes to connect them...\"},{\"level\":1,\"x\":2,\"y\":3,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":3}],\"message\":\"Different nodes can have different numbers of connections...\"},{\"level\":2,\"x\":2,\"y\":2,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":1,\"y\":2},{\"type\":0,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"The connections don't have to be in one loop...\"},{\"level\":3,\"x\":2,\"y\":2,\"nodes\":[{\"type\":1,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":1}],\"message\":\"But sometimes it's impossible without...\"},{\"level\":4,\"x\":5,\"y\":3,\"nodes\":[{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3}],\"message\":\"No crossing lines though...\"},{\"level\":5,\"x\":5,\"y\":4,\"nodes\":[{\"type\":0,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3},{\"type\":0,\"x\":4,\"y\":4}],\"message\":\"All nodes must hit their max to continue...\"},{\"level\":6,\"x\":4,\"y\":5,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":2,\"x\":1,\"y\":3},{\"type\":0,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":4},{\"type\":1,\"x\":2,\"y\":4},{\"type\":2,\"x\":1,\"y\":5},{\"type\":0,\"x\":2,\"y\":2},{\"type\":2,\"x\":3,\"y\":5},{\"type\":1,\"x\":4,\"y\":3},{\"type\":1,\"x\":4,\"y\":5},{\"type\":1,\"x\":4,\"y\":1}],\"message\":\"Try this one on for size...\"}]");
-
-/***/ }),
-
 /***/ "./src/assets/nodeA.png":
 /*!******************************!*\
   !*** ./src/assets/nodeA.png ***!
@@ -48771,6 +48943,17 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "aeb8b59b5d11c575054da181648b60b7.png");
+
+/***/ }),
+
+/***/ "./src/assets/world1.json":
+/*!********************************!*\
+  !*** ./src/assets/world1.json ***!
+  \********************************/
+/*! exports provided: 0, 1, 2, 3, 4, 5, 6, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("[{\"level\":0,\"x\":2,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"Click two nodes to connect them...\"},{\"level\":1,\"x\":2,\"y\":3,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":3}],\"message\":\"Different nodes can have different numbers of connections...\"},{\"level\":2,\"x\":2,\"y\":2,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":1,\"y\":2},{\"type\":0,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"The connections don't have to be in one loop...\"},{\"level\":3,\"x\":2,\"y\":2,\"nodes\":[{\"type\":1,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":1}],\"message\":\"But sometimes it's impossible without...\"},{\"level\":4,\"x\":5,\"y\":3,\"nodes\":[{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3}],\"message\":\"No crossing lines though...\"},{\"level\":5,\"x\":5,\"y\":4,\"nodes\":[{\"type\":0,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3},{\"type\":0,\"x\":4,\"y\":4}],\"message\":\"All nodes must hit their max to continue...\"},{\"level\":6,\"x\":4,\"y\":5,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":2,\"x\":1,\"y\":3},{\"type\":0,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":4},{\"type\":1,\"x\":2,\"y\":4},{\"type\":2,\"x\":1,\"y\":5},{\"type\":0,\"x\":2,\"y\":2},{\"type\":2,\"x\":3,\"y\":5},{\"type\":1,\"x\":4,\"y\":3},{\"type\":1,\"x\":4,\"y\":5},{\"type\":1,\"x\":4,\"y\":1}],\"message\":\"Try this one on for size...\"}]");
 
 /***/ })
 

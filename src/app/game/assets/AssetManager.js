@@ -3,7 +3,7 @@ import { Loader, Texture, Rectangle } from 'pixi.js';
 import NodeA from '../../../assets/nodeA.png';
 import NodeB from '../../../assets/nodeB.png';
 import NodeC from '../../../assets/nodeC.png';
-import Levels from '../../../assets/levels.json';
+import World1 from '../../../assets/world1.json';
 import '../../../app.css';
 
 /**
@@ -17,7 +17,7 @@ export class AssetManager {
 
       this.loader.add(NodeA).add(NodeB).add(NodeC);
 
-      this.levels = Levels;
+      this.levels = [World1];
       this.nodeA = [];
       this.nodeB = [];
       this.nodeC = [];

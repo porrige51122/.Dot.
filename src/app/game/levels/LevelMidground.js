@@ -6,14 +6,17 @@ import { Subtitle } from '../../core/display/Subtitle.js';
 import { Node } from '../../core/display/Node.js';
 
 export class LevelMidground extends Container {
-  constructor(GameController) {
+  constructor(GameController, world) {
     super();
+    if (world == undefined) {
+      world = 0;
+    }
     this.gt = GameController;
     let w = this.gt.canvas.width;
     let h = this.gt.canvas.height;
     this.sortableChildren = true;
 
-    let lvl = this.gt.assets.levels[this.gt.levels.level];
+    let lvl = this.gt.assets.levels[world][this.gt.levels.level];
 
     this.message = new Subtitle(colors.secondaryTitle, lvl.message, w, h);
     this.message.x = w / 2;
