@@ -1,0 +1,14 @@
+[
+  {
+    "level": 0,
+    "x":     1,
+    "y":     1,
+    "nodes": [{
+        "type": 0,
+        "x":    1,
+        "y":    1
+      }
+    ],
+    "message": "Something strange is happening here"
+  }
+]

@@ -47864,6 +47864,10 @@ var _world = __webpack_require__(/*! ../../../assets/world1.json */ "./src/asset
 
 var _world2 = _interopRequireDefault(_world);
 
+var _world3 = __webpack_require__(/*! ../../../assets/world2.json */ "./src/assets/world2.json");
+
+var _world4 = _interopRequireDefault(_world3);
+
 __webpack_require__(/*! ../../../app.css */ "./src/app.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -47885,7 +47889,7 @@ var AssetManager = exports.AssetManager = function () {
 
       _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default);
 
-      _this.levels = [_world2.default];
+      _this.levels = [_world2.default, _world4.default];
       _this.nodeA = [];
       _this.nodeB = [];
       _this.nodeC = [];
@@ -49015,6 +49019,17 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module) {
 
 module.exports = JSON.parse("[{\"level\":0,\"x\":2,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"Click two nodes to connect them...\"},{\"level\":1,\"x\":2,\"y\":3,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":3}],\"message\":\"Different nodes can have different numbers of connections...\"},{\"level\":2,\"x\":2,\"y\":2,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":1,\"y\":2},{\"type\":0,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"The connections don't have to be in one loop...\"},{\"level\":3,\"x\":2,\"y\":2,\"nodes\":[{\"type\":1,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":1}],\"message\":\"But sometimes it's impossible without...\"},{\"level\":4,\"x\":5,\"y\":3,\"nodes\":[{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3}],\"message\":\"No crossing lines though...\"},{\"level\":5,\"x\":5,\"y\":4,\"nodes\":[{\"type\":0,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3},{\"type\":0,\"x\":4,\"y\":4}],\"message\":\"All nodes must hit their max to continue...\"},{\"level\":6,\"x\":4,\"y\":5,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":2,\"x\":1,\"y\":3},{\"type\":0,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":4},{\"type\":1,\"x\":2,\"y\":4},{\"type\":2,\"x\":1,\"y\":5},{\"type\":0,\"x\":2,\"y\":2},{\"type\":2,\"x\":3,\"y\":5},{\"type\":1,\"x\":4,\"y\":3},{\"type\":1,\"x\":4,\"y\":5},{\"type\":1,\"x\":4,\"y\":1}],\"message\":\"Try this one on for size...\"}]");
+
+/***/ }),
+
+/***/ "./src/assets/world2.json":
+/*!********************************!*\
+  !*** ./src/assets/world2.json ***!
+  \********************************/
+/*! exports provided: 0, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("[{\"level\":0,\"x\":1,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1}],\"message\":\"Something strange is happening here\"}]");
 
 /***/ })
 

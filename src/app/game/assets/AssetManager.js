@@ -4,6 +4,7 @@ import NodeA from '../../../assets/nodeA.png';
 import NodeB from '../../../assets/nodeB.png';
 import NodeC from '../../../assets/nodeC.png';
 import World1 from '../../../assets/world1.json';
+import World2 from '../../../assets/world2.json';
 import '../../../app.css';
 
 /**
@@ -17,7 +18,7 @@ export class AssetManager {
 
       this.loader.add(NodeA).add(NodeB).add(NodeC);
 
-      this.levels = [World1];
+      this.levels = [World1, World2];
       this.nodeA = [];
       this.nodeB = [];
       this.nodeC = [];
