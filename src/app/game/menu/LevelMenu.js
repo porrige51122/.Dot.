@@ -22,8 +22,7 @@ export class LevelMenu extends Container {
       but.y = h / 3 + ((h / 6) * Math.floor(i / 6));
       but.enable();
       if (i < 1) {
-        but.buttonMode = true;
-        but.interactive = true;
+        but.buttonMode = but.interactive = true;
       } else {
         but.alpha = 0.75;
       }
@@ -45,8 +44,7 @@ export class LevelMenu extends Container {
     this.back = new Button(colors.mainFG, colors.mainText, "Back", w, h);
     this.back.x = w - (w / 10);
     this.back.y = h / 8;
-    this.back.buttonMode = true;
-    this.back.interactive = true;
+    this.back.buttonMode = this.back.interactive = true;
     this.back.enable();
     this.addChild(this.back);
     this.back.on('pointertap', () => {

@@ -48415,6 +48415,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * DailyMenu Class
+ *
+ * Container of all elements in the Daily Menu screen
+ */
 var DailyMenu = exports.DailyMenu = function (_Container) {
   _inherits(DailyMenu, _Container);
 
@@ -48426,16 +48431,13 @@ var DailyMenu = exports.DailyMenu = function (_Container) {
     var w = controller.canvas.width;
     var h = controller.canvas.height;
 
-    _this.title = new _Heading.Heading(0x000034, 'Daily Challenge', w, h);
-    _this.title.x = w / 2;
-    _this.title.y = h / 8;
+    _this.title = new _Heading.Heading(colors.mainFG, 'Daily Challenge', w, h);
+    _this.title.position.set(w / 2, h / 8);
     _this.title.enable();
 
     _this.back = new _Button.Button(colors.mainFG, colors.mainText, "Back", w, h);
-    _this.back.x = w - w / 10;
-    _this.back.y = h / 8;
-    _this.back.buttonMode = true;
-    _this.back.interactive = true;
+    _this.back.position.set(w - w / 10, h / 8);
+    _this.back.buttonMode = _this.back.interactive = true;
     _this.back.enable();
     _this.back.on('pointertap', function () {
       controller.transitions.transitionSlide(controller.menu.dailyMenu, controller.menu.mainMenu);
@@ -48471,8 +48473,6 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
-
 var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
 
 var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
@@ -48485,6 +48485,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * LevelCompleteMenu Class
+ *
+ * Container of all elements in the level complete screen
+ */
 var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
   _inherits(LevelCompleteMenu, _Container);
 
@@ -48493,15 +48498,13 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (LevelCompleteMenu.__proto__ || Object.getPrototypeOf(LevelCompleteMenu)).call(this));
 
-    if (world == undefined) {
-      world = 0;
-    }
+    if (world == undefined) world = 0;
+
     var w = controller.canvas.width;
     var h = controller.canvas.height;
 
     _this.back = new _Button.Button(colors.mainFG, colors.mainText, 'Back', w, h);
-    _this.back.x = w - w / 10;
-    _this.back.y = h / 8;
+    _this.back.position.set(w - w / 10, h / 10);
     _this.back.buttonMode = _this.back.interactive = true;
     _this.back.enable();
     _this.back.on('pointertap', function () {
@@ -48511,30 +48514,26 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
 
     if (controller.levels.level < controller.assets.levels[world].length - 1) {
       _this.title = new _Heading.Heading(0x000034, 'Level ' + (controller.levels.level + 1) + ' Complete!', w, h);
-      _this.title.x = w / 2;
-      _this.title.y = h / 8;
+      _this.title.position.set(w / 2, h / 8);
       _this.title.enable();
 
       _this.next = new _Button.Button(colors.mainFG, colors.mainText, 'Level ' + (controller.levels.level + 2), w, h);
-      _this.next.x = w / 2;
-      _this.next.y = h / 2;
+      _this.next.position.set(w / 2, h / 2);
       _this.next.buttonMode = _this.next.interactive = true;
       _this.next.enable();
       _this.next.on('pointertap', function () {
-        controller.levels.level++;
         _this.next.buttonMode = _this.next.interactive = false;
+        controller.levels.level++;
         controller.levels.buildLevel();
         controller.transitions.transitionFade(controller.menu.levelCompleteMenu, controller.levels);
       });
       _this.addChild(_this.title, _this.next);
     } else {
-      _this.endMessageA = new _Heading.Heading(0x000034, 'All Levels Complete!', w, h);
-      _this.endMessageA.x = w / 2;
-      _this.endMessageA.y = h / 3;
+      _this.endMessageA = new _Heading.Heading(colors.mainFG, 'World Complete!', w, h);
+      _this.endMessageA.position.set(w / 2, h / 3);
       _this.endMessageA.enable();
-      _this.endMessageB = new _Heading.Heading(0x000034, 'Thanks for Playing!', w, h);
-      _this.endMessageB.x = w / 2;
-      _this.endMessageB.y = h / 3 * 2;
+      _this.endMessageB = new _Heading.Heading(colors.mainFG, 'Thanks for Playing!', w, h);
+      _this.endMessageA.position.set(w / 2, h / 3 * 2);
       _this.endMessageB.enable();
 
       _this.addChild(_this.endMessageA, _this.endMessageB);
@@ -48605,8 +48604,7 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       but.y = h / 3 + h / 6 * Math.floor(i / 6);
       but.enable();
       if (i < 1) {
-        but.buttonMode = true;
-        but.interactive = true;
+        but.buttonMode = but.interactive = true;
       } else {
         but.alpha = 0.75;
       }
@@ -48632,8 +48630,7 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
     _this.back = new _Button.Button(colors.mainFG, colors.mainText, "Back", w, h);
     _this.back.x = w - w / 10;
     _this.back.y = h / 8;
-    _this.back.buttonMode = true;
-    _this.back.interactive = true;
+    _this.back.buttonMode = _this.back.interactive = true;
     _this.back.enable();
     _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
@@ -48668,8 +48665,6 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
-
 var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
 
 var _Title = __webpack_require__(/*! ../../core/display/Title.js */ "./src/app/core/display/Title.js");
@@ -48682,6 +48677,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * MainMenu Class
+ *
+ * Cpntainer of Main Menu buttons and titles
+ */
 var MainMenu = exports.MainMenu = function (_Container) {
   _inherits(MainMenu, _Container);
 
@@ -48694,26 +48694,22 @@ var MainMenu = exports.MainMenu = function (_Container) {
     var h = controller.canvas.height;
 
     _this.startButton = new _Button.Button(colors.mainFG, colors.mainText, 'Start', w, h);
-    _this.startButton.x = w / 2;
-    _this.startButton.y = h / 8 * 5;
-    _this.startButton.buttonMode = true;
-    _this.startButton.interactive = true;
+    _this.startButton.position.set(w / 2, h / 8 * 5);
+    _this.startButton.buttonMode = _this.startButton.interactive = true;
     _this.startButton.on('pointertap', function () {
       controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.worldMenu);
     });
 
     _this.challengeButton = new _Button.Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);
-    _this.challengeButton.x = w / 2;
-    _this.challengeButton.y = h / 8 * 7;
-    _this.challengeButton.buttonMode = true;
-    _this.challengeButton.interactive = true;
+    _this.challengeButton.position.set(w / 2, h / 8 * 7);
+    _this.challengeButton.buttonMode = _this.challengeButton.interactive = true;
     _this.challengeButton.on('pointertap', function () {
       controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
     });
 
     _this.title = new _Title.Title(0x000034, '.Dot.', w, h);
-    _this.title.x = w / 2;
-    _this.title.y = h / 4;
+    _this.title.position.set(w / 2, h / 4);
+
     _this.startButton.enable();
     _this.challengeButton.enable();
     _this.title.enable();
@@ -48761,6 +48757,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * MenuManager Class
+ *
+ * Container of all different menus to switch between them.
+ */
 var MenuManager = exports.MenuManager = function (_Container) {
     _inherits(MenuManager, _Container);
 
@@ -48819,8 +48820,6 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
-
 var _LevelMenu = __webpack_require__(/*! ./LevelMenu.js */ "./src/app/game/menu/LevelMenu.js");
 
 var _LargeButton = __webpack_require__(/*! ../../core/display/LargeButton.js */ "./src/app/core/display/LargeButton.js");
@@ -48837,6 +48836,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * WorldMenu Class
+ *
+ * Container of all buttons and titles needed to be displayed on the
+ * world selection screen.
+ */
 var WorldMenu = exports.WorldMenu = function (_Container) {
   _inherits(WorldMenu, _Container);
 
@@ -48852,31 +48857,33 @@ var WorldMenu = exports.WorldMenu = function (_Container) {
     _this.update(controller);
 
     _this.title = new _Heading.Heading(colors.mainFG, 'Select World', w, h);
-    _this.title.x = w / 2;
-    _this.title.y = h / 8;
+    _this.title.position.set(w / 2, h / 8);
     _this.title.enable();
-    _this.addChild(_this.title);
 
     _this.back = new _Button.Button(colors.mainFG, colors.mainText, "Back", w, h);
-    _this.back.x = w - w / 10;
-    _this.back.y = h / 8;
-    _this.back.buttonMode = true;
-    _this.back.interactive = true;
+    _this.back.position.set(w - w / 10, h / 8);
+    _this.back.buttonMode = _this.back.interactive = true;
     _this.back.enable();
-    _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
       controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.mainMenu);
     });
+    _this.addChild(_this.back, _this.title);
     return _this;
   }
 
+  /**
+   * Update - Updates buttons to show completion
+   *
+   * @param c Game Controller object
+   */
+
+
   _createClass(WorldMenu, [{
     key: 'update',
-    value: function update(controller) {
+    value: function update(c) {
       var _this2 = this;
 
-      var w = controller.canvas.width;
-      var h = controller.canvas.height;
+      var dim = { w: c.canvas.width, h: c.canvas.height };
 
       this.buttons.forEach(function (but) {
         _this2.removeChild(but);
@@ -48884,34 +48891,33 @@ var WorldMenu = exports.WorldMenu = function (_Container) {
 
       var _loop = function _loop(i) {
         var completed = 0;
-        if (controller.menu !== undefined) {
-          for (var j = 0; j < controller.menu.levelMenu[i].buttons.length; j++) {
-            if (controller.menu.levelMenu[i].buttons[j].completed) {
+        if (c.menu !== undefined) {
+          for (var j = 0; j < c.menu.levelMenu[i].buttons.length; j++) {
+            if (c.menu.levelMenu[i].buttons[j].completed) {
               completed++;
             }
           }
         }
-        var but = new _LargeButton.LargeButton(colors.mainFG, colors.mainText, "." + (i + 1) + ".", completed + " / " + controller.assets.levels[i].length, w, h);
-        but.x = w / 4 + w / 4 * (i % 3);
-        but.y = h / 3 + h / 6 * Math.floor(i / 3);
+        var but = new _LargeButton.LargeButton(colors.mainFG, colors.mainText, "." + (i + 1) + ".", completed + " / " + c.assets.levels[i].length, dim.w, dim.h);
+        but.x = dim.w / 4 + dim.w / 4 * (i % 3);
+        but.y = dim.h / 3 + dim.h / 6 * Math.floor(i / 3);
         but.enable();
-        if (completed == controller.assets.levels[i].length) {
-          but.createBox(colors.blue);
-        }
+        if (completed == c.assets.levels[i].length) but.createBox(colors.blue);
+
         if (i < 2) {
           but.buttonMode = but.interactive = true;
         } else {
           but.alpha = 0.75;
         }
         but.on('pointertap', function () {
-          controller.menu.currentLevel = i;
-          controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu[i]);
+          c.menu.currentLevel = i;
+          c.transitions.transitionSlide(c.menu.worldMenu, c.menu.levelMenu[i]);
         });
         _this2.buttons.push(but);
         _this2.addChild(but);
       };
 
-      for (var i = 0; i < controller.assets.levels.length; i++) {
+      for (var i = 0; i < c.assets.levels.length; i++) {
         _loop(i);
       }
     }

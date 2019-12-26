@@ -1,4 +1,4 @@
-import { Container, Ticker } from 'pixi.js';
+import { Container } from 'pixi.js';
 
 import { MainMenu } from './MainMenu.js';
 import { LevelMenu } from './LevelMenu.js';
@@ -7,6 +7,11 @@ import { DailyMenu } from './DailyMenu.js';
 import { LevelCompleteMenu } from './LevelCompleteMenu.js';
 import { GameController } from '../GameController.js';
 
+/**
+ * MenuManager Class
+ *
+ * Container of all different menus to switch between them.
+ */
 export class MenuManager extends Container {
   constructor(gameController) {
     super();
