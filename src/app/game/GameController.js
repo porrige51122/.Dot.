@@ -7,6 +7,11 @@ import { AssetManager } from './assets/AssetManager.js';
 import { LevelManager } from './levels/LevelManager.js';
 import { MenuManager } from './menu/MenuManager.js';
 
+/**
+ * GameController Class
+ *
+ * Contains all states and objects containted in the game
+ */
 export class GameController {
   constructor() {
     this.canvas = new Canvas();

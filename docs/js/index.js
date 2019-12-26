@@ -47786,6 +47786,11 @@ var _MenuManager = __webpack_require__(/*! ./menu/MenuManager.js */ "./src/app/g
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * GameController Class
+ *
+ * Contains all states and objects containted in the game
+ */
 var GameController = exports.GameController = function () {
   function GameController() {
     _classCallCheck(this, GameController);
