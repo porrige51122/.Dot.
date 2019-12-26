@@ -7,29 +7,14 @@ import { Button } from '../../core/display/Button.js';
 import { Heading } from '../../core/display/Heading.js';
 
 export class WorldMenu extends Container {
-  constructor(controller, world) {
+  constructor(controller) {
     super();
     let w = controller.canvas.width;
     let h = controller.canvas.height;
 
     this.buttons = [];
+    this.update(controller);
 
-    for (let i = 0; i < controller.assets.levels.length; i++) {
-      let but = new LargeButton(colors.mainFG, colors.mainText, "." + (i + 1) + ".", "0 / " + controller.assets.levels[i].length, w, h);
-      but.x = w / 4 + ((w / 4) * (i % 3));
-      but.y = h / 3 + ((h / 6) * Math.floor(i / 3));
-      but.enable();
-      if (i < 1) {
-        but.buttonMode = but.interactive = true;
-      } else {
-        but.alpha = 0.75;
-      }
-      but.on('pointertap', () => {
-        controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu);
-      });
-      this.buttons.push(but);
-      this.addChild(but);
-    }
     this.title = new Heading(colors.mainFG, 'Select World', w, h);
     this.title.x = w / 2;
     this.title.y = h / 8;
@@ -46,5 +31,39 @@ export class WorldMenu extends Container {
     this.back.on('pointertap', () => {
       controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.mainMenu);
     });
+  }
+
+  update(controller) {
+    let w = controller.canvas.width;
+    let h = controller.canvas.height;
+
+    this.buttons.forEach((but) => { this.removeChild(but) });
+    for (let i = 0; i < controller.assets.levels.length; i++) {
+      let completed = 0;
+      if (controller.menu !== undefined) {
+        for (let j = 0; j < controller.menu.levelMenu.buttons.length; j++) {
+          if (controller.menu.levelMenu.buttons[j].completed) {
+            completed++;
+          }
+        }
+      }
+      let but = new LargeButton(colors.mainFG, colors.mainText, "." + (i + 1) + ".", completed + " / " + controller.assets.levels[i].length, w, h);
+      but.x = w / 4 + ((w / 4) * (i % 3));
+      but.y = h / 3 + ((h / 6) * Math.floor(i / 3));
+      but.enable();
+      if (completed == controller.assets.levels[i].length) {
+        but.createBox(colors.blue);
+      }
+      if (i < 1) {
+        but.buttonMode = but.interactive = true;
+      } else {
+        but.alpha = 0.75;
+      }
+      but.on('pointertap', () => {
+        controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu);
+      });
+      this.buttons.push(but);
+      this.addChild(but);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import { Container, Ticker } from 'pixi.js';
+import * as colors from '../../core/display/colors.js'
 
 import { GameController } from '../GameController.js';
 import { LevelBackend } from './LevelBackend.js';
@@ -37,13 +38,15 @@ export class LevelManager extends Container {
   }
 
   levelComplete(gt) {
-    gt.menu.levelMenu.buttons[gt.levels.level].createBox(0x00441B);
+    gt.menu.levelMenu.buttons[gt.levels.level].createBox(colors.blue);
+    gt.menu.levelMenu.buttons[gt.levels.level].completed = true;
     if (gt.menu.levelMenu.buttons[gt.levels.level + 1] !== undefined) {
       gt.menu.levelMenu.buttons[gt.levels.level + 1].alpha = 1;
       gt.menu.levelMenu.buttons[gt.levels.level + 1].buttonMode = true;
       gt.menu.levelMenu.buttons[gt.levels.level + 1].interactive = true;
     }
-    
+    gt.menu.worldMenu.update(gt);
+
     gt.menu.removeChild(gt.menu.levelCompleteMenu);
     gt.menu.levelCompleteMenu = new LevelCompleteMenu(gt);
     gt.menu.addChild(gt.menu.levelCompleteMenu);

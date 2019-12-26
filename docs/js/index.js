@@ -47481,6 +47481,31 @@ var Title = exports.Title = function (_Container) {
 
 /***/ }),
 
+/***/ "./src/app/core/display/colors.js":
+/*!****************************************!*\
+  !*** ./src/app/core/display/colors.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+             value: true
+});
+var mainBG = exports.mainBG = 0xFCBF49,
+    mainFG = exports.mainFG = 0x000034,
+    mainText = exports.mainText = 0xFCBF49,
+    secondaryBG = exports.secondaryBG = 0x00034,
+    secondaryTitle = exports.secondaryTitle = 0xFCBF49,
+    connector = exports.connector = 0xEDF7F6,
+    connectorHover = exports.connectorHover = 0xFF5555,
+    blue = exports.blue = 0x2660A4,
+    red = exports.red = 0xFE4A49;
+
+/***/ }),
+
 /***/ "./src/app/core/helpers/Canvas.js":
 /*!****************************************!*\
   !*** ./src/app/core/helpers/Canvas.js ***!
@@ -48176,6 +48201,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
+var _colors = __webpack_require__(/*! ../../core/display/colors.js */ "./src/app/core/display/colors.js");
+
+var colors = _interopRequireWildcard(_colors);
+
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
 
 var _LevelBackend = __webpack_require__(/*! ./LevelBackend.js */ "./src/app/game/levels/LevelBackend.js");
@@ -48187,6 +48216,8 @@ var _LevelMidground = __webpack_require__(/*! ./LevelMidground.js */ "./src/app/
 var _LevelForeground = __webpack_require__(/*! ./LevelForeground.js */ "./src/app/game/levels/LevelForeground.js");
 
 var _LevelCompleteMenu = __webpack_require__(/*! ../menu/LevelCompleteMenu.js */ "./src/app/game/menu/LevelCompleteMenu.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -48232,12 +48263,14 @@ var LevelManager = exports.LevelManager = function (_Container) {
   }, {
     key: 'levelComplete',
     value: function levelComplete(gt) {
-      gt.menu.levelMenu.buttons[gt.levels.level].createBox(0x00441B);
+      gt.menu.levelMenu.buttons[gt.levels.level].createBox(colors.blue);
+      gt.menu.levelMenu.buttons[gt.levels.level].completed = true;
       if (gt.menu.levelMenu.buttons[gt.levels.level + 1] !== undefined) {
         gt.menu.levelMenu.buttons[gt.levels.level + 1].alpha = 1;
         gt.menu.levelMenu.buttons[gt.levels.level + 1].buttonMode = true;
         gt.menu.levelMenu.buttons[gt.levels.level + 1].interactive = true;
       }
+      gt.menu.worldMenu.update(gt);
 
       gt.menu.removeChild(gt.menu.levelCompleteMenu);
       gt.menu.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gt);
@@ -48768,6 +48801,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.WorldMenu = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
@@ -48793,7 +48828,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var WorldMenu = exports.WorldMenu = function (_Container) {
   _inherits(WorldMenu, _Container);
 
-  function WorldMenu(controller, world) {
+  function WorldMenu(controller) {
     _classCallCheck(this, WorldMenu);
 
     var _this = _possibleConstructorReturn(this, (WorldMenu.__proto__ || Object.getPrototypeOf(WorldMenu)).call(this));
@@ -48802,23 +48837,8 @@ var WorldMenu = exports.WorldMenu = function (_Container) {
     var h = controller.canvas.height;
 
     _this.buttons = [];
+    _this.update(controller);
 
-    for (var i = 0; i < controller.assets.levels.length; i++) {
-      var but = new _LargeButton.LargeButton(colors.mainFG, colors.mainText, "." + (i + 1) + ".", "0 / " + controller.assets.levels[i].length, w, h);
-      but.x = w / 4 + w / 4 * (i % 3);
-      but.y = h / 3 + h / 6 * Math.floor(i / 3);
-      but.enable();
-      if (i < 1) {
-        but.buttonMode = but.interactive = true;
-      } else {
-        but.alpha = 0.75;
-      }
-      but.on('pointertap', function () {
-        controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu);
-      });
-      _this.buttons.push(but);
-      _this.addChild(but);
-    }
     _this.title = new _Heading.Heading(colors.mainFG, 'Select World', w, h);
     _this.title.x = w / 2;
     _this.title.y = h / 8;
@@ -48837,6 +48857,47 @@ var WorldMenu = exports.WorldMenu = function (_Container) {
     });
     return _this;
   }
+
+  _createClass(WorldMenu, [{
+    key: 'update',
+    value: function update(controller) {
+      var _this2 = this;
+
+      var w = controller.canvas.width;
+      var h = controller.canvas.height;
+
+      this.buttons.forEach(function (but) {
+        _this2.removeChild(but);
+      });
+      for (var i = 0; i < controller.assets.levels.length; i++) {
+        var completed = 0;
+        if (controller.menu !== undefined) {
+          for (var j = 0; j < controller.menu.levelMenu.buttons.length; j++) {
+            if (controller.menu.levelMenu.buttons[j].completed) {
+              completed++;
+            }
+          }
+        }
+        var but = new _LargeButton.LargeButton(colors.mainFG, colors.mainText, "." + (i + 1) + ".", completed + " / " + controller.assets.levels[i].length, w, h);
+        but.x = w / 4 + w / 4 * (i % 3);
+        but.y = h / 3 + h / 6 * Math.floor(i / 3);
+        but.enable();
+        if (completed == controller.assets.levels[i].length) {
+          but.createBox(colors.blue);
+        }
+        if (i < 1) {
+          but.buttonMode = but.interactive = true;
+        } else {
+          but.alpha = 0.75;
+        }
+        but.on('pointertap', function () {
+          controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu);
+        });
+        this.buttons.push(but);
+        this.addChild(but);
+      }
+    }
+  }]);
 
   return WorldMenu;
 }(_pixi.Container);
