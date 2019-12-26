@@ -29,8 +29,9 @@ export class LevelMenu extends Container {
       }
       but.on('pointertap', () => {
         controller.levels.level = i;
+        controller.levels.world = world;
         controller.levels.buildLevel();
-        controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
+        controller.transitions.transitionFade(controller.menu.levelMenu[controller.menu.currentLevel], controller.levels);
       });
       this.buttons.push(but);
       this.addChild(but);
@@ -49,7 +50,7 @@ export class LevelMenu extends Container {
     this.back.enable();
     this.addChild(this.back);
     this.back.on('pointertap', () => {
-      controller.transitions.transitionSlide(controller.menu.levelMenu, controller.menu.worldMenu);
+      controller.transitions.transitionSlide(controller.menu.levelMenu[controller.menu.currentLevel], controller.menu.worldMenu);
     });
   }
 }

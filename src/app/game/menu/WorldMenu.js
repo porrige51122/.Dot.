@@ -2,6 +2,7 @@ import { Container } from 'pixi.js';
 import * as colors from '../../core/display/Colors.js';
 
 import { GameController } from '../GameController.js';
+import { LevelMenu } from './LevelMenu.js';
 import { LargeButton } from '../../core/display/LargeButton.js';
 import { Button } from '../../core/display/Button.js';
 import { Heading } from '../../core/display/Heading.js';
@@ -41,8 +42,8 @@ export class WorldMenu extends Container {
     for (let i = 0; i < controller.assets.levels.length; i++) {
       let completed = 0;
       if (controller.menu !== undefined) {
-        for (let j = 0; j < controller.menu.levelMenu.buttons.length; j++) {
-          if (controller.menu.levelMenu.buttons[j].completed) {
+        for (let j = 0; j < controller.menu.levelMenu[i].buttons.length; j++) {
+          if (controller.menu.levelMenu[i].buttons[j].completed) {
             completed++;
           }
         }
@@ -54,13 +55,14 @@ export class WorldMenu extends Container {
       if (completed == controller.assets.levels[i].length) {
         but.createBox(colors.blue);
       }
-      if (i < 1) {
+      if (i < 2) {
         but.buttonMode = but.interactive = true;
       } else {
         but.alpha = 0.75;
       }
       but.on('pointertap', () => {
-        controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu);
+        controller.menu.currentLevel = i;
+        controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu[i]);
       });
       this.buttons.push(but);
       this.addChild(but);

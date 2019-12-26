@@ -6,8 +6,9 @@ import { Subtitle } from '../../core/display/Subtitle.js';
 import { Node } from '../../core/display/Node.js';
 
 export class LevelMidground extends Container {
-  constructor(GameController, world) {
+  constructor(GameController) {
     super();
+    let world = GameController.levels.world;
     if (world == undefined) {
       world = 0;
     }

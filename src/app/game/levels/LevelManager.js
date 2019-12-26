@@ -38,12 +38,12 @@ export class LevelManager extends Container {
   }
 
   levelComplete(gt) {
-    gt.menu.levelMenu.buttons[gt.levels.level].createBox(colors.blue);
-    gt.menu.levelMenu.buttons[gt.levels.level].completed = true;
-    if (gt.menu.levelMenu.buttons[gt.levels.level + 1] !== undefined) {
-      gt.menu.levelMenu.buttons[gt.levels.level + 1].alpha = 1;
-      gt.menu.levelMenu.buttons[gt.levels.level + 1].buttonMode = true;
-      gt.menu.levelMenu.buttons[gt.levels.level + 1].interactive = true;
+    gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level].createBox(colors.blue);
+    gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level].completed = true;
+    if (gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1] !== undefined) {
+      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].alpha = 1;
+      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].buttonMode = true;
+      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].interactive = true;
     }
     gt.menu.worldMenu.update(gt);
 

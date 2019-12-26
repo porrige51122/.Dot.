@@ -48176,7 +48176,7 @@ var LevelForeground = exports.LevelForeground = function (_Container) {
     _this.back.enable();
     _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
-      GameController.transitions.transitionFade(GameController.levels, GameController.menu.levelMenu);
+      GameController.transitions.transitionFade(GameController.levels, GameController.menu.levelMenu[GameController.menu.currentLevel]);
     });
     return _this;
   }
@@ -48267,12 +48267,12 @@ var LevelManager = exports.LevelManager = function (_Container) {
   }, {
     key: 'levelComplete',
     value: function levelComplete(gt) {
-      gt.menu.levelMenu.buttons[gt.levels.level].createBox(colors.blue);
-      gt.menu.levelMenu.buttons[gt.levels.level].completed = true;
-      if (gt.menu.levelMenu.buttons[gt.levels.level + 1] !== undefined) {
-        gt.menu.levelMenu.buttons[gt.levels.level + 1].alpha = 1;
-        gt.menu.levelMenu.buttons[gt.levels.level + 1].buttonMode = true;
-        gt.menu.levelMenu.buttons[gt.levels.level + 1].interactive = true;
+      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level].createBox(colors.blue);
+      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level].completed = true;
+      if (gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1] !== undefined) {
+        gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].alpha = 1;
+        gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].buttonMode = true;
+        gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].interactive = true;
       }
       gt.menu.worldMenu.update(gt);
 
@@ -48326,11 +48326,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LevelMidground = exports.LevelMidground = function (_Container) {
   _inherits(LevelMidground, _Container);
 
-  function LevelMidground(GameController, world) {
+  function LevelMidground(GameController) {
     _classCallCheck(this, LevelMidground);
 
     var _this = _possibleConstructorReturn(this, (LevelMidground.__proto__ || Object.getPrototypeOf(LevelMidground)).call(this));
 
+    var world = GameController.levels.world;
     if (world == undefined) {
       world = 0;
     }
@@ -48504,7 +48505,7 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
     _this.back.buttonMode = _this.back.interactive = true;
     _this.back.enable();
     _this.back.on('pointertap', function () {
-      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu);
+      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu[controller.menu.currentLevel]);
     });
     _this.addChild(_this.back);
 
@@ -48611,8 +48612,9 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       }
       but.on('pointertap', function () {
         controller.levels.level = i;
+        controller.levels.world = world;
         controller.levels.buildLevel();
-        controller.transitions.transitionFade(controller.menu.levelMenu, controller.levels);
+        controller.transitions.transitionFade(controller.menu.levelMenu[controller.menu.currentLevel], controller.levels);
       });
       _this.buttons.push(but);
       _this.addChild(but);
@@ -48635,7 +48637,7 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
     _this.back.enable();
     _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
-      controller.transitions.transitionSlide(controller.menu.levelMenu, controller.menu.worldMenu);
+      controller.transitions.transitionSlide(controller.menu.levelMenu[controller.menu.currentLevel], controller.menu.worldMenu);
     });
     return _this;
   }
@@ -48770,18 +48772,22 @@ var MenuManager = exports.MenuManager = function (_Container) {
         _this.gc = gameController;
 
         _this.mainMenu = new _MainMenu.MainMenu(gameController);
-        _this.levelMenu = new _LevelMenu.LevelMenu(gameController);
+        _this.levelMenu = [];
+        for (var i = 0; i < gameController.assets.levels.length; i++) {
+            _this.levelMenu.push(new _LevelMenu.LevelMenu(gameController, i));
+            _this.levelMenu[i].visible = false;
+            _this.addChild(_this.levelMenu[i]);
+        }
         _this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
         _this.worldMenu = new _WorldMenu.WorldMenu(gameController);
         _this.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gameController);
 
         // this.mainMenu.visible = false;
-        _this.levelMenu.visible = false;
         _this.dailyMenu.visible = false;
         _this.worldMenu.visible = false;
         _this.levelCompleteMenu.visible = false;
 
-        _this.addChild(_this.mainMenu, _this.levelMenu, _this.dailyMenu, _this.worldMenu, _this.levelCompleteMenu);
+        _this.addChild(_this.mainMenu, _this.dailyMenu, _this.worldMenu, _this.levelCompleteMenu);
         return _this;
     }
 
@@ -48814,6 +48820,8 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 var colors = _interopRequireWildcard(_Colors);
 
 var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
+
+var _LevelMenu = __webpack_require__(/*! ./LevelMenu.js */ "./src/app/game/menu/LevelMenu.js");
 
 var _LargeButton = __webpack_require__(/*! ../../core/display/LargeButton.js */ "./src/app/core/display/LargeButton.js");
 
@@ -48873,11 +48881,12 @@ var WorldMenu = exports.WorldMenu = function (_Container) {
       this.buttons.forEach(function (but) {
         _this2.removeChild(but);
       });
-      for (var i = 0; i < controller.assets.levels.length; i++) {
+
+      var _loop = function _loop(i) {
         var completed = 0;
         if (controller.menu !== undefined) {
-          for (var j = 0; j < controller.menu.levelMenu.buttons.length; j++) {
-            if (controller.menu.levelMenu.buttons[j].completed) {
+          for (var j = 0; j < controller.menu.levelMenu[i].buttons.length; j++) {
+            if (controller.menu.levelMenu[i].buttons[j].completed) {
               completed++;
             }
           }
@@ -48889,16 +48898,21 @@ var WorldMenu = exports.WorldMenu = function (_Container) {
         if (completed == controller.assets.levels[i].length) {
           but.createBox(colors.blue);
         }
-        if (i < 1) {
+        if (i < 2) {
           but.buttonMode = but.interactive = true;
         } else {
           but.alpha = 0.75;
         }
         but.on('pointertap', function () {
-          controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu);
+          controller.menu.currentLevel = i;
+          controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.levelMenu[i]);
         });
-        this.buttons.push(but);
-        this.addChild(but);
+        _this2.buttons.push(but);
+        _this2.addChild(but);
+      };
+
+      for (var i = 0; i < controller.assets.levels.length; i++) {
+        _loop(i);
       }
     }
   }]);

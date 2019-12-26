@@ -13,19 +13,22 @@ export class MenuManager extends Container {
     this.gc = gameController;
 
     this.mainMenu = new MainMenu(gameController);
-    this.levelMenu = new LevelMenu(gameController);
+    this.levelMenu = [];
+    for (let i = 0; i < gameController.assets.levels.length; i++) {
+      this.levelMenu.push(new LevelMenu(gameController, i));
+      this.levelMenu[i].visible = false;
+      this.addChild(this.levelMenu[i]);
+    }
     this.dailyMenu = new DailyMenu(gameController);
     this.worldMenu = new WorldMenu(gameController);
     this.levelCompleteMenu = new LevelCompleteMenu(gameController);
 
     // this.mainMenu.visible = false;
-    this.levelMenu.visible = false;
     this.dailyMenu.visible = false;
     this.worldMenu.visible = false;
     this.levelCompleteMenu.visible = false;
 
     this.addChild(this.mainMenu,
-                   this.levelMenu,
                    this.dailyMenu,
                    this.worldMenu,
                    this.levelCompleteMenu

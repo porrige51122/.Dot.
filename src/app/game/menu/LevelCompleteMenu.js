@@ -20,7 +20,7 @@ export class LevelCompleteMenu extends Container {
     this.back.buttonMode = this.back.interactive = true;
     this.back.enable();
     this.back.on('pointertap', () => {
-      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu);
+      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu[controller.menu.currentLevel]);
     });
     this.addChild(this.back);
 
