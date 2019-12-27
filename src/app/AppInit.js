@@ -1,4 +1,4 @@
-import { Utils } from 'pixi.js';
+import { utils } from 'pixi.js';
 
 import { GameController } from './game/GameController.js';
 
@@ -18,8 +18,8 @@ class AppInit {
 }
 
 let type = "WebGL";
-if (!Utils.isWebGLSupported())
+if (!utils.isWebGLSupported())
   type = "canvas";
-Utils.sayHello(type);
+utils.sayHello(type);
 
 new AppInit();
