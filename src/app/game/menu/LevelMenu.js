@@ -10,12 +10,9 @@ export class LevelMenu extends Container {
     super();
     let w = controller.canvas.width;
     let h = controller.canvas.height;
-
+    world = world || 0;
+    
     this.buttons = [];
-    if (world == undefined) {
-      console.log('world undefined');
-      world = 0;
-    }
     for (let i = 0; i < controller.assets.levels[world].length; i++) {
       let but = new Button(colors.mainFG, colors.mainText, "." + (i + 1) + ".", w, h);
       but.x = w / 7 + ((w / 7) * (i % 6));

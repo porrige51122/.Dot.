@@ -8,10 +8,7 @@ import { Node } from '../../core/display/Node.js';
 export class LevelMidground extends Container {
   constructor(GameController) {
     super();
-    let world = GameController.levels.world;
-    if (world == undefined) {
-      world = 0;
-    }
+    let world = GameController.levels.world || 0;
     this.gt = GameController;
     let w = this.gt.canvas.width;
     let h = this.gt.canvas.height;

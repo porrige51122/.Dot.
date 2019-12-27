@@ -1,10 +1,9 @@
 import { Container, Graphics } from 'pixi.js';
 import * as colors from '../../core/display/Colors.js';
 
-import { GameController } from '../GameController.js';
 import { Heading } from '../../core/display/Heading.js'
 
-export class LevelBackground extends Container {
+export class BuilderBackground extends Container {
   constructor(GameController) {
     super();
 

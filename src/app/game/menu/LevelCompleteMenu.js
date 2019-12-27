@@ -12,8 +12,7 @@ import { Heading } from '../../core/display/Heading.js';
 export class LevelCompleteMenu extends Container {
   constructor(controller, world) {
     super();
-    if (world == undefined)
-      world = 0;
+    world = world || 0;
 
     let w = controller.canvas.width;
     let h = controller.canvas.height;

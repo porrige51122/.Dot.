@@ -47782,6 +47782,8 @@ var _AssetManager = __webpack_require__(/*! ./assets/AssetManager.js */ "./src/a
 
 var _LevelManager = __webpack_require__(/*! ./levels/LevelManager.js */ "./src/app/game/levels/LevelManager.js");
 
+var _BuilderManager = __webpack_require__(/*! ./builder/BuilderManager.js */ "./src/app/game/builder/BuilderManager.js");
+
 var _MenuManager = __webpack_require__(/*! ./menu/MenuManager.js */ "./src/app/game/menu/MenuManager.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -47814,6 +47816,9 @@ var GameController = exports.GameController = function () {
 
           _this.levels = new _LevelManager.LevelManager(_this);
           _this.canvas.app.stage.addChild(_this.levels);
+
+          _this.builder = new _BuilderManager.BuilderManager(_this);
+          _this.canvas.app.stage.addChild(_this.builder);
 
           _this.menu = new _MenuManager.MenuManager(_this);
           _this.canvas.app.stage.addChild(_this.menu);
@@ -47931,6 +47936,252 @@ var AssetManager = exports.AssetManager = function () {
 
   return AssetManager;
 }();
+
+/***/ }),
+
+/***/ "./src/app/game/builder/BuilderBackground.js":
+/*!***************************************************!*\
+  !*** ./src/app/game/builder/BuilderBackground.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BuilderBackground = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var colors = _interopRequireWildcard(_Colors);
+
+var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BuilderBackground = exports.BuilderBackground = function (_Container) {
+  _inherits(BuilderBackground, _Container);
+
+  function BuilderBackground(GameController) {
+    _classCallCheck(this, BuilderBackground);
+
+    var _this = _possibleConstructorReturn(this, (BuilderBackground.__proto__ || Object.getPrototypeOf(BuilderBackground)).call(this));
+
+    var w = GameController.canvas.width;
+    var h = GameController.canvas.height;
+
+    _this.background = new _pixi.Graphics();
+    _this.background.beginFill(colors.secondaryBG);
+    _this.background.drawRect(0, 0, w, h);
+    _this.addChild(_this.background);
+    return _this;
+  }
+
+  return BuilderBackground;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/builder/BuilderForeground.js":
+/*!***************************************************!*\
+  !*** ./src/app/game/builder/BuilderForeground.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BuilderForeground = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var colors = _interopRequireWildcard(_Colors);
+
+var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
+
+var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BuilderForeground = exports.BuilderForeground = function (_Container) {
+  _inherits(BuilderForeground, _Container);
+
+  function BuilderForeground(GameController) {
+    _classCallCheck(this, BuilderForeground);
+
+    var _this = _possibleConstructorReturn(this, (BuilderForeground.__proto__ || Object.getPrototypeOf(BuilderForeground)).call(this));
+
+    var w = GameController.canvas.width;
+    var h = GameController.canvas.height;
+
+    _this.back = new _Button.Button(colors.mainText, colors.mainFG, "Back", w, h);
+    _this.back.x = w - w / 10;
+    _this.back.y = h / 8;
+    _this.back.buttonMode = true;
+    _this.back.interactive = true;
+    _this.back.enable();
+    _this.addChild(_this.back);
+    _this.back.on('pointertap', function () {
+      if (confirm("Are you sure? All unsaved progress will be lost")) GameController.transitions.transitionSlide(GameController.builder, GameController.menu.mainMenu);
+    });
+    _this.play = new _Button.Button(colors.mainText, colors.mainFG, "Play", w, h);
+    _this.play.x = w - w / 10;
+    _this.play.y = h - h / 8;
+    _this.play.buttonMode = _this.play.interactive = true;
+    _this.play.scale.set(0.5);
+    _this.play.enable();
+    _this.addChild(_this.play);
+    _this.play.on('pointertap', function () {
+      alert('PLAY LEVEL!!');
+    });
+    _this.export = new _Button.Button(colors.mainText, colors.mainFG, "Export", w, h);
+    _this.export.x = w - w / 10;
+    _this.export.y = h - h / 16;
+    _this.export.buttonMode = _this.export.interactive = true;
+    _this.export.scale.set(0.5);
+    _this.export.enable();
+    _this.addChild(_this.export);
+    _this.export.on('pointertap', function () {
+      alert('SAVE FILE!!');
+    });
+    return _this;
+  }
+
+  return BuilderForeground;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/builder/BuilderManager.js":
+/*!************************************************!*\
+  !*** ./src/app/game/builder/BuilderManager.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BuilderManager = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _colors = __webpack_require__(/*! ../../core/display/colors.js */ "./src/app/core/display/colors.js");
+
+var colors = _interopRequireWildcard(_colors);
+
+var _BuilderScreen = __webpack_require__(/*! ./BuilderScreen.js */ "./src/app/game/builder/BuilderScreen.js");
+
+var _BuilderForeground = __webpack_require__(/*! ./BuilderForeground.js */ "./src/app/game/builder/BuilderForeground.js");
+
+var _BuilderBackground = __webpack_require__(/*! ./BuilderBackground.js */ "./src/app/game/builder/BuilderBackground.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BuilderManager = exports.BuilderManager = function (_Container) {
+  _inherits(BuilderManager, _Container);
+
+  function BuilderManager(GameController) {
+    _classCallCheck(this, BuilderManager);
+
+    var _this = _possibleConstructorReturn(this, (BuilderManager.__proto__ || Object.getPrototypeOf(BuilderManager)).call(this));
+
+    _this.gc = GameController;
+    _this.background = new _BuilderBackground.BuilderBackground(GameController);
+    _this.foreground = new _BuilderForeground.BuilderForeground(GameController);
+    _this.addChild(_this.background, _this.foreground);
+    _this.visible = false;
+    return _this;
+  }
+
+  _createClass(BuilderManager, [{
+    key: 'enable',
+    value: function enable() {
+      this.removeChild(this.screen);
+      this.screen = new _BuilderScreen.BuilderScreen(this.gc);
+      this.addChild(this.screen);
+    }
+  }]);
+
+  return BuilderManager;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/builder/BuilderScreen.js":
+/*!***********************************************!*\
+  !*** ./src/app/game/builder/BuilderScreen.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BuilderScreen = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _colors = __webpack_require__(/*! ../../core/display/colors.js */ "./src/app/core/display/colors.js");
+
+var colors = _interopRequireWildcard(_colors);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var BuilderScreen = exports.BuilderScreen = function (_Container) {
+  _inherits(BuilderScreen, _Container);
+
+  function BuilderScreen(GameController) {
+    _classCallCheck(this, BuilderScreen);
+
+    return _possibleConstructorReturn(this, (BuilderScreen.__proto__ || Object.getPrototypeOf(BuilderScreen)).call(this));
+  }
+
+  return BuilderScreen;
+}(_pixi.Container);
 
 /***/ }),
 
@@ -48336,10 +48587,7 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (LevelMidground.__proto__ || Object.getPrototypeOf(LevelMidground)).call(this));
 
-    var world = GameController.levels.world;
-    if (world == undefined) {
-      world = 0;
-    }
+    var world = GameController.levels.world || 0;
     _this.gt = GameController;
     var w = _this.gt.canvas.width;
     var h = _this.gt.canvas.height;
@@ -48503,7 +48751,7 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (LevelCompleteMenu.__proto__ || Object.getPrototypeOf(LevelCompleteMenu)).call(this));
 
-    if (world == undefined) world = 0;
+    world = world || 0;
 
     var w = controller.canvas.width;
     var h = controller.canvas.height;
@@ -48596,12 +48844,9 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
 
     var w = controller.canvas.width;
     var h = controller.canvas.height;
+    world = world || 0;
 
     _this.buttons = [];
-    if (world == undefined) {
-      console.log('world undefined');
-      world = 0;
-    }
 
     var _loop = function _loop(i) {
       var but = new _Button.Button(colors.mainFG, colors.mainText, "." + (i + 1) + ".", w, h);
@@ -48705,6 +48950,14 @@ var MainMenu = exports.MainMenu = function (_Container) {
       controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.worldMenu);
     });
 
+    _this.buildButton = new _Button.Button(colors.mainFG, colors.mainText, 'Level Builder', w, h);
+    _this.buildButton.position.set(w / 2, h / 8 * 6);
+    _this.buildButton.buttonMode = _this.buildButton.interactive = true;
+    _this.buildButton.on('pointertap', function () {
+      controller.builder.enable();
+      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.builder);
+    });
+
     _this.challengeButton = new _Button.Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);
     _this.challengeButton.position.set(w / 2, h / 8 * 7);
     _this.challengeButton.buttonMode = _this.challengeButton.interactive = true;
@@ -48712,13 +48965,14 @@ var MainMenu = exports.MainMenu = function (_Container) {
       controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
     });
 
-    _this.title = new _Title.Title(0x000034, '.Dot.', w, h);
+    _this.title = new _Title.Title(colors.mainFG, '.Dot.', w, h);
     _this.title.position.set(w / 2, h / 4);
 
     _this.startButton.enable();
+    _this.buildButton.enable();
     _this.challengeButton.enable();
     _this.title.enable();
-    _this.addChild(_this.startButton, _this.challengeButton, _this.title);
+    _this.addChild(_this.startButton, _this.challengeButton, _this.buildButton, _this.title);
     return _this;
   }
 

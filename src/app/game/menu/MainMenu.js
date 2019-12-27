@@ -22,6 +22,14 @@ export class MainMenu extends Container {
       controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.worldMenu);
     });
 
+    this.buildButton = new Button(colors.mainFG, colors.mainText, 'Level Builder', w, h);
+    this.buildButton.position.set((w / 2), (h / 8 * 6));
+    this.buildButton.buttonMode = this.buildButton.interactive = true;
+    this.buildButton.on('pointertap', () => {
+      controller.builder.enable();
+      controller.transitions.transitionSlide(controller.menu.mainMenu, controller.builder);
+    });
+
     this.challengeButton = new Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);
     this.challengeButton.position.set((w / 2), (h / 8 * 7));
     this.challengeButton.buttonMode = this.challengeButton.interactive = true;
@@ -29,12 +37,13 @@ export class MainMenu extends Container {
       controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
     });
 
-    this.title = new Title(0x000034, '.Dot.', w, h);
+    this.title = new Title(colors.mainFG, '.Dot.', w, h);
     this.title.position.set(w / 2, h / 4);
 
     this.startButton.enable();
+    this.buildButton.enable();
     this.challengeButton.enable();
     this.title.enable();
-    this.addChild(this.startButton, this.challengeButton, this.title);
+    this.addChild(this.startButton, this.challengeButton, this.buildButton, this.title);
   }
 }

@@ -5,6 +5,7 @@ import { StatusDisplay } from './status/StatusDisplay.js'
 import { Transitions } from '../core/helpers/Transitions.js'
 import { AssetManager } from './assets/AssetManager.js';
 import { LevelManager } from './levels/LevelManager.js';
+import { BuilderManager } from './builder/BuilderManager.js';
 import { MenuManager } from './menu/MenuManager.js';
 
 /**
@@ -29,6 +30,9 @@ export class GameController {
 
         this.levels = new LevelManager(this);
         this.canvas.app.stage.addChild(this.levels);
+
+        this.builder = new BuilderManager(this);
+        this.canvas.app.stage.addChild(this.builder);
 
         this.menu = new MenuManager(this);
         this.canvas.app.stage.addChild(this.menu);
