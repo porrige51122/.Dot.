@@ -46967,7 +46967,7 @@ var Button = exports.Button = function (_Container) {
         fill: this.textColor
       });
 
-      this.boxX = this.style.fontSize * this.label.length * 0.8;
+      this.boxX = this.style.fontSize * this.label.length * 0.6;
       this.boxY = this.style.fontSize * 1.5;
 
       this.createBox(this.bgColor);
