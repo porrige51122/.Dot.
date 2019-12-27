@@ -1,7 +1,7 @@
 import { Container } from 'pixi.js';
-import * as colors from '../../core/display/colors.js';
+import * as colors from '../../core/display/Colors.js';
 
-import { Node } from '../../core/display/node.js';
+import { Node } from '../../core/display/Node.js';
 
 export class BuilderScreen extends Container {
   constructor(GameController) {

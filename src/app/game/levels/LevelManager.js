@@ -1,5 +1,5 @@
 import { Container, Ticker } from 'pixi.js';
-import * as colors from '../../core/display/colors.js'
+import * as colors from '../../core/display/Colors.js'
 
 import { GameController } from '../GameController.js';
 import { LevelBackend } from './LevelBackend.js';

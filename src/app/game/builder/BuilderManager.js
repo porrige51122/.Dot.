@@ -1,5 +1,5 @@
 import { Container } from 'pixi.js';
-import * as colors from '../../core/display/colors.js';
+import * as colors from '../../core/display/Colors.js';
 
 import { BuilderScreen } from './BuilderScreen.js';
 import { BuilderForeground } from './BuilderForeground.js';
