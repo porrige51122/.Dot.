@@ -47506,6 +47506,104 @@ var mainBG = exports.mainBG = 0xFCBF49,
 
 /***/ }),
 
+/***/ "./src/app/core/display/node.js":
+/*!**************************************!*\
+  !*** ./src/app/core/display/node.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Node = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Node = exports.Node = function (_Container) {
+  _inherits(Node, _Container);
+
+  function Node(assets, type) {
+    _classCallCheck(this, Node);
+
+    var _this = _possibleConstructorReturn(this, (Node.__proto__ || Object.getPrototypeOf(Node)).call(this));
+
+    switch (type) {
+      case 0:
+        _this.textures = assets.nodeA;
+        break;
+      case 1:
+        _this.textures = assets.nodeB;
+        break;
+      case 2:
+        _this.textures = assets.nodeC;
+        break;
+      default:
+        console.log("JSON ERROR");
+    }
+    _this.cur = 0;
+    _this.max = _this.textures.length - 1;
+
+    _this.halo = new _pixi.Graphics();
+    _this.halo.beginFill(0xFCBF49);
+    _this.halo.drawStar(0, 0, 8, 100);
+    _this.halo.alpha = 0.25;
+    _this.halo.visible = false;
+
+    _this.nodeTypes = assets.nodeTypes;
+    _this.node = new _pixi.Sprite(_this.textures[_this.cur]);
+    _this.node.anchor.set(0.5);
+    _this.selected = false;
+    _this.addChild(_this.halo, _this.node);
+    return _this;
+  }
+
+  _createClass(Node, [{
+    key: "select",
+    value: function select() {
+      this.selected = !this.selected;
+      this.halo.visible = this.selected;
+    }
+  }, {
+    key: "increase",
+    value: function increase() {
+      if (this.cur < this.max) {
+        this.cur++;
+        this.node.texture = this.textures[this.cur];
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: "decrease",
+    value: function decrease() {
+      this.cur--;
+      this.node.texture = this.textures[this.cur];
+    }
+  }, {
+    key: "complete",
+    value: function complete() {
+      return this.cur === this.max;
+    }
+  }]);
+
+  return Node;
+}(_pixi.Container);
+
+/***/ }),
+
 /***/ "./src/app/core/helpers/Canvas.js":
 /*!****************************************!*\
   !*** ./src/app/core/helpers/Canvas.js ***!
@@ -48157,11 +48255,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.BuilderScreen = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var _colors = __webpack_require__(/*! ../../core/display/colors.js */ "./src/app/core/display/colors.js");
 
 var colors = _interopRequireWildcard(_colors);
+
+var _node = __webpack_require__(/*! ../../core/display/node.js */ "./src/app/core/display/node.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -48177,8 +48279,51 @@ var BuilderScreen = exports.BuilderScreen = function (_Container) {
   function BuilderScreen(GameController) {
     _classCallCheck(this, BuilderScreen);
 
-    return _possibleConstructorReturn(this, (BuilderScreen.__proto__ || Object.getPrototypeOf(BuilderScreen)).call(this));
+    var _this = _possibleConstructorReturn(this, (BuilderScreen.__proto__ || Object.getPrototypeOf(BuilderScreen)).call(this));
+
+    var w = GameController.canvas.width;
+    var h = GameController.canvas.height;
+    var nodes = [];
+    for (var i = 0; i < 5; i++) {
+      var node = new _node.Node(GameController.assets, i % 3);
+      node.x = Math.floor(w / 2);
+      node.y = Math.floor(h / 2);
+      node.scale.set(w / 1400);
+
+      node.buttonMode = node.interactive = true;
+
+      node.on('pointerdown', _this.onDragStart).on('pointerup', _this.onDragEnd).on('pointermove', _this.onDragMove);
+
+      nodes.push(node);
+      _this.addChild(node);
+    }
+    return _this;
   }
+
+  _createClass(BuilderScreen, [{
+    key: 'onDragStart',
+    value: function onDragStart(event) {
+      this.data = event.data;
+      this.alpha = 0.5;
+      this.dragging = true;
+    }
+  }, {
+    key: 'onDragEnd',
+    value: function onDragEnd() {
+      this.alpha = 1;
+      this.dragging = false;
+      this.data = null;
+    }
+  }, {
+    key: 'onDragMove',
+    value: function onDragMove() {
+      if (this.dragging) {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.position.x = newPosition.x;
+        this.position.y = newPosition.y;
+      }
+    }
+  }]);
 
   return BuilderScreen;
 }(_pixi.Container);
