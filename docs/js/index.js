@@ -40963,7 +40963,7 @@ module.exports = function parseURI (str, opts) {
 /*!*********************************************!*\
   !*** ./node_modules/pixi.js/lib/pixi.es.js ***!
   \*********************************************/
-/*! exports provided: accessibility, extract, interaction, prepare, utils, VERSION, filters, useDeprecated, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings */
+/*! exports provided: accessibility, extract, interaction, prepare, utils, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings, VERSION, filters, useDeprecated */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -47960,6 +47960,29 @@ var BuilderBackground = exports.BuilderBackground = function (_Container) {
     _this.background.beginFill(colors.secondaryBG);
     _this.background.drawRect(0, 0, w, h);
     _this.addChild(_this.background);
+
+    // Grid Area
+    _this.grid = [];
+    var maxw = GameController.builder.w;
+    var maxh = GameController.builder.h;
+    for (var i = 1; i < maxw; i++) {
+      var line = new _pixi.Graphics();
+      line.lineStyle(5, colors.connector);
+      line.moveTo(w * i / maxw, 0);
+      line.lineTo(w * i / maxw, h);
+      line.alpha = 0.5;
+      _this.grid.push(line);
+      _this.addChild(line);
+    }
+    for (var _i = 1; _i < maxh; _i++) {
+      var _line = new _pixi.Graphics();
+      _line.lineStyle(5, colors.connector);
+      _line.moveTo(0, h * _i / maxh);
+      _line.lineTo(w, h * _i / maxh);
+      _line.alpha = 0.5;
+      _this.grid.push(_line);
+      _this.addChild(_line);
+    }
     return _this;
   }
 
@@ -48022,9 +48045,10 @@ var BuilderForeground = exports.BuilderForeground = function (_Container) {
     _this.back.on('pointertap', function () {
       if (confirm("Are you sure? All unsaved progress will be lost")) GameController.transitions.transitionSlide(GameController.builder, GameController.menu.mainMenu);
     });
+
     _this.play = new _Button.Button(colors.mainText, colors.mainFG, "Play", w, h);
     _this.play.x = w - w / 10;
-    _this.play.y = h - h / 8;
+    _this.play.y = h - h / 16 * 2;
     _this.play.buttonMode = _this.play.interactive = true;
     _this.play.scale.set(0.5);
     _this.play.enable();
@@ -48042,11 +48066,116 @@ var BuilderForeground = exports.BuilderForeground = function (_Container) {
     _this.export.on('pointertap', function () {
       alert('SAVE FILE!!');
     });
+
+    _this.nodeA = new _Button.Button(colors.mainText, colors.mainFG, "Node A", w, h);
+    _this.nodeA.x = w - w / 10;
+    _this.nodeA.y = h - h / 16 * 6;
+    _this.nodeA.buttonMode = _this.nodeA.interactive = true;
+    _this.nodeA.scale.set(0.5);
+    _this.nodeA.enable();
+    _this.addChild(_this.nodeA);
+    _this.nodeA.on('pointertap', function () {
+      GameController.builder.midground.createNode(GameController, 0);
+    });
+
+    _this.nodeB = new _Button.Button(colors.mainText, colors.mainFG, "Node B", w, h);
+    _this.nodeB.x = w - w / 10;
+    _this.nodeB.y = h - h / 16 * 5;
+    _this.nodeB.buttonMode = _this.nodeB.interactive = true;
+    _this.nodeB.scale.set(0.5);
+    _this.nodeB.enable();
+    _this.addChild(_this.nodeB);
+    _this.nodeB.on('pointertap', function () {
+      GameController.builder.midground.createNode(GameController, 1);
+    });
+
+    _this.nodeC = new _Button.Button(colors.mainText, colors.mainFG, "Node C", w, h);
+    _this.nodeC.x = w - w / 10;
+    _this.nodeC.y = h - h / 16 * 4;
+    _this.nodeC.buttonMode = _this.nodeC.interactive = true;
+    _this.nodeC.scale.set(0.5);
+    _this.nodeC.enable();
+    _this.addChild(_this.nodeC);
+    _this.nodeC.on('pointertap', function () {
+      GameController.builder.midground.createNode(GameController, 2);
+    });
+
+    _this.delete = new _Button.Button(colors.red, colors.mainFG, "Delete", w, h);
+    _this.delete.x = w - w / 10;
+    _this.delete.y = h - h / 16 * 8;
+    _this.delete.buttonMode = _this.delete.interactive = true;
+    _this.delete.scale.set(0.5);
+    _this.delete.enable();
+    _this.addChild(_this.delete);
+    _this.delete.on('pointertap', function () {
+      for (var i = 0; i < GameController.builder.midground.nodes.length; i++) {
+        if (GameController.builder.midground.nodes[i].selected) {
+          GameController.builder.midground.removeChild(GameController.builder.midground.nodes[i]);
+          GameController.builder.midground.nodes.splice(i, 1);
+          i--;
+        }
+      }
+    });
     return _this;
   }
 
   return BuilderForeground;
 }(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/builder/BuilderLogic.js":
+/*!**********************************************!*\
+  !*** ./src/app/game/builder/BuilderLogic.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BuilderLogic = exports.BuilderLogic = function () {
+  function BuilderLogic(GameController) {
+    _classCallCheck(this, BuilderLogic);
+
+    this.gc = GameController;
+  }
+
+  _createClass(BuilderLogic, [{
+    key: "onDragStart",
+    value: function onDragStart(event) {
+      this.data = event.data;
+      this.alpha = 0.5;
+      this.dragging = true;
+    }
+  }, {
+    key: "onDragEnd",
+    value: function onDragEnd() {
+      this.alpha = 1;
+      this.dragging = false;
+      this.data = null;
+    }
+  }, {
+    key: "onDragMove",
+    value: function onDragMove(a) {
+      if (this.dragging) {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.position.x = newPosition.x;
+        this.position.y = newPosition.y;
+      }
+    }
+  }]);
+
+  return BuilderLogic;
+}();
 
 /***/ }),
 
@@ -48073,7 +48202,7 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _BuilderScreen = __webpack_require__(/*! ./BuilderScreen.js */ "./src/app/game/builder/BuilderScreen.js");
+var _BuilderMidground = __webpack_require__(/*! ./BuilderMidground.js */ "./src/app/game/builder/BuilderMidground.js");
 
 var _BuilderForeground = __webpack_require__(/*! ./BuilderForeground.js */ "./src/app/game/builder/BuilderForeground.js");
 
@@ -48095,10 +48224,9 @@ var BuilderManager = exports.BuilderManager = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (BuilderManager.__proto__ || Object.getPrototypeOf(BuilderManager)).call(this));
 
+    _this.w = 7;
+    _this.h = 5;
     _this.gc = GameController;
-    _this.background = new _BuilderBackground.BuilderBackground(GameController);
-    _this.foreground = new _BuilderForeground.BuilderForeground(GameController);
-    _this.addChild(_this.background, _this.foreground);
     _this.visible = false;
     return _this;
   }
@@ -48106,9 +48234,11 @@ var BuilderManager = exports.BuilderManager = function (_Container) {
   _createClass(BuilderManager, [{
     key: 'enable',
     value: function enable() {
-      this.removeChild(this.screen);
-      this.screen = new _BuilderScreen.BuilderScreen(this.gc);
-      this.addChild(this.screen);
+      this.removeChild(this.background, this.midground, this.foreground);
+      this.background = new _BuilderBackground.BuilderBackground(this.gc);
+      this.midground = new _BuilderMidground.BuilderMidground(this.gc);
+      this.foreground = new _BuilderForeground.BuilderForeground(this.gc);
+      this.addChild(this.background, this.midground, this.foreground);
     }
   }]);
 
@@ -48117,10 +48247,10 @@ var BuilderManager = exports.BuilderManager = function (_Container) {
 
 /***/ }),
 
-/***/ "./src/app/game/builder/BuilderScreen.js":
-/*!***********************************************!*\
-  !*** ./src/app/game/builder/BuilderScreen.js ***!
-  \***********************************************/
+/***/ "./src/app/game/builder/BuilderMidground.js":
+/*!**************************************************!*\
+  !*** ./src/app/game/builder/BuilderMidground.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -48130,7 +48260,7 @@ var BuilderManager = exports.BuilderManager = function (_Container) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BuilderScreen = undefined;
+exports.BuilderMidground = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -48142,6 +48272,8 @@ var colors = _interopRequireWildcard(_Colors);
 
 var _Node = __webpack_require__(/*! ../../core/display/Node.js */ "./src/app/core/display/Node.js");
 
+var _BuilderLogic = __webpack_require__(/*! ./BuilderLogic */ "./src/app/game/builder/BuilderLogic.js");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -48150,59 +48282,48 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var BuilderScreen = exports.BuilderScreen = function (_Container) {
-  _inherits(BuilderScreen, _Container);
+var BuilderMidground = exports.BuilderMidground = function (_Container) {
+  _inherits(BuilderMidground, _Container);
 
-  function BuilderScreen(GameController) {
-    _classCallCheck(this, BuilderScreen);
+  function BuilderMidground(GameController) {
+    _classCallCheck(this, BuilderMidground);
 
-    var _this = _possibleConstructorReturn(this, (BuilderScreen.__proto__ || Object.getPrototypeOf(BuilderScreen)).call(this));
+    var _this = _possibleConstructorReturn(this, (BuilderMidground.__proto__ || Object.getPrototypeOf(BuilderMidground)).call(this));
 
-    var w = GameController.canvas.width;
-    var h = GameController.canvas.height;
-    var nodes = [];
-    for (var i = 0; i < 5; i++) {
-      var node = new _Node.Node(GameController.assets, i % 3);
-      node.x = Math.floor(w / 2);
-      node.y = Math.floor(h / 2);
+    _this.nodes = [];
+    return _this;
+  }
+
+  _createClass(BuilderMidground, [{
+    key: 'createNode',
+    value: function createNode(GameController, type) {
+      var _this2 = this;
+
+      var logic = new _BuilderLogic.BuilderLogic(GameController);
+      var w = GameController.canvas.width;
+      var h = GameController.canvas.height;
+
+      var node = new _Node.Node(GameController.assets, type);
+      node.x = Math.floor(w / GameController.builder.w);
+      node.y = Math.floor(h / GameController.builder.h);
       node.scale.set(w / 1400);
 
       node.buttonMode = node.interactive = true;
 
-      node.on('pointerdown', _this.onDragStart).on('pointerup', _this.onDragEnd).on('pointermove', _this.onDragMove);
+      node.on('pointerdown', logic.onDragStart).on('pointerup', logic.onDragEnd).on('pointermove', logic.onDragMove);
 
-      nodes.push(node);
-      _this.addChild(node);
-    }
-    return _this;
-  }
+      node.on('pointerdown', function () {
+        for (var i = 0; i < _this2.nodes.length; i++) {
+          if (_this2.nodes[i].selected && _this2.nodes[i] != node) _this2.nodes[i].select();
+        }node.select();
+      });
 
-  _createClass(BuilderScreen, [{
-    key: 'onDragStart',
-    value: function onDragStart(event) {
-      this.data = event.data;
-      this.alpha = 0.5;
-      this.dragging = true;
-    }
-  }, {
-    key: 'onDragEnd',
-    value: function onDragEnd() {
-      this.alpha = 1;
-      this.dragging = false;
-      this.data = null;
-    }
-  }, {
-    key: 'onDragMove',
-    value: function onDragMove() {
-      if (this.dragging) {
-        var newPosition = this.data.getLocalPosition(this.parent);
-        this.position.x = newPosition.x;
-        this.position.y = newPosition.y;
-      }
+      this.nodes.push(node);
+      this.addChild(node);
     }
   }]);
 
-  return BuilderScreen;
+  return BuilderMidground;
 }(_pixi.Container);
 
 /***/ }),
