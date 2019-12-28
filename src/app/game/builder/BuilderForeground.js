@@ -44,38 +44,22 @@ export class BuilderForeground extends Container {
       alert('SAVE FILE!!');
     });
 
-    this.nodeA = new Button(colors.mainText, colors.mainFG, "Node A", w, h);
-    this.nodeA.x = w - (w / 10);
-    this.nodeA.y = h - (h / 16) * 6;
-    this.nodeA.buttonMode = this.nodeA.interactive = true;
-    this.nodeA.scale.set(0.5);
-    this.nodeA.enable();
-    this.addChild(this.nodeA);
-    this.nodeA.on('pointertap', () => {
-      GameController.builder.midground.createNode(GameController, 0);
-    });
+    this.nodeButtons = [];
+    this.nodeButtons.push(new Button(colors.mainText, colors.mainFG, "Node A", w, h),
+                          new Button(colors.mainText, colors.mainFG, "Node B", w, h),
+                          new Button(colors.mainText, colors.mainFG, "Node C", w, h));
 
-    this.nodeB = new Button(colors.mainText, colors.mainFG, "Node B", w, h);
-    this.nodeB.x = w - (w / 10);
-    this.nodeB.y = h - (h / 16) * 5;
-    this.nodeB.buttonMode = this.nodeB.interactive = true;
-    this.nodeB.scale.set(0.5);
-    this.nodeB.enable();
-    this.addChild(this.nodeB);
-    this.nodeB.on('pointertap', () => {
-      GameController.builder.midground.createNode(GameController, 1);
-    });
-
-    this.nodeC = new Button(colors.mainText, colors.mainFG, "Node C", w, h);
-    this.nodeC.x = w - (w / 10);
-    this.nodeC.y = h - (h / 16) * 4;
-    this.nodeC.buttonMode = this.nodeC.interactive = true;
-    this.nodeC.scale.set(0.5);
-    this.nodeC.enable();
-    this.addChild(this.nodeC);
-    this.nodeC.on('pointertap', () => {
-      GameController.builder.midground.createNode(GameController, 2);
-    });
+    for (let i = 0; i < this.nodeButtons.length; i++) {
+      this.nodeButtons[i].x = w - (w / 10);
+      this.nodeButtons[i].y = (h / 16) * (10 + i);
+      this.nodeButtons[i].buttonMode = this.nodeButtons[i].interactive = true;
+      this.nodeButtons[i].scale.set(0.5);
+      this.nodeButtons[i].enable();
+      this.addChild(this.nodeButtons[i]);
+      this.nodeButtons[i].on('pointertap', () => {
+        GameController.builder.midground.createNode(GameController, i);
+      });
+    }
 
     this.delete = new Button(colors.red, colors.mainFG, "Delete", w, h);
     this.delete.x = w - (w / 10);

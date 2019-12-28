@@ -48067,38 +48067,24 @@ var BuilderForeground = exports.BuilderForeground = function (_Container) {
       alert('SAVE FILE!!');
     });
 
-    _this.nodeA = new _Button.Button(colors.mainText, colors.mainFG, "Node A", w, h);
-    _this.nodeA.x = w - w / 10;
-    _this.nodeA.y = h - h / 16 * 6;
-    _this.nodeA.buttonMode = _this.nodeA.interactive = true;
-    _this.nodeA.scale.set(0.5);
-    _this.nodeA.enable();
-    _this.addChild(_this.nodeA);
-    _this.nodeA.on('pointertap', function () {
-      GameController.builder.midground.createNode(GameController, 0);
-    });
+    _this.nodeButtons = [];
+    _this.nodeButtons.push(new _Button.Button(colors.mainText, colors.mainFG, "Node A", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Node B", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Node C", w, h));
 
-    _this.nodeB = new _Button.Button(colors.mainText, colors.mainFG, "Node B", w, h);
-    _this.nodeB.x = w - w / 10;
-    _this.nodeB.y = h - h / 16 * 5;
-    _this.nodeB.buttonMode = _this.nodeB.interactive = true;
-    _this.nodeB.scale.set(0.5);
-    _this.nodeB.enable();
-    _this.addChild(_this.nodeB);
-    _this.nodeB.on('pointertap', function () {
-      GameController.builder.midground.createNode(GameController, 1);
-    });
+    var _loop = function _loop(i) {
+      _this.nodeButtons[i].x = w - w / 10;
+      _this.nodeButtons[i].y = h / 16 * (10 + i);
+      _this.nodeButtons[i].buttonMode = _this.nodeButtons[i].interactive = true;
+      _this.nodeButtons[i].scale.set(0.5);
+      _this.nodeButtons[i].enable();
+      _this.addChild(_this.nodeButtons[i]);
+      _this.nodeButtons[i].on('pointertap', function () {
+        GameController.builder.midground.createNode(GameController, i);
+      });
+    };
 
-    _this.nodeC = new _Button.Button(colors.mainText, colors.mainFG, "Node C", w, h);
-    _this.nodeC.x = w - w / 10;
-    _this.nodeC.y = h - h / 16 * 4;
-    _this.nodeC.buttonMode = _this.nodeC.interactive = true;
-    _this.nodeC.scale.set(0.5);
-    _this.nodeC.enable();
-    _this.addChild(_this.nodeC);
-    _this.nodeC.on('pointertap', function () {
-      GameController.builder.midground.createNode(GameController, 2);
-    });
+    for (var i = 0; i < _this.nodeButtons.length; i++) {
+      _loop(i);
+    }
 
     _this.delete = new _Button.Button(colors.red, colors.mainFG, "Delete", w, h);
     _this.delete.x = w - w / 10;
