@@ -48076,7 +48076,17 @@ var BuilderForeground = exports.BuilderForeground = function (_Container) {
     _this.export.enable();
     _this.addChild(_this.export);
     _this.export.on('pointertap', function () {
-      alert('SAVE FILE!!');
+      var nodes = GameController.builder.midground.nodes;
+      var compact = [];
+      for (var i = 0; i < nodes.length; i++) {
+        var cur = nodes[i];
+        var type = cur.type;
+        var x = Math.floor(cur.x * GameController.builder.w / w) + 1;
+        var y = Math.floor(cur.y * GameController.builder.h / h) + 1;
+        compact.push({ type: type, x: x, y: y });
+      }
+      GameController.builder.lvl.nodes = compact;
+      console.log(GameController.builder.lvl);
     });
 
     _this.nodeButtons = [];

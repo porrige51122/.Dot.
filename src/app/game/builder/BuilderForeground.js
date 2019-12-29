@@ -52,7 +52,17 @@ export class BuilderForeground extends Container {
     this.export.enable();
     this.addChild(this.export);
     this.export.on('pointertap', () => {
-      alert('SAVE FILE!!');
+      let nodes = GameController.builder.midground.nodes;
+      let compact = [];
+      for (let i = 0; i < nodes.length; i++) {
+        let cur = nodes[i];
+        let type = cur.type;
+        let x = Math.floor((cur.x * (GameController.builder.w)) / w) + 1;
+        let y = Math.floor((cur.y * (GameController.builder.h)) / h) + 1;
+        compact.push({ type: type, x: x, y: y});
+      }
+      GameController.builder.lvl.nodes = compact;
+      console.log(GameController.builder.lvl);
     });
 
     this.nodeButtons = [];
