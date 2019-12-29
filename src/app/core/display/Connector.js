@@ -4,11 +4,11 @@ import * as Color from './Colors.js';
 import * as Utils from '../utils/Utils.js';
 
 export class Connector extends Container {
-  constructor(a, b) {
+  constructor(a, b, w, h) {
     super();
     this.a = a;
     this.b = b;
-    let nodeRad = 16; // TODO: Set the value related to actual node radius
+    let nodeRad = w/50;
     let dis = Utils.dist(a.x, a.y, b.x, b.y) - (nodeRad * 2);
 
     this.line = new Graphics();

@@ -35,11 +35,6 @@ export class LevelForeground extends Container {
         GameController.transitions.transitionFade(GameController.levels, GameController.builder);
       });
     }
-
-
-
-
   }
-
 
 }

@@ -73,7 +73,7 @@ export class LevelBackend {
   }
 
   addLine(ctx, a, b) {
-    let line = new Connector(a, b);
+    let line = new Connector(a, b, ctx.gt.canvas.width, ctx.gt.canvas.height);
     line.buttonMode = true;
     line.interactive = true;
     line.on('pointertap', () => {

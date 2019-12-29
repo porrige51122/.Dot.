@@ -47057,14 +47057,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Connector = exports.Connector = function (_Container) {
   _inherits(Connector, _Container);
 
-  function Connector(a, b) {
+  function Connector(a, b, w, h) {
     _classCallCheck(this, Connector);
 
     var _this = _possibleConstructorReturn(this, (Connector.__proto__ || Object.getPrototypeOf(Connector)).call(this));
 
     _this.a = a;
     _this.b = b;
-    var nodeRad = 16; // TODO: Set the value related to actual node radius
+    var nodeRad = w / 50;
     var dis = Utils.dist(a.x, a.y, b.x, b.y) - nodeRad * 2;
 
     _this.line = new _pixi.Graphics();
@@ -47267,7 +47267,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Node = exports.Node = function (_Container) {
   _inherits(Node, _Container);
 
-  function Node(assets, type) {
+  function Node(assets, type, w, h) {
     _classCallCheck(this, Node);
 
     var _this = _possibleConstructorReturn(this, (Node.__proto__ || Object.getPrototypeOf(Node)).call(this));
@@ -47300,6 +47300,8 @@ var Node = exports.Node = function (_Container) {
     _this.node.anchor.set(0.5);
     _this.selected = false;
     _this.addChild(_this.halo, _this.node);
+
+    _this.scale.set(w / 1400);
     return _this;
   }
 
@@ -48312,10 +48314,9 @@ var BuilderMidground = exports.BuilderMidground = function (_Container) {
       var w = GameController.canvas.width;
       var h = GameController.canvas.height;
 
-      var node = new _Node.Node(GameController.assets, type);
+      var node = new _Node.Node(GameController.assets, type, w, h);
       node.x = Math.floor(w / 2);
       node.y = Math.floor(h / 2);
-      node.scale.set(w / 1400);
 
       node.buttonMode = node.interactive = true;
 
@@ -48449,7 +48450,7 @@ var LevelBackend = exports.LevelBackend = function () {
     value: function addLine(ctx, a, b) {
       var _this = this;
 
-      var line = new _Connector.Connector(a, b);
+      var line = new _Connector.Connector(a, b, ctx.gt.canvas.width, ctx.gt.canvas.height);
       line.buttonMode = true;
       line.interactive = true;
       line.on('pointertap', function () {
@@ -48593,7 +48594,6 @@ var LevelForeground = exports.LevelForeground = function (_Container) {
         GameController.transitions.transitionFade(GameController.levels, GameController.builder);
       });
     }
-
     return _this;
   }
 
@@ -48720,8 +48720,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.LevelMidground = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
@@ -48763,7 +48761,6 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
       lvl = _this.gt.assets.levels[world][_this.gt.levels.level];
     }
 
-    console.log(lvl);
     _this.message = new _Subtitle.Subtitle(colors.secondaryTitle, lvl.message, w, h);
     _this.message.x = w / 2;
     _this.message.y = h / 10 * 2;
@@ -48774,10 +48771,9 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
     _this.lines = [];
 
     var _loop = function _loop(i) {
-      var node = new _Node.Node(_this.gt.assets, lvl.nodes[i].type);
+      var node = new _Node.Node(_this.gt.assets, lvl.nodes[i].type, w, h);
       node.x = Math.floor(w / (lvl.x + 1) * lvl.nodes[i].x);
       node.y = Math.floor(h / (lvl.y + 2) * (lvl.nodes[i].y + 1));
-      node.scale.set(w / 1400);
 
       node.buttonMode = true;
       node.interactive = true;
@@ -48795,14 +48791,6 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
     }
     return _this;
   }
-
-  _createClass(LevelMidground, [{
-    key: 'custom',
-    value: function custom(GameController) {}
-  }, {
-    key: 'story',
-    value: function story(GameController) {}
-  }]);
 
   return LevelMidground;
 }(_pixi.Container);

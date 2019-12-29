@@ -1,7 +1,7 @@
 import { Container, Sprite, Graphics } from 'pixi.js';
 
 export class Node extends Container {
-  constructor(assets, type) {
+  constructor(assets, type, w, h) {
     super();
     this.type = type;
     switch (type) {
@@ -31,6 +31,9 @@ export class Node extends Container {
     this.node.anchor.set(0.5);
     this.selected = false;
     this.addChild(this.halo, this.node);
+
+
+    this.scale.set(w/1400);
   }
 
   select() {
