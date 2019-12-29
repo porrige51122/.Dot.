@@ -31,7 +31,11 @@ export class LevelBackend {
           if (!node.complete() && !prevNode.complete()) {
             this.addLine(ctx, node, prevNode);
             if (this.checkWin()) {
-              ctx.gt.levels.levelComplete(ctx.gt);
+              if (ctx.gt.levels.custom) {
+                ctx.gt.transitions.transitionFade(ctx.gt.levels, ctx.gt.builder);
+              } else {
+                ctx.gt.levels.levelComplete(ctx.gt);
+              }
             }
           } else {
             Toastify({

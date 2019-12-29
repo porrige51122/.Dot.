@@ -21,16 +21,16 @@ export class LevelManager extends Container {
   }
 
   buildLevel(builder) {
-    let custom = builder || false;
+    this.custom = builder || false;
     this.bg.visible = true;
 
     this.removeChild(this.mg);
-    this.mg = new LevelMidground(this.gt, custom);
+    this.mg = new LevelMidground(this.gt, this.custom);
     this.mg.visible = true;
     this.addChild(this.mg);
 
     this.removeChild(this.fg);
-    this.fg = new LevelForeground(this.gt, custom);
+    this.fg = new LevelForeground(this.gt, this.custom);
     this.fg.visible = true;
     this.addChild(this.fg);
 

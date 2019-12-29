@@ -48404,7 +48404,11 @@ var LevelBackend = exports.LevelBackend = function () {
             if (!node.complete() && !prevNode.complete()) {
               this.addLine(ctx, node, prevNode);
               if (this.checkWin()) {
-                ctx.gt.levels.levelComplete(ctx.gt);
+                if (ctx.gt.levels.custom) {
+                  ctx.gt.transitions.transitionFade(ctx.gt.levels, ctx.gt.builder);
+                } else {
+                  ctx.gt.levels.levelComplete(ctx.gt);
+                }
               }
             } else {
               (0, _toastifyJs2.default)({
@@ -48666,16 +48670,16 @@ var LevelManager = exports.LevelManager = function (_Container) {
   _createClass(LevelManager, [{
     key: 'buildLevel',
     value: function buildLevel(builder) {
-      var custom = builder || false;
+      this.custom = builder || false;
       this.bg.visible = true;
 
       this.removeChild(this.mg);
-      this.mg = new _LevelMidground.LevelMidground(this.gt, custom);
+      this.mg = new _LevelMidground.LevelMidground(this.gt, this.custom);
       this.mg.visible = true;
       this.addChild(this.mg);
 
       this.removeChild(this.fg);
-      this.fg = new _LevelForeground.LevelForeground(this.gt, custom);
+      this.fg = new _LevelForeground.LevelForeground(this.gt, this.custom);
       this.fg.visible = true;
       this.addChild(this.fg);
 

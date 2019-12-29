@@ -32,7 +32,6 @@ export class Node extends Container {
     this.selected = false;
     this.addChild(this.halo, this.node);
 
-
     this.scale.set(w/1400);
   }
 
