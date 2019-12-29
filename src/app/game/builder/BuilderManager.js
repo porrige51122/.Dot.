@@ -8,8 +8,8 @@ import { BuilderBackground } from './BuilderBackground.js';
 export class BuilderManager extends Container {
   constructor(GameController) {
     super();
-    this.w = 7;
-    this.h = 5;
+    this.w = GameController.canvas.width;
+    this.h = GameController.canvas.height;
     this.gc = GameController;
     this.visible = false;
     this.lvl = { x: this.w, y: this.h, nodes: [] };

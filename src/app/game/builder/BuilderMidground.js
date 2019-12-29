@@ -16,8 +16,8 @@ export class BuilderMidground extends Container {
     let h = GameController.canvas.height;
 
     let node = new Node(GameController.assets, type);
-    node.x = Math.floor(w / GameController.builder.w);
-    node.y = Math.floor(h / GameController.builder.h);
+    node.x = Math.floor(w / 2);
+    node.y = Math.floor(h / 2);
     node.scale.set(w/1400);
 
     node.buttonMode = node.interactive = true;

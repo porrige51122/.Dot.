@@ -47964,8 +47964,8 @@ var BuilderBackground = exports.BuilderBackground = function (_Container) {
 
     // Grid Area
     _this.grid = [];
-    var maxw = GameController.builder.w;
-    var maxh = GameController.builder.h;
+    var maxw = 8;
+    var maxh = 4.5;
     for (var i = 1; i < maxw; i++) {
       var line = new _pixi.Graphics();
       line.lineStyle(5, colors.connector);
@@ -48222,8 +48222,8 @@ var BuilderManager = exports.BuilderManager = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (BuilderManager.__proto__ || Object.getPrototypeOf(BuilderManager)).call(this));
 
-    _this.w = 7;
-    _this.h = 5;
+    _this.w = GameController.canvas.width;
+    _this.h = GameController.canvas.height;
     _this.gc = GameController;
     _this.visible = false;
     _this.lvl = { x: _this.w, y: _this.h, nodes: [] };
@@ -48303,8 +48303,8 @@ var BuilderMidground = exports.BuilderMidground = function (_Container) {
       var h = GameController.canvas.height;
 
       var node = new _Node.Node(GameController.assets, type);
-      node.x = Math.floor(w / GameController.builder.w);
-      node.y = Math.floor(h / GameController.builder.h);
+      node.x = Math.floor(w / 2);
+      node.y = Math.floor(h / 2);
       node.scale.set(w / 1400);
 
       node.buttonMode = node.interactive = true;

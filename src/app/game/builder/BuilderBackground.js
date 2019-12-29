@@ -17,8 +17,8 @@ export class BuilderBackground extends Container {
 
     // Grid Area
     this.grid = [];
-    let maxw = GameController.builder.w;
-    let maxh = GameController.builder.h;
+    let maxw = 8;
+    let maxh = 4.5;
     for (let i = 1; i < maxw; i++) {
       let line = new Graphics();
       line.lineStyle(5, colors.connector);
