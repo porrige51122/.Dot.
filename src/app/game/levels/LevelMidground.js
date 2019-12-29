@@ -6,7 +6,7 @@ import { Subtitle } from '../../core/display/Subtitle.js';
 import { Node } from '../../core/display/Node.js';
 
 export class LevelMidground extends Container {
-  constructor(GameController) {
+  constructor(GameController, builder) {
     super();
     let world = GameController.levels.world || 0;
     this.gt = GameController;
@@ -14,8 +14,14 @@ export class LevelMidground extends Container {
     let h = this.gt.canvas.height;
     this.sortableChildren = true;
 
-    let lvl = this.gt.assets.levels[world][this.gt.levels.level];
-
+    let lvl;
+    if (builder) {
+      lvl = GameController.builder.lvl;
+    } else {
+      lvl = this.gt.assets.levels[world][this.gt.levels.level]
+    }
+    
+    console.log(lvl);
     this.message = new Subtitle(colors.secondaryTitle, lvl.message, w, h);
     this.message.x = w / 2;
     this.message.y = h / 10 * 2;
@@ -41,6 +47,11 @@ export class LevelMidground extends Container {
       this.addChild(node);
       this.nodes.push(node);
     }
+  }
+
+  custom(GameController) {}
+
+  story(GameController) {
 
   }
 

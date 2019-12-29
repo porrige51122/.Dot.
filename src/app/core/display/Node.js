@@ -3,6 +3,7 @@ import { Container, Sprite, Graphics } from 'pixi.js';
 export class Node extends Container {
   constructor(assets, type) {
     super();
+    this.type = type;
     switch (type) {
       case 0:
         this.textures = assets.nodeA;

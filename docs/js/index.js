@@ -47272,6 +47272,7 @@ var Node = exports.Node = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (Node.__proto__ || Object.getPrototypeOf(Node)).call(this));
 
+    _this.type = type;
     switch (type) {
       case 0:
         _this.textures = assets.nodeA;
@@ -48054,7 +48055,18 @@ var BuilderForeground = exports.BuilderForeground = function (_Container) {
     _this.play.enable();
     _this.addChild(_this.play);
     _this.play.on('pointertap', function () {
-      alert('PLAY LEVEL!!');
+      var nodes = GameController.builder.midground.nodes;
+      var compact = [];
+      for (var i = 0; i < nodes.length; i++) {
+        var cur = nodes[i];
+        var type = cur.type;
+        var x = Math.floor(cur.x * GameController.builder.w / w) + 1;
+        var y = Math.floor(cur.y * GameController.builder.h / h) + 1;
+        compact.push({ type: type, x: x, y: y });
+      }
+      GameController.builder.lvl.nodes = compact;
+      GameController.levels.buildLevel(true);
+      GameController.transitions.transitionFade(GameController.builder, GameController.levels);
     });
     _this.export = new _Button.Button(colors.mainText, colors.mainFG, "Export", w, h);
     _this.export.x = w - w / 10;
@@ -48214,6 +48226,7 @@ var BuilderManager = exports.BuilderManager = function (_Container) {
     _this.h = 5;
     _this.gc = GameController;
     _this.visible = false;
+    _this.lvl = { x: _this.w, y: _this.h, nodes: [] };
     return _this;
   }
 
@@ -48539,19 +48552,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LevelForeground = exports.LevelForeground = function (_Container) {
   _inherits(LevelForeground, _Container);
 
-  function LevelForeground(GameController) {
+  function LevelForeground(GameController, builder) {
     _classCallCheck(this, LevelForeground);
 
     var _this = _possibleConstructorReturn(this, (LevelForeground.__proto__ || Object.getPrototypeOf(LevelForeground)).call(this));
 
     var w = GameController.canvas.width;
     var h = GameController.canvas.height;
-
-    _this.title = new _Heading.Heading(colors.secondaryTitle, 'Level ' + (GameController.levels.level + 1), w, h);
-    _this.title.x = w / 2;
-    _this.title.y = h / 10;
-    _this.title.enable();
-    _this.addChild(_this.title);
 
     _this.back = new _Button.Button(colors.mainText, colors.mainFG, "Back", w, h);
     _this.back.x = w - w / 10;
@@ -48560,9 +48567,23 @@ var LevelForeground = exports.LevelForeground = function (_Container) {
     _this.back.interactive = true;
     _this.back.enable();
     _this.addChild(_this.back);
-    _this.back.on('pointertap', function () {
-      GameController.transitions.transitionFade(GameController.levels, GameController.menu.levelMenu[GameController.menu.currentLevel]);
-    });
+
+    if (!builder) {
+      _this.title = new _Heading.Heading(colors.secondaryTitle, 'Level ' + (GameController.levels.level + 1), w, h);
+      _this.title.x = w / 2;
+      _this.title.y = h / 10;
+      _this.title.enable();
+      _this.addChild(_this.title);
+
+      _this.back.on('pointertap', function () {
+        GameController.transitions.transitionFade(GameController.levels, GameController.menu.levelMenu[GameController.menu.currentLevel]);
+      });
+    } else {
+      _this.back.on('pointertap', function () {
+        GameController.transitions.transitionFade(GameController.levels, GameController.builder);
+      });
+    }
+
     return _this;
   }
 
@@ -48634,16 +48655,17 @@ var LevelManager = exports.LevelManager = function (_Container) {
 
   _createClass(LevelManager, [{
     key: 'buildLevel',
-    value: function buildLevel() {
+    value: function buildLevel(builder) {
+      var custom = builder || false;
       this.bg.visible = true;
 
       this.removeChild(this.mg);
-      this.mg = new _LevelMidground.LevelMidground(this.gt);
+      this.mg = new _LevelMidground.LevelMidground(this.gt, custom);
       this.mg.visible = true;
       this.addChild(this.mg);
 
       this.removeChild(this.fg);
-      this.fg = new _LevelForeground.LevelForeground(this.gt);
+      this.fg = new _LevelForeground.LevelForeground(this.gt, custom);
       this.fg.visible = true;
       this.addChild(this.fg);
 
@@ -48688,6 +48710,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.LevelMidground = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
 var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
@@ -48711,7 +48735,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LevelMidground = exports.LevelMidground = function (_Container) {
   _inherits(LevelMidground, _Container);
 
-  function LevelMidground(GameController) {
+  function LevelMidground(GameController, builder) {
     _classCallCheck(this, LevelMidground);
 
     var _this = _possibleConstructorReturn(this, (LevelMidground.__proto__ || Object.getPrototypeOf(LevelMidground)).call(this));
@@ -48722,8 +48746,14 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
     var h = _this.gt.canvas.height;
     _this.sortableChildren = true;
 
-    var lvl = _this.gt.assets.levels[world][_this.gt.levels.level];
+    var lvl = void 0;
+    if (builder) {
+      lvl = GameController.builder.lvl;
+    } else {
+      lvl = _this.gt.assets.levels[world][_this.gt.levels.level];
+    }
 
+    console.log(lvl);
     _this.message = new _Subtitle.Subtitle(colors.secondaryTitle, lvl.message, w, h);
     _this.message.x = w / 2;
     _this.message.y = h / 10 * 2;
@@ -48753,9 +48783,16 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
     for (var i = 0; i < lvl.nodes.length; i++) {
       _loop(i);
     }
-
     return _this;
   }
+
+  _createClass(LevelMidground, [{
+    key: 'custom',
+    value: function custom(GameController) {}
+  }, {
+    key: 'story',
+    value: function story(GameController) {}
+  }]);
 
   return LevelMidground;
 }(_pixi.Container);

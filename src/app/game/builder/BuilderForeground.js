@@ -31,7 +31,18 @@ export class BuilderForeground extends Container {
     this.play.enable();
     this.addChild(this.play);
     this.play.on('pointertap', () => {
-      alert('PLAY LEVEL!!');
+      let nodes = GameController.builder.midground.nodes;
+      let compact = [];
+      for (let i = 0; i < nodes.length; i++) {
+        let cur = nodes[i];
+        let type = cur.type;
+        let x = Math.floor((cur.x * (GameController.builder.w)) / w) + 1;
+        let y = Math.floor((cur.y * (GameController.builder.h)) / h) + 1;
+        compact.push({ type: type, x: x, y: y});
+      }
+      GameController.builder.lvl.nodes = compact;
+      GameController.levels.buildLevel(true);
+      GameController.transitions.transitionFade(GameController.builder, GameController.levels);
     });
     this.export = new Button(colors.mainText, colors.mainFG, "Export", w, h);
     this.export.x = w - (w / 10);

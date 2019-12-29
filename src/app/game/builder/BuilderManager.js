@@ -12,6 +12,7 @@ export class BuilderManager extends Container {
     this.h = 5;
     this.gc = GameController;
     this.visible = false;
+    this.lvl = { x: this.w, y: this.h, nodes: [] };
   }
 
   enable() {
