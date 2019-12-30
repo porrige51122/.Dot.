@@ -47,7 +47,7 @@ export class LevelCompleteMenu extends Container {
       this.endMessageA.position.set(w / 2, h / 3);
       this.endMessageA.enable();
       this.endMessageB = new Heading(colors.mainFG, 'Thanks for Playing!', w, h);
-      this.endMessageA.position.set(w / 2, h / 3 * 2);
+      this.endMessageB.position.set(w / 2, h / 3 * 2);
       this.endMessageB.enable();
 
       this.addChild(this.endMessageA, this.endMessageB);

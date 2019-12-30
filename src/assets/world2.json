@@ -2,13 +2,18 @@
   {
     "level": 0,
     "x":     1,
-    "y":     1,
+    "y":     2,
     "nodes": [{
         "type": 0,
         "x":    1,
         "y":    1
+      },
+      {
+        "type": 0,
+        "x":    1,
+        "y":    2
       }
     ],
-    "message": "Something strange is happening here"
+    "message": "Something strange is happening here..."
   }
 ]

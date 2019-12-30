@@ -8,17 +8,18 @@ import { Heading } from '../../core/display/Heading.js';
 export class LevelMenu extends Container {
   constructor(controller, world) {
     super();
+    let DEVMODE = true;
     let w = controller.canvas.width;
     let h = controller.canvas.height;
     world = world || 0;
-    
+
     this.buttons = [];
     for (let i = 0; i < controller.assets.levels[world].length; i++) {
       let but = new Button(colors.mainFG, colors.mainText, "." + (i + 1) + ".", w, h);
       but.x = w / 7 + ((w / 7) * (i % 6));
       but.y = h / 3 + ((h / 6) * Math.floor(i / 6));
       but.enable();
-      if (i < 1) {
+      if (i < 1 || DEVMODE) {
         but.buttonMode = but.interactive = true;
       } else {
         but.alpha = 0.75;

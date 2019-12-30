@@ -48698,7 +48698,7 @@ var LevelManager = exports.LevelManager = function (_Container) {
       gt.menu.worldMenu.update(gt);
 
       gt.menu.removeChild(gt.menu.levelCompleteMenu);
-      gt.menu.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gt);
+      gt.menu.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gt, this.world);
       gt.menu.addChild(gt.menu.levelCompleteMenu);
       gt.transitions.transitionSlide(gt.levels, gt.menu.levelCompleteMenu);
     }
@@ -48954,7 +48954,7 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
       _this.endMessageA.position.set(w / 2, h / 3);
       _this.endMessageA.enable();
       _this.endMessageB = new _Heading.Heading(colors.mainFG, 'Thanks for Playing!', w, h);
-      _this.endMessageA.position.set(w / 2, h / 3 * 2);
+      _this.endMessageB.position.set(w / 2, h / 3 * 2);
       _this.endMessageB.enable();
 
       _this.addChild(_this.endMessageA, _this.endMessageB);
@@ -49010,6 +49010,7 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (LevelMenu.__proto__ || Object.getPrototypeOf(LevelMenu)).call(this));
 
+    var DEVMODE = true;
     var w = controller.canvas.width;
     var h = controller.canvas.height;
     world = world || 0;
@@ -49021,7 +49022,7 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       but.x = w / 7 + w / 7 * (i % 6);
       but.y = h / 3 + h / 6 * Math.floor(i / 6);
       but.enable();
-      if (i < 1) {
+      if (i < 1 || DEVMODE) {
         but.buttonMode = but.interactive = true;
       } else {
         but.alpha = 0.75;
@@ -49465,7 +49466,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! exports provided: 0, 1, 2, 3, 4, 5, 6, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"level\":0,\"x\":2,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"Click two nodes to connect them...\"},{\"level\":1,\"x\":2,\"y\":3,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":3}],\"message\":\"Different nodes can have different numbers of connections...\"},{\"level\":2,\"x\":2,\"y\":2,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":1,\"y\":2},{\"type\":0,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"The connections don't have to be in one loop...\"},{\"level\":3,\"x\":2,\"y\":2,\"nodes\":[{\"type\":1,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":1}],\"message\":\"But sometimes it's impossible without...\"},{\"level\":4,\"x\":5,\"y\":3,\"nodes\":[{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3}],\"message\":\"No crossing lines though...\"},{\"level\":5,\"x\":5,\"y\":4,\"nodes\":[{\"type\":0,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3},{\"type\":0,\"x\":4,\"y\":4}],\"message\":\"All nodes must hit their max to continue...\"},{\"level\":6,\"x\":4,\"y\":5,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":2,\"x\":1,\"y\":3},{\"type\":0,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":4},{\"type\":1,\"x\":2,\"y\":4},{\"type\":2,\"x\":1,\"y\":5},{\"type\":0,\"x\":2,\"y\":2},{\"type\":2,\"x\":3,\"y\":5},{\"type\":1,\"x\":4,\"y\":3},{\"type\":1,\"x\":4,\"y\":5},{\"type\":1,\"x\":4,\"y\":1}],\"message\":\"Try this one on for size...\"}]");
+module.exports = JSON.parse("[{\"x\":2,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":2,\"y\":1}],\"message\":\"Click two nodes to connect them...\"},{\"x\":2,\"y\":3,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":0,\"x\":2,\"y\":3}],\"message\":\"Different nodes can have different numbers of connections...\"},{\"x\":5,\"y\":3,\"nodes\":[{\"type\":1,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3}],\"message\":\"No crossing lines though...\"},{\"x\":5,\"y\":4,\"nodes\":[{\"type\":0,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":2},{\"type\":1,\"x\":5,\"y\":1},{\"type\":1,\"x\":4,\"y\":3},{\"type\":0,\"x\":4,\"y\":4}],\"message\":\"All nodes must hit their max to continue...\"},{\"x\":4,\"y\":5,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":1,\"x\":1,\"y\":2},{\"type\":2,\"x\":1,\"y\":3},{\"type\":0,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3},{\"type\":0,\"x\":1,\"y\":4},{\"type\":1,\"x\":2,\"y\":4},{\"type\":2,\"x\":1,\"y\":5},{\"type\":0,\"x\":2,\"y\":2},{\"type\":2,\"x\":3,\"y\":5},{\"type\":1,\"x\":4,\"y\":3},{\"type\":1,\"x\":4,\"y\":5},{\"type\":1,\"x\":4,\"y\":1}],\"message\":\"Try this one on for size...\"},{\"x\":4,\"y\":3,\"nodes\":[{\"type\":2,\"x\":2,\"y\":1},{\"type\":2,\"x\":3,\"y\":1},{\"type\":2,\"x\":1,\"y\":2},{\"type\":2,\"x\":2,\"y\":2},{\"type\":1,\"x\":4,\"y\":2},{\"type\":2,\"x\":2,\"y\":3},{\"type\":2,\"x\":3,\"y\":3}],\"message\":\"I call this one the lemon\"},{\"x\":6,\"y\":5,\"nodes\":[{\"type\":0,\"x\":3,\"y\":1},{\"type\":0,\"x\":4,\"y\":1},{\"type\":0,\"x\":2,\"y\":2},{\"type\":2,\"x\":3,\"y\":2},{\"type\":2,\"x\":4,\"y\":2},{\"type\":0,\"x\":5,\"y\":2},{\"type\":2,\"x\":1,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":1,\"x\":4,\"y\":3},{\"type\":2,\"x\":6,\"y\":3},{\"type\":0,\"x\":2,\"y\":4},{\"type\":2,\"x\":3,\"y\":4},{\"type\":2,\"x\":4,\"y\":4},{\"type\":0,\"x\":5,\"y\":4},{\"type\":0,\"x\":3,\"y\":5},{\"type\":0,\"x\":4,\"y\":5}],\"message\":\"How about a bigger lemon?\"}]");
 
 /***/ }),
 
@@ -49476,7 +49477,7 @@ module.exports = JSON.parse("[{\"level\":0,\"x\":2,\"y\":1,\"nodes\":[{\"type\":
 /*! exports provided: 0, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"level\":0,\"x\":1,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1}],\"message\":\"Something strange is happening here\"}]");
+module.exports = JSON.parse("[{\"level\":0,\"x\":1,\"y\":2,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":1,\"y\":2}],\"message\":\"Something strange is happening here...\"}]");
 
 /***/ })
 

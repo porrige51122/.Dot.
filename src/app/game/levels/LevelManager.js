@@ -49,7 +49,7 @@ export class LevelManager extends Container {
     gt.menu.worldMenu.update(gt);
 
     gt.menu.removeChild(gt.menu.levelCompleteMenu);
-    gt.menu.levelCompleteMenu = new LevelCompleteMenu(gt);
+    gt.menu.levelCompleteMenu = new LevelCompleteMenu(gt, this.world);
     gt.menu.addChild(gt.menu.levelCompleteMenu);
     gt.transitions.transitionSlide(gt.levels, gt.menu.levelCompleteMenu);
   }
