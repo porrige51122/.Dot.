@@ -48942,6 +48942,7 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
       _this.next.position.set(w / 2, h / 2);
       _this.next.buttonMode = _this.next.interactive = true;
       _this.next.enable();
+      _this.next.scale.set(2);
       _this.next.on('pointertap', function () {
         _this.next.buttonMode = _this.next.interactive = false;
         controller.levels.level++;

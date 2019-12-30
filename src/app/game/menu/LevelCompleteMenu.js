@@ -35,6 +35,7 @@ export class LevelCompleteMenu extends Container {
       this.next.position.set(w / 2, h / 2);
       this.next.buttonMode = this.next.interactive = true;
       this.next.enable();
+      this.next.scale.set(2);
       this.next.on('pointertap', () => {
         this.next.buttonMode = this.next.interactive = false;
         controller.levels.level++;
