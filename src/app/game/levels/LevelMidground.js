@@ -38,7 +38,12 @@ export class LevelMidground extends Container {
       node.buttonMode = true;
       node.interactive = true;
       node.zIndex = 2;
-      node.on('pointertap', () => {
+      node.on('pointerdown', () => {
+        node.select();
+      });
+      node.on('pointerup', () => {
+        if (node.selected)
+          node.select();
         GameController.levels.game.nodeSelect(this, node);
       });
 

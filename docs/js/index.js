@@ -48782,7 +48782,11 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
       node.buttonMode = true;
       node.interactive = true;
       node.zIndex = 2;
-      node.on('pointertap', function () {
+      node.on('pointerdown', function () {
+        node.select();
+      });
+      node.on('pointerup', function () {
+        if (node.selected) node.select();
         GameController.levels.game.nodeSelect(_this, node);
       });
 
