@@ -49134,7 +49134,8 @@ var MainMenu = exports.MainMenu = function (_Container) {
 
     _this.challengeButton = new _Button.Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);
     _this.challengeButton.position.set(w / 2, h / 8 * 7);
-    _this.challengeButton.buttonMode = _this.challengeButton.interactive = true;
+    // this.challengeButton.buttonMode = this.challengeButton.interactive = true;
+    _this.challengeButton.alpha = 0.5;
     _this.challengeButton.on('pointertap', function () {
       controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
     });

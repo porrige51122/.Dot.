@@ -32,7 +32,8 @@ export class MainMenu extends Container {
 
     this.challengeButton = new Button(colors.mainFG, colors.mainText, 'Daily Challenge', w, h);
     this.challengeButton.position.set((w / 2), (h / 8 * 7));
-    this.challengeButton.buttonMode = this.challengeButton.interactive = true;
+    // this.challengeButton.buttonMode = this.challengeButton.interactive = true;
+    this.challengeButton.alpha = 0.5;
     this.challengeButton.on('pointertap', () => {
       controller.transitions.transitionSlide(controller.menu.mainMenu, controller.menu.dailyMenu);
     });
