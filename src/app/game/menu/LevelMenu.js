@@ -8,7 +8,9 @@ import { Heading } from '../../core/display/Heading.js';
 export class LevelMenu extends Container {
   constructor(controller, world) {
     super();
-    let DEVMODE = true;
+    let DEVMODE =
+    // true;
+    false;
     let w = controller.canvas.width;
     let h = controller.canvas.height;
     world = world || 0;
