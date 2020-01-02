@@ -26,6 +26,6 @@ export const nodeC = [
                         0x06D6A0
                      ];
 export const nodeD = [
-                        0x2660A4,
+                        0xEF476F,
                         0x06D6A0
                      ];

@@ -25,6 +25,14 @@ export class LevelBackend {
     } else {
       prevNode.select();
       let result = this.checkLines(ctx, node, prevNode);
+      if (!node.canConnect(prevNode) || !prevNode.canConnect(node)) {
+        Toastify({
+          text: "These cannot connect...",
+          position: 'left'
+        }).showToast();
+        prevNode = undefined;
+        return;
+      }
 
       switch (result) {
         case -1:
