@@ -68,11 +68,12 @@ export class BuilderForeground extends Container {
     this.nodeButtons = [];
     this.nodeButtons.push(new Button(colors.mainText, colors.mainFG, "Node A", w, h),
                           new Button(colors.mainText, colors.mainFG, "Node B", w, h),
-                          new Button(colors.mainText, colors.mainFG, "Node C", w, h));
+                          new Button(colors.mainText, colors.mainFG, "Node C", w, h),
+                          new Button(colors.mainText, colors.mainFG, "Node D", w, h));
 
     for (let i = 0; i < this.nodeButtons.length; i++) {
       this.nodeButtons[i].x = w - (w / 10);
-      this.nodeButtons[i].y = (h / 16) * (10 + i);
+      this.nodeButtons[i].y = (h / 16) * (9 + i);
       this.nodeButtons[i].buttonMode = this.nodeButtons[i].interactive = true;
       this.nodeButtons[i].scale.set(0.5);
       this.nodeButtons[i].enable();
@@ -84,7 +85,7 @@ export class BuilderForeground extends Container {
 
     this.delete = new Button(colors.red, colors.mainFG, "Delete", w, h);
     this.delete.x = w - (w / 10);
-    this.delete.y = h - (h / 16) * 8;
+    this.delete.y = h - (h / 16) * 11;
     this.delete.buttonMode = this.delete.interactive = true;
     this.delete.scale.set(0.5);
     this.delete.enable();
