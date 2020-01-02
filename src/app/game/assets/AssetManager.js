@@ -3,6 +3,7 @@ import { Loader, Texture, Rectangle } from 'pixi.js';
 import NodeA from '../../../assets/nodeA.png';
 import NodeB from '../../../assets/nodeB.png';
 import NodeC from '../../../assets/nodeC.png';
+import NodeD from '../../../assets/nodeD.png';
 import World1 from '../../../assets/world1.json';
 import World2 from '../../../assets/world2.json';
 import '../../../app.css';
@@ -16,24 +17,27 @@ export class AssetManager {
     this.promise = new Promise((resolve, reject) => {
       this.loader = new Loader();
 
-      this.loader.add(NodeA).add(NodeB).add(NodeC);
+      this.loader.add(NodeA).add(NodeB).add(NodeC).add(NodeD);
 
       this.levels = [World1, World2];
-      this.nodeA = [];
-      this.nodeB = [];
-      this.nodeC = [];
 
       this.loader.on('progress', this.loadProgressHandler)
       this.loader.load(() => {
-        this.nodeA = this.split(NodeA, 100);
-        this.nodeB = this.split(NodeB, 100);
-        this.nodeC = this.split(NodeC, 100);
+        this.nodeA = this.loader.resources[NodeA].texture;
+        this.nodeB = this.loader.resources[NodeB].texture;
+        this.nodeC = this.loader.resources[NodeC].texture;
+        this.nodeD = this.loader.resources[NodeD].texture;
         console.log('All Assets Loaded');
         resolve();
       });
     });
   }
 
+  /** DEPRECATED
+   * Split function
+   *
+   * Splits tecture into an array of individual textures
+   */
   split(id, width) {
     let output = []
     let sheet = this.loader.resources[id].texture
