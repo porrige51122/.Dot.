@@ -9,8 +9,8 @@ export class LevelMenu extends Container {
   constructor(controller, world) {
     super();
     let DEVMODE =
-    true;
-    // false;
+    // true;
+    false;
     let w = controller.canvas.width;
     let h = controller.canvas.height;
     world = world || 0;
