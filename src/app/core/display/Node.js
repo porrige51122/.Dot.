@@ -1,25 +1,33 @@
 import { Container, Sprite, Graphics } from 'pixi.js';
 
+import * as Color from './Colors.js';
+
 export class Node extends Container {
   constructor(assets, type, w, h) {
     super();
     this.type = type;
     switch (type) {
       case 0:
-        this.textures = assets.nodeA;
+        this.texture = assets.nodeA;
+        this.colors = Color.nodeA;
         break;
       case 1:
-        this.textures = assets.nodeB;
+        this.texture = assets.nodeB;
+        this.colors = Color.nodeB;
         break;
       case 2:
-        this.textures = assets.nodeC;
+        this.texture = assets.nodeC;
+        this.colors = Color.nodeC;
+        break;
+      case 3:
+        this.texture = assets.nodeD;
+        this.colors = Color.nodeD;
         break;
       default:
-        console.log("JSON ERROR");
+        console.log("JSON ERROR: Type " + type + " called upexpectedly!");
     }
     this.cur = 0;
-    this.max = this.textures.length - 1;
-
+    this.max = this.colors.length - 1;
     this.halo = new Graphics();
     this.halo.beginFill(0xFCBF49);
     this.halo.drawStar(0, 0, 8, 100);
@@ -27,8 +35,9 @@ export class Node extends Container {
     this.halo.visible = false;
 
     this.nodeTypes = assets.nodeTypes;
-    this.node = new Sprite(this.textures[this.cur]);
+    this.node = new Sprite(this.texture);
     this.node.anchor.set(0.5);
+    this.node.tint = this.colors[0];
     this.selected = false;
     this.addChild(this.halo, this.node);
 
@@ -44,7 +53,8 @@ export class Node extends Container {
   increase() {
     if (this.cur < this.max) {
       this.cur++;
-      this.node.texture = this.textures[this.cur];
+      this.node.tint = 0xFFFFFF;
+      this.node.tint = this.colors[this.cur];
       return true;
     } else {
       return false;
@@ -53,7 +63,8 @@ export class Node extends Container {
 
   decrease() {
     this.cur--;
-    this.node.texture = this.textures[this.cur];
+    this.node.tint = 0xFFFFFF;
+    this.node.tint = this.colors[this.cur];
   }
 
   complete() {

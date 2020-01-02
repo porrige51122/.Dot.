@@ -47007,7 +47007,7 @@ var Button = exports.Button = function (_Container) {
 
 
 Object.defineProperty(exports, "__esModule", {
-             value: true
+                        value: true
 });
 var mainBG = exports.mainBG = 0xFCBF49,
     mainFG = exports.mainFG = 0x000034,
@@ -47018,6 +47018,13 @@ var mainBG = exports.mainBG = 0xFCBF49,
     connectorHover = exports.connectorHover = 0xFF5555,
     blue = exports.blue = 0x2660A4,
     red = exports.red = 0xFE4A49;
+
+var nodeA = exports.nodeA = [0xEF476F, 0x06D6A0];
+
+var nodeB = exports.nodeB = [0xEF476F, 0xFCBF49, 0x06D6A0];
+
+var nodeC = exports.nodeC = [0xEF476F, 0xFE7F2D, 0xFCBF49, 0x06D6A0];
+var nodeD = exports.nodeD = [0x2660A4, 0x06D6A0];
 
 /***/ }),
 
@@ -47258,6 +47265,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
+var _Colors = __webpack_require__(/*! ./Colors.js */ "./src/app/core/display/Colors.js");
+
+var Color = _interopRequireWildcard(_Colors);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -47275,20 +47288,26 @@ var Node = exports.Node = function (_Container) {
     _this.type = type;
     switch (type) {
       case 0:
-        _this.textures = assets.nodeA;
+        _this.texture = assets.nodeA;
+        _this.colors = Color.nodeA;
         break;
       case 1:
-        _this.textures = assets.nodeB;
+        _this.texture = assets.nodeB;
+        _this.colors = Color.nodeB;
         break;
       case 2:
-        _this.textures = assets.nodeC;
+        _this.texture = assets.nodeC;
+        _this.colors = Color.nodeC;
+        break;
+      case 3:
+        _this.texture = assets.nodeD;
+        _this.colors = Color.nodeD;
         break;
       default:
-        console.log("JSON ERROR");
+        console.log("JSON ERROR: Type " + type + " called upexpectedly!");
     }
     _this.cur = 0;
-    _this.max = _this.textures.length - 1;
-
+    _this.max = _this.colors.length - 1;
     _this.halo = new _pixi.Graphics();
     _this.halo.beginFill(0xFCBF49);
     _this.halo.drawStar(0, 0, 8, 100);
@@ -47296,8 +47315,9 @@ var Node = exports.Node = function (_Container) {
     _this.halo.visible = false;
 
     _this.nodeTypes = assets.nodeTypes;
-    _this.node = new _pixi.Sprite(_this.textures[_this.cur]);
+    _this.node = new _pixi.Sprite(_this.texture);
     _this.node.anchor.set(0.5);
+    _this.node.tint = _this.colors[0];
     _this.selected = false;
     _this.addChild(_this.halo, _this.node);
 
@@ -47306,30 +47326,32 @@ var Node = exports.Node = function (_Container) {
   }
 
   _createClass(Node, [{
-    key: "select",
+    key: 'select',
     value: function select() {
       this.selected = !this.selected;
       this.halo.visible = this.selected;
     }
   }, {
-    key: "increase",
+    key: 'increase',
     value: function increase() {
       if (this.cur < this.max) {
         this.cur++;
-        this.node.texture = this.textures[this.cur];
+        this.node.tint = 0xFFFFFF;
+        this.node.tint = this.colors[this.cur];
         return true;
       } else {
         return false;
       }
     }
   }, {
-    key: "decrease",
+    key: 'decrease',
     value: function decrease() {
       this.cur--;
-      this.node.texture = this.textures[this.cur];
+      this.node.tint = 0xFFFFFF;
+      this.node.tint = this.colors[this.cur];
     }
   }, {
-    key: "complete",
+    key: 'complete',
     value: function complete() {
       return this.cur === this.max;
     }
@@ -47848,6 +47870,10 @@ var _nodeC = __webpack_require__(/*! ../../../assets/nodeC.png */ "./src/assets/
 
 var _nodeC2 = _interopRequireDefault(_nodeC);
 
+var _nodeD = __webpack_require__(/*! ../../../assets/nodeD.png */ "./src/assets/nodeD.png");
+
+var _nodeD2 = _interopRequireDefault(_nodeD);
+
 var _world = __webpack_require__(/*! ../../../assets/world1.json */ "./src/assets/world1.json");
 
 var _world2 = _interopRequireDefault(_world);
@@ -47875,23 +47901,28 @@ var AssetManager = exports.AssetManager = function () {
     this.promise = new Promise(function (resolve, reject) {
       _this.loader = new _pixi.Loader();
 
-      _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default);
+      _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default).add(_nodeD2.default);
 
       _this.levels = [_world2.default, _world4.default];
-      _this.nodeA = [];
-      _this.nodeB = [];
-      _this.nodeC = [];
 
       _this.loader.on('progress', _this.loadProgressHandler);
       _this.loader.load(function () {
-        _this.nodeA = _this.split(_nodeA2.default, 100);
-        _this.nodeB = _this.split(_nodeB2.default, 100);
-        _this.nodeC = _this.split(_nodeC2.default, 100);
+        _this.nodeA = _this.loader.resources[_nodeA2.default].texture;
+        _this.nodeB = _this.loader.resources[_nodeB2.default].texture;
+        _this.nodeC = _this.loader.resources[_nodeC2.default].texture;
+        _this.nodeD = _this.loader.resources[_nodeD2.default].texture;
         console.log('All Assets Loaded');
         resolve();
       });
     });
   }
+
+  /** DEPRECATED
+   * Split function
+   *
+   * Splits tecture into an array of individual textures
+   */
+
 
   _createClass(AssetManager, [{
     key: 'split',
@@ -49437,7 +49468,7 @@ var StatusDisplay = exports.StatusDisplay = function (_Container) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "35dbf10119500d20c0f08646ea4d7ebd.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "a72ae3d6f38131c2874bf32c70bb8743.png");
 
 /***/ }),
 
@@ -49450,7 +49481,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "9e775437fb05bc41d481c5ecca50528e.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "0ca1f1a3482461a5f895d363841af2da.png");
 
 /***/ }),
 
@@ -49463,7 +49494,20 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "aeb8b59b5d11c575054da181648b60b7.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "9ee94d3f775760d200670aab3f50f583.png");
+
+/***/ }),
+
+/***/ "./src/assets/nodeD.png":
+/*!******************************!*\
+  !*** ./src/assets/nodeD.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "ead299510f70725997bbaf1d45fe831e.png");
 
 /***/ }),
 
@@ -49485,7 +49529,7 @@ module.exports = JSON.parse("[{\"x\":2,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"
 /*! exports provided: 0, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"level\":0,\"x\":1,\"y\":2,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":0,\"x\":1,\"y\":2}],\"message\":\"Something strange is happening here...\"}]");
+module.exports = JSON.parse("[{\"level\":0,\"x\":1,\"y\":2,\"nodes\":[{\"type\":3,\"x\":1,\"y\":1},{\"type\":3,\"x\":1,\"y\":2}],\"message\":\"Something strange is happening here...\"}]");
 
 /***/ })
 
