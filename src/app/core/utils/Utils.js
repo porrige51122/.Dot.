@@ -19,6 +19,10 @@ export function sameLine(a, b) {
   return (a.a === b.a && a.b === b.b) || (a.b === b.a && a.a === b.b)
 }
 
+export function lineThroughCircle(x1, y1, x2, y2, cx, cy, cr) {
+  return false;
+}
+
 export function checkCross(array, line) {
   for (let i = 0; i < array.length; i++) {
     if (this.crossLine(array[i], line)) {

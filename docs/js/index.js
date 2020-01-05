@@ -47247,10 +47247,10 @@ var LargeButton = exports.LargeButton = function (_Button) {
 
 /***/ }),
 
-/***/ "./src/app/core/display/Node.js":
-/*!**************************************!*\
-  !*** ./src/app/core/display/Node.js ***!
-  \**************************************/
+/***/ "./src/app/core/display/NodeFactory.js":
+/*!*********************************************!*\
+  !*** ./src/app/core/display/NodeFactory.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -47260,7 +47260,9 @@ var LargeButton = exports.LargeButton = function (_Button) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Node = Node;
+exports.NodeFactory = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _NodeA = __webpack_require__(/*! ../nodes/NodeA.js */ "./src/app/core/nodes/NodeA.js");
 
@@ -47270,20 +47272,37 @@ var _NodeC = __webpack_require__(/*! ../nodes/NodeC.js */ "./src/app/core/nodes/
 
 var _NodeD = __webpack_require__(/*! ../nodes/NodeD.js */ "./src/app/core/nodes/NodeD.js");
 
-function Node(assets, type, w, h) {
-  switch (type) {
-    case 0:
-      return new _NodeA.NodeA(assets, w, h);
-    case 1:
-      return new _NodeB.NodeB(assets, w, h);
-    case 2:
-      return new _NodeC.NodeC(assets, w, h);
-    case 3:
-      return new _NodeD.NodeD(assets, w, h);
-    default:
-      console.log('JSON ERROR: Type ' + type + ' entered but it does not exist!');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NodeFactory = exports.NodeFactory = function () {
+  function NodeFactory(assets, w, h) {
+    _classCallCheck(this, NodeFactory);
+
+    this.assets = assets;
+    this.w = w;
+    this.h = h;
   }
-}
+
+  _createClass(NodeFactory, [{
+    key: 'createNode',
+    value: function createNode(type) {
+      switch (type) {
+        case 0:
+          return new _NodeA.NodeA(this.assets, this.w, this.h);
+        case 1:
+          return new _NodeB.NodeB(this.assets, this.w, this.h);
+        case 2:
+          return new _NodeC.NodeC(this.assets, this.w, this.h);
+        case 3:
+          return new _NodeD.NodeD(this.assets, this.w, this.h);
+        default:
+          console.log('JSON ERROR: Type ' + type + ' entered but it does not exist!');
+      }
+    }
+  }]);
+
+  return NodeFactory;
+}();
 
 /***/ }),
 
@@ -47942,6 +47961,7 @@ exports.dist = dist;
 exports.angle = angle;
 exports.checkDuplicate = checkDuplicate;
 exports.sameLine = sameLine;
+exports.lineThroughCircle = lineThroughCircle;
 exports.checkCross = checkCross;
 exports.crossLine = crossLine;
 function dist(x1, y1, x2, y2) {
@@ -47963,6 +47983,10 @@ function checkDuplicate(array, line) {
 
 function sameLine(a, b) {
   return a.a === b.a && a.b === b.b || a.b === b.a && a.a === b.b;
+}
+
+function lineThroughCircle(x1, y1, x2, y2, cx, cy, cr) {
+  return false;
 }
 
 function checkCross(array, line) {
@@ -48367,7 +48391,7 @@ var BuilderForeground = exports.BuilderForeground = function (_Container) {
     });
 
     _this.nodeButtons = [];
-    _this.nodeButtons.push(new _Button.Button(colors.mainText, colors.mainFG, "Node A", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Node B", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Node C", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Node D", w, h));
+    _this.nodeButtons.push(new _Button.Button(colors.mainText, colors.mainFG, "Circle A", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Circle B", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Circle C", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Triangle A", w, h));
 
     var _loop = function _loop(i) {
       _this.nodeButtons[i].x = w - w / 10;
@@ -48556,7 +48580,7 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _Node = __webpack_require__(/*! ../../core/display/Node.js */ "./src/app/core/display/Node.js");
+var _NodeFactory = __webpack_require__(/*! ../../core/display/NodeFactory.js */ "./src/app/core/display/NodeFactory.js");
 
 var _BuilderLogic = __webpack_require__(/*! ./BuilderLogic */ "./src/app/game/builder/BuilderLogic.js");
 
@@ -48576,6 +48600,7 @@ var BuilderMidground = exports.BuilderMidground = function (_Container) {
 
     var _this = _possibleConstructorReturn(this, (BuilderMidground.__proto__ || Object.getPrototypeOf(BuilderMidground)).call(this));
 
+    _this.nodeFac = new _NodeFactory.NodeFactory(GameController.assets, GameController.canvas.width, GameController.canvas.height);
     _this.nodes = [];
     return _this;
   }
@@ -48589,7 +48614,7 @@ var BuilderMidground = exports.BuilderMidground = function (_Container) {
       var w = GameController.canvas.width;
       var h = GameController.canvas.height;
 
-      var node = new _Node.Node(GameController.assets, type, w, h);
+      var node = this.nodeFac.createNode(type);
       node.x = Math.floor(w / 2);
       node.y = Math.floor(h / 2);
 
@@ -48707,6 +48732,12 @@ var LevelBackend = exports.LevelBackend = function () {
               position: 'left'
             }).showToast();
             break;
+          case -3:
+            (0, _toastifyJs2.default)({
+              text: "Cannot pass through another node...",
+              position: 'left'
+            }).showToast();
+            break;
           default:
             this.removeLine(ctx, node, prevNode, result);
             break;
@@ -48719,9 +48750,20 @@ var LevelBackend = exports.LevelBackend = function () {
     key: 'checkLines',
     value: function checkLines(ctx, a, b) {
       var output = Utils.checkDuplicate(ctx.lines, { a: a, b: b });
-      if (output !== -1) return output;
+      if (output >= 0) return output;
+
       output = Utils.checkCross(ctx.lines, { a: a, b: b });
-      return output ? -2 : -1;
+      if (output) return -2;
+
+      for (var i = 0; i < ctx.nodes.length; i++) {
+        var cur = ctx.nodes[i];
+        if (cur === a || cur === b) continue;
+        if (Utils.lineThroughCircle(a.x, a.y, b.x, b.y, cur.x, cur.y, a.width / 4)) {
+          console.log(a, b, cur);
+          return -3;
+        }
+      }
+      return -1;
     }
   }, {
     key: 'removeLine',
@@ -49017,7 +49059,7 @@ var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app
 
 var _Subtitle = __webpack_require__(/*! ../../core/display/Subtitle.js */ "./src/app/core/display/Subtitle.js");
 
-var _Node = __webpack_require__(/*! ../../core/display/Node.js */ "./src/app/core/display/Node.js");
+var _NodeFactory = __webpack_require__(/*! ../../core/display/NodeFactory.js */ "./src/app/core/display/NodeFactory.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -49056,9 +49098,10 @@ var LevelMidground = exports.LevelMidground = function (_Container) {
 
     _this.nodes = [];
     _this.lines = [];
+    var nodeFac = new _NodeFactory.NodeFactory(_this.gt.assets, w, h);
 
     var _loop = function _loop(i) {
-      var node = new _Node.Node(_this.gt.assets, lvl.nodes[i].type, w, h);
+      var node = nodeFac.createNode(lvl.nodes[i].type);
       node.x = Math.floor(w / (lvl.x + 1) * lvl.nodes[i].x);
       node.y = Math.floor(h / (lvl.y + 2) * (lvl.nodes[i].y + 1));
 

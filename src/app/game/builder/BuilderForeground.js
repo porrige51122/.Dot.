@@ -66,10 +66,10 @@ export class BuilderForeground extends Container {
     });
 
     this.nodeButtons = [];
-    this.nodeButtons.push(new Button(colors.mainText, colors.mainFG, "Node A", w, h),
-                          new Button(colors.mainText, colors.mainFG, "Node B", w, h),
-                          new Button(colors.mainText, colors.mainFG, "Node C", w, h),
-                          new Button(colors.mainText, colors.mainFG, "Node D", w, h));
+    this.nodeButtons.push(new Button(colors.mainText, colors.mainFG, "Circle A", w, h),
+                          new Button(colors.mainText, colors.mainFG, "Circle B", w, h),
+                          new Button(colors.mainText, colors.mainFG, "Circle C", w, h),
+                          new Button(colors.mainText, colors.mainFG, "Triangle A", w, h));
 
     for (let i = 0; i < this.nodeButtons.length; i++) {
       this.nodeButtons[i].x = w - (w / 10);

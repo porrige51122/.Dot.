@@ -59,6 +59,12 @@ export class LevelBackend {
             position: 'left'
           }).showToast();
           break;
+        case -3:
+          Toastify({
+            text: "Cannot pass through another node...",
+            position: 'left'
+          }).showToast();
+          break;
         default:
           this.removeLine(ctx, node, prevNode, result);
           break;
@@ -70,9 +76,20 @@ export class LevelBackend {
 
   checkLines(ctx, a, b) {
     let output = Utils.checkDuplicate(ctx.lines, {a: a, b: b});
-    if (output !== -1) return output;
+    if (output >= 0) return output;
+
     output = Utils.checkCross(ctx.lines, {a: a, b: b});
-    return output ? -2 : -1;
+    if (output) return -2;
+
+    for (let i = 0; i < ctx.nodes.length; i++) {
+      let cur = ctx.nodes[i];
+      if (cur === a || cur === b) continue;
+      if (Utils.lineThroughCircle(a.x, a.y, b.x, b.y, cur.x, cur.y, a.width/4)) {
+        console.log(a, b, cur);
+        return -3;
+      }
+    }
+    return -1;
   }
 
   removeLine(ctx, a, b, index, value) {

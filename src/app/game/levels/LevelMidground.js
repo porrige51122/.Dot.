@@ -3,7 +3,7 @@ import * as colors from '../../core/display/Colors.js';
 
 import { GameController } from '../GameController.js';
 import { Subtitle } from '../../core/display/Subtitle.js';
-import { Node } from '../../core/display/Node.js';
+import { NodeFactory } from '../../core/display/NodeFactory.js';
 
 export class LevelMidground extends Container {
   constructor(GameController, builder) {
@@ -29,9 +29,10 @@ export class LevelMidground extends Container {
 
     this.nodes = [];
     this.lines = [];
+    let nodeFac = new NodeFactory(this.gt.assets, w, h);
 
     for (let i = 0; i < lvl.nodes.length; i++) {
-      let node = new Node(this.gt.assets, lvl.nodes[i].type, w, h);
+      let node = nodeFac.createNode(lvl.nodes[i].type);
       node.x = Math.floor(w / (lvl.x + 1) * lvl.nodes[i].x);
       node.y = Math.floor(h / (lvl.y + 2) * (lvl.nodes[i].y + 1));
 

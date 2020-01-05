@@ -1,12 +1,13 @@
 import { Container } from 'pixi.js';
 import * as colors from '../../core/display/Colors.js';
 
-import { Node } from '../../core/display/Node.js';
+import { NodeFactory } from '../../core/display/NodeFactory.js';
 import { BuilderLogic } from './BuilderLogic';
 
 export class BuilderMidground extends Container {
   constructor(GameController) {
     super();
+    this.nodeFac = new NodeFactory(GameController.assets, GameController.canvas.width, GameController.canvas.height)
     this.nodes = [];
   }
 
@@ -15,7 +16,7 @@ export class BuilderMidground extends Container {
     let w = GameController.canvas.width;
     let h = GameController.canvas.height;
 
-    let node = new Node(GameController.assets, type, w, h);
+    let node = this.nodeFac.createNode(type);
     node.x = Math.floor(w / 2);
     node.y = Math.floor(h / 2);
 
