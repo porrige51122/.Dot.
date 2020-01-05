@@ -8,7 +8,7 @@ This game was originally created in Early December 2019 for a hackathon built in
 
 ---
 ### Demo
-This game is currently hosted on github pages which can be accessed from [here]([https://porrige51122.github.io/.Dot./](https://porrige51122.github.io/.Dot./)).
+This game is currently hosted on github pages which can be accessed from [here]([https://porrige51122.github.io/.Dot./](https://porrige51122.github.io/.Dot./)) .
  
  ---
 ### Develop
