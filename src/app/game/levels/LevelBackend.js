@@ -85,7 +85,6 @@ export class LevelBackend {
       let cur = ctx.nodes[i];
       if (cur === a || cur === b) continue;
       if (Utils.lineThroughCircle(a.x, a.y, b.x, b.y, cur.x, cur.y, a.width/4)) {
-        console.log(a, b, cur);
         return -3;
       }
     }

@@ -47962,6 +47962,9 @@ exports.angle = angle;
 exports.checkDuplicate = checkDuplicate;
 exports.sameLine = sameLine;
 exports.lineThroughCircle = lineThroughCircle;
+exports.nearestPoint = nearestPoint;
+exports.dot = dot;
+exports.normalize = normalize;
 exports.checkCross = checkCross;
 exports.crossLine = crossLine;
 function dist(x1, y1, x2, y2) {
@@ -47986,7 +47989,33 @@ function sameLine(a, b) {
 }
 
 function lineThroughCircle(x1, y1, x2, y2, cx, cy, cr) {
+  var nearest = this.nearestPoint(x1, y1, x2, y2, cx, cy);
+  if (x1 <= nearest.x && nearest.x <= x2 || x1 >= nearest.x && nearest.x >= x2) {
+    if (y1 <= nearest.y && nearest.y <= y2 || y1 >= nearest.y && nearest.y >= y2) {
+      var _dist = this.dist(cx, cy, nearest.x, nearest.y);
+      if (_dist <= cr) return true;
+    }
+  }
   return false;
+}
+
+function nearestPoint(x1, y1, x2, y2, cx, cy) {
+  var dir = this.normalize(x2 - x1, y2 - y1);
+  var vx = cx - x1;
+  var vy = cy - y1;
+  var d = this.dot(vx, vy, dir.x, dir.y);
+  var outx = x1 + dir.x * d;
+  var outy = y1 + dir.y * d;
+  return { x: outx, y: outy };
+}
+
+function dot(x1, y1, x2, y2) {
+  return x1 * x2 + y1 * y2;
+}
+
+function normalize(x, y) {
+  var mag = Math.pow(Math.pow(x, 2) + Math.pow(y, 2), 0.5);
+  return { x: x / mag, y: y / mag };
 }
 
 function checkCross(array, line) {
@@ -48759,7 +48788,6 @@ var LevelBackend = exports.LevelBackend = function () {
         var cur = ctx.nodes[i];
         if (cur === a || cur === b) continue;
         if (Utils.lineThroughCircle(a.x, a.y, b.x, b.y, cur.x, cur.y, a.width / 4)) {
-          console.log(a, b, cur);
           return -3;
         }
       }
