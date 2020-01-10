@@ -47272,6 +47272,10 @@ var _NodeC = __webpack_require__(/*! ../nodes/NodeC.js */ "./src/app/core/nodes/
 
 var _NodeD = __webpack_require__(/*! ../nodes/NodeD.js */ "./src/app/core/nodes/NodeD.js");
 
+var _NodeE = __webpack_require__(/*! ../nodes/NodeE.js */ "./src/app/core/nodes/NodeE.js");
+
+var _NodeF = __webpack_require__(/*! ../nodes/NodeF.js */ "./src/app/core/nodes/NodeF.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeFactory = exports.NodeFactory = function () {
@@ -47295,6 +47299,10 @@ var NodeFactory = exports.NodeFactory = function () {
           return new _NodeC.NodeC(this.assets, this.w, this.h);
         case 3:
           return new _NodeD.NodeD(this.assets, this.w, this.h);
+        case 4:
+          return new _NodeE.NodeE(this.assets, this.w, this.h);
+        case 5:
+          return new _NodeF.NodeF(this.assets, this.w, this.h);
         default:
           console.log('JSON ERROR: Type ' + type + ' entered but it does not exist!');
       }
@@ -47935,11 +47943,137 @@ var NodeD = exports.NodeD = function (_Node) {
   _createClass(NodeD, [{
     key: 'canConnect',
     value: function canConnect(node) {
-      return node.type === this.type;
+      return node.type >= 3;
     }
   }]);
 
   return NodeD;
+}(_Node2.Node);
+
+/***/ }),
+
+/***/ "./src/app/core/nodes/NodeE.js":
+/*!*************************************!*\
+  !*** ./src/app/core/nodes/NodeE.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NodeE = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Node2 = __webpack_require__(/*! ./Node.js */ "./src/app/core/nodes/Node.js");
+
+var _Colors = __webpack_require__(/*! ../display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var Color = _interopRequireWildcard(_Colors);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NodeE = exports.NodeE = function (_Node) {
+  _inherits(NodeE, _Node);
+
+  function NodeE(assets, w, h) {
+    _classCallCheck(this, NodeE);
+
+    var _this = _possibleConstructorReturn(this, (NodeE.__proto__ || Object.getPrototypeOf(NodeE)).call(this, assets, w, h));
+
+    _this.type = 4;
+    _this.node = new _pixi.Sprite(assets.nodeE);
+    _this.colors = Color.nodeB;
+    _this.node.anchor.set(0.5);
+    _this.node.tint = _this.colors[0];
+    _this.max = _this.colors.length - 1;
+    _this.addChild(_this.node);
+    return _this;
+  }
+
+  _createClass(NodeE, [{
+    key: 'canConnect',
+    value: function canConnect(node) {
+      return node.type >= 3;
+    }
+  }]);
+
+  return NodeE;
+}(_Node2.Node);
+
+/***/ }),
+
+/***/ "./src/app/core/nodes/NodeF.js":
+/*!*************************************!*\
+  !*** ./src/app/core/nodes/NodeF.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.NodeF = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Node2 = __webpack_require__(/*! ./Node.js */ "./src/app/core/nodes/Node.js");
+
+var _Colors = __webpack_require__(/*! ../display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var Color = _interopRequireWildcard(_Colors);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var NodeF = exports.NodeF = function (_Node) {
+  _inherits(NodeF, _Node);
+
+  function NodeF(assets, w, h) {
+    _classCallCheck(this, NodeF);
+
+    var _this = _possibleConstructorReturn(this, (NodeF.__proto__ || Object.getPrototypeOf(NodeF)).call(this, assets, w, h));
+
+    _this.type = 5;
+    _this.node = new _pixi.Sprite(assets.nodeF);
+    _this.colors = Color.nodeC;
+    _this.node.anchor.set(0.5);
+    _this.node.tint = _this.colors[0];
+    _this.max = _this.colors.length - 1;
+    _this.addChild(_this.node);
+    return _this;
+  }
+
+  _createClass(NodeF, [{
+    key: 'canConnect',
+    value: function canConnect(node) {
+      return node.type >= 3;
+    }
+  }]);
+
+  return NodeF;
 }(_Node2.Node);
 
 /***/ }),
@@ -48171,6 +48305,14 @@ var _nodeD = __webpack_require__(/*! ../../../assets/nodeD.png */ "./src/assets/
 
 var _nodeD2 = _interopRequireDefault(_nodeD);
 
+var _nodeE = __webpack_require__(/*! ../../../assets/nodeE.png */ "./src/assets/nodeE.png");
+
+var _nodeE2 = _interopRequireDefault(_nodeE);
+
+var _nodeF = __webpack_require__(/*! ../../../assets/nodeF.png */ "./src/assets/nodeF.png");
+
+var _nodeF2 = _interopRequireDefault(_nodeF);
+
 var _world = __webpack_require__(/*! ../../../assets/world1.json */ "./src/assets/world1.json");
 
 var _world2 = _interopRequireDefault(_world);
@@ -48198,7 +48340,7 @@ var AssetManager = exports.AssetManager = function () {
     this.promise = new Promise(function (resolve, reject) {
       _this.loader = new _pixi.Loader();
 
-      _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default).add(_nodeD2.default);
+      _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default).add(_nodeD2.default).add(_nodeE2.default).add(_nodeF2.default);
 
       _this.levels = [_world2.default, _world4.default];
 
@@ -48208,6 +48350,8 @@ var AssetManager = exports.AssetManager = function () {
         _this.nodeB = _this.loader.resources[_nodeB2.default].texture;
         _this.nodeC = _this.loader.resources[_nodeC2.default].texture;
         _this.nodeD = _this.loader.resources[_nodeD2.default].texture;
+        _this.nodeE = _this.loader.resources[_nodeE2.default].texture;
+        _this.nodeF = _this.loader.resources[_nodeF2.default].texture;
         console.log('All Assets Loaded');
         resolve();
       });
@@ -48420,11 +48564,11 @@ var BuilderForeground = exports.BuilderForeground = function (_Container) {
     });
 
     _this.nodeButtons = [];
-    _this.nodeButtons.push(new _Button.Button(colors.mainText, colors.mainFG, "Circle A", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Circle B", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Circle C", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Triangle A", w, h));
+    _this.nodeButtons.push(new _Button.Button(colors.mainText, colors.mainFG, "Circle A", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Circle B", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Circle C", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Triangle A", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Triangle B", w, h), new _Button.Button(colors.mainText, colors.mainFG, "Triangle C", w, h));
 
     var _loop = function _loop(i) {
       _this.nodeButtons[i].x = w - w / 10;
-      _this.nodeButtons[i].y = h / 16 * (9 + i);
+      _this.nodeButtons[i].y = h / 16 * (7 + i);
       _this.nodeButtons[i].buttonMode = _this.nodeButtons[i].interactive = true;
       _this.nodeButtons[i].scale.set(0.5);
       _this.nodeButtons[i].enable();
@@ -49834,6 +49978,32 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/assets/nodeE.png":
+/*!******************************!*\
+  !*** ./src/assets/nodeE.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "521c37523bf0a76cc970ccb4019f24bd.png");
+
+/***/ }),
+
+/***/ "./src/assets/nodeF.png":
+/*!******************************!*\
+  !*** ./src/assets/nodeF.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "ff0579d4230b3da32de99a286034343b.png");
+
+/***/ }),
+
 /***/ "./src/assets/world1.json":
 /*!********************************!*\
   !*** ./src/assets/world1.json ***!
@@ -49849,10 +50019,10 @@ module.exports = JSON.parse("[{\"x\":2,\"y\":1,\"nodes\":[{\"type\":0,\"x\":1,\"
 /*!********************************!*\
   !*** ./src/assets/world2.json ***!
   \********************************/
-/*! exports provided: 0, default */
+/*! exports provided: 0, 1, 2, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("[{\"level\":0,\"x\":3,\"y\":3,\"nodes\":[{\"type\":3,\"x\":2,\"y\":1},{\"type\":0,\"x\":1,\"y\":1},{\"type\":3,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":0,\"x\":3,\"y\":2}],\"message\":\"Something strange is happening here...\"}]");
+module.exports = JSON.parse("[{\"x\":3,\"y\":3,\"nodes\":[{\"type\":3,\"x\":2,\"y\":1},{\"type\":0,\"x\":1,\"y\":1},{\"type\":3,\"x\":2,\"y\":2},{\"type\":1,\"x\":2,\"y\":3},{\"type\":1,\"x\":1,\"y\":2},{\"type\":0,\"x\":3,\"y\":2}],\"message\":\"Something strange is happening here...\"},{\"x\":5,\"y\":4,\"nodes\":[{\"type\":0,\"x\":1,\"y\":1},{\"type\":3,\"x\":2,\"y\":1},{\"type\":0,\"x\":3,\"y\":1},{\"type\":1,\"x\":4,\"y\":1},{\"type\":3,\"x\":1,\"y\":2},{\"type\":1,\"x\":2,\"y\":2},{\"type\":3,\"x\":3,\"y\":2},{\"type\":2,\"x\":4,\"y\":2},{\"type\":2,\"x\":5,\"y\":2},{\"type\":0,\"x\":1,\"y\":3},{\"type\":3,\"x\":2,\"y\":3},{\"type\":1,\"x\":3,\"y\":3},{\"type\":3,\"x\":4,\"y\":3},{\"type\":1,\"x\":5,\"y\":3},{\"type\":1,\"x\":2,\"y\":4},{\"type\":3,\"x\":3,\"y\":4},{\"type\":0,\"x\":4,\"y\":4}],\"message\":\"Leave no node behind...\"},{\"x\":7,\"y\":8,\"nodes\":[{\"type\":3,\"x\":3,\"y\":2},{\"type\":3,\"x\":5,\"y\":2},{\"type\":0,\"x\":2,\"y\":3},{\"type\":0,\"x\":4,\"y\":3},{\"type\":3,\"x\":1,\"y\":4},{\"type\":3,\"x\":3,\"y\":4},{\"type\":4,\"x\":5,\"y\":4},{\"type\":3,\"x\":7,\"y\":4},{\"type\":1,\"x\":2,\"y\":5},{\"type\":2,\"x\":4,\"y\":5},{\"type\":0,\"x\":6,\"y\":5},{\"type\":4,\"x\":1,\"y\":6},{\"type\":4,\"x\":3,\"y\":6},{\"type\":4,\"x\":5,\"y\":6},{\"type\":3,\"x\":7,\"y\":6},{\"type\":0,\"x\":4,\"y\":7},{\"type\":0,\"x\":6,\"y\":7},{\"type\":4,\"x\":3,\"y\":8},{\"type\":4,\"x\":5,\"y\":8}],\"message\":\"No Diagonals for you...\"}]");
 
 /***/ })
 

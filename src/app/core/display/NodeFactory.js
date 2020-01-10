@@ -1,7 +1,9 @@
 import { NodeA } from '../nodes/NodeA.js';
-import { NodeB } from '../nodes/NodeB.js'
-import { NodeC } from '../nodes/NodeC.js'
-import { NodeD } from '../nodes/NodeD.js'
+import { NodeB } from '../nodes/NodeB.js';
+import { NodeC } from '../nodes/NodeC.js';
+import { NodeD } from '../nodes/NodeD.js';
+import { NodeE } from '../nodes/NodeE.js'
+import { NodeF } from '../nodes/NodeF.js'
 
 export class NodeFactory {
   constructor(assets, w, h) {
@@ -20,6 +22,10 @@ export class NodeFactory {
         return new NodeC(this.assets, this.w, this.h);
       case 3:
         return new NodeD(this.assets, this.w, this.h);
+      case 4:
+        return new NodeE(this.assets, this.w, this.h);
+      case 5:
+        return new NodeF(this.assets, this.w, this.h);
       default:
         console.log('JSON ERROR: Type ' + type + ' entered but it does not exist!');
     }

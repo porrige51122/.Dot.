@@ -69,11 +69,13 @@ export class BuilderForeground extends Container {
     this.nodeButtons.push(new Button(colors.mainText, colors.mainFG, "Circle A", w, h),
                           new Button(colors.mainText, colors.mainFG, "Circle B", w, h),
                           new Button(colors.mainText, colors.mainFG, "Circle C", w, h),
-                          new Button(colors.mainText, colors.mainFG, "Triangle A", w, h));
+                          new Button(colors.mainText, colors.mainFG, "Triangle A", w, h),
+                          new Button(colors.mainText, colors.mainFG, "Triangle B", w, h),
+                          new Button(colors.mainText, colors.mainFG, "Triangle C", w, h));
 
     for (let i = 0; i < this.nodeButtons.length; i++) {
       this.nodeButtons[i].x = w - (w / 10);
-      this.nodeButtons[i].y = (h / 16) * (9 + i);
+      this.nodeButtons[i].y = (h / 16) * (7 + i);
       this.nodeButtons[i].buttonMode = this.nodeButtons[i].interactive = true;
       this.nodeButtons[i].scale.set(0.5);
       this.nodeButtons[i].enable();
