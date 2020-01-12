@@ -21,9 +21,14 @@ module.exports = {
         }
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|jpg|gif|svg)$/,
         use: [
-          'file-loader',
+          {
+            loader: 'file-loader',
+            options: {
+              outputPath: 'images/'
+            }
+          }
         ],
       },
       {
@@ -40,7 +45,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
         use: [{
           loader: 'file-loader',
           options: {

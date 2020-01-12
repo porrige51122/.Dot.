@@ -1,4 +1,4 @@
-import { Loader, Texture, Rectangle } from 'pixi.js';
+import { Loader, Texture, Rectangle, resources } from 'pixi.js';
 
 import NodeA from '../../../assets/nodeA.png';
 import NodeB from '../../../assets/nodeB.png';
@@ -6,6 +6,7 @@ import NodeC from '../../../assets/nodeC.png';
 import NodeD from '../../../assets/nodeD.png';
 import NodeE from '../../../assets/nodeE.png';
 import NodeF from '../../../assets/nodeF.png';
+import Home from '@fortawesome/fontawesome-free/svgs/solid/door-open.svg';
 import World1 from '../../../assets/world1.json';
 import World2 from '../../../assets/world2.json';
 import '../../../app.css';
@@ -19,7 +20,13 @@ export class AssetManager {
     this.promise = new Promise((resolve, reject) => {
       this.loader = new Loader();
 
-      this.loader.add(NodeA).add(NodeB).add(NodeC).add(NodeD).add(NodeE).add(NodeF);
+      this.loader.add(NodeA)
+                 .add(NodeB)
+                 .add(NodeC)
+                 .add(NodeD)
+                 .add(NodeE)
+                 .add(NodeF)
+                 .add(Home);
 
       this.levels = [World1, World2];
 
@@ -31,6 +38,8 @@ export class AssetManager {
         this.nodeD = this.loader.resources[NodeD].texture;
         this.nodeE = this.loader.resources[NodeE].texture;
         this.nodeF = this.loader.resources[NodeF].texture;
+        this.home = this.loader.resources[Home].texture;
+
         console.log('All Assets Loaded');
         resolve();
       });

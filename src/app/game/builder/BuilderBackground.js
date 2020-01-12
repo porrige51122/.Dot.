@@ -21,19 +21,19 @@ export class BuilderBackground extends Container {
     let maxh = 4.5;
     for (let i = 1; i < maxw; i++) {
       let line = new Graphics();
-      line.lineStyle(5, colors.connector);
+      line.lineStyle(w/500, colors.connector);
       line.moveTo((w * i) / maxw, 0);
       line.lineTo((w * i) / maxw, h);
-      line.alpha = 0.5;
+      line.alpha = 0.25;
       this.grid.push(line);
       this.addChild(line);
     }
     for (let i = 1; i < maxh; i++) {
       let line = new Graphics();
-      line.lineStyle(5, colors.connector);
+      line.lineStyle(w/500, colors.connector);
       line.moveTo(0, (h * i) / maxh);
       line.lineTo(w, (h * i) / maxh);
-      line.alpha = 0.5;
+      line.alpha = 0.25;
       this.grid.push(line);
       this.addChild(line);
     }

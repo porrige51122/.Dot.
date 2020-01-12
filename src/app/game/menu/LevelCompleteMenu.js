@@ -1,8 +1,10 @@
-import { Container } from 'pixi.js';
+import { Container, Graphics } from 'pixi.js';
 import * as colors from '../../core/display/Colors.js';
 
 import { Button } from '../../core/display/Button.js';
 import { Heading } from '../../core/display/Heading.js';
+import { Subtitle } from '../../core/display/Subtitle.js';
+import { Icon } from '../../core/display/Icon.js';
 
 /**
  * LevelCompleteMenu Class
@@ -17,32 +19,29 @@ export class LevelCompleteMenu extends Container {
     let w = controller.canvas.width;
     let h = controller.canvas.height;
 
-    this.back = new Button(colors.mainFG, colors.mainText, 'Back', w, h);
-    this.back.position.set(w - (w / 10), h / 10);
-    this.back.buttonMode = this.back.interactive = true;
-    this.back.enable();
-    this.back.on('pointertap', () => {
-      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu[controller.menu.currentLevel]);
-    });
-    this.addChild(this.back);
-
     if (controller.levels.level < controller.assets.levels[world].length - 1) {
       this.title = new Heading(0x000034, 'Level ' + (controller.levels.level + 1) + ' Complete!', w, h);
-      this.title.position.set(w / 2, h / 8);
+      this.title.position.set(w / 2, (1 * h) / 3);
       this.title.enable();
 
-      this.next = new Button(colors.mainFG, colors.mainText, 'Level ' + (controller.levels.level + 2), w, h);
-      this.next.position.set(w / 2, h / 2);
+      this.subtitle = new Heading(0x000034, 'tap to continue...', w, h);
+      this.subtitle.position.set(w / 2, (2 * h) / 3);
+      this.subtitle.scale.set(0.5);
+      this.subtitle.enable();
+
+      this.next = new Graphics();
+      this.next.beginFill('0xFFFFFF');
+      this.next.alpha = 0;
+      this.next.drawRect(0, 0, w, h);
       this.next.buttonMode = this.next.interactive = true;
-      this.next.enable();
-      this.next.scale.set(2);
       this.next.on('pointertap', () => {
         this.next.buttonMode = this.next.interactive = false;
         controller.levels.level++;
         controller.levels.buildLevel();
         controller.transitions.transitionFade(controller.menu.levelCompleteMenu, controller.levels);
       });
-      this.addChild(this.title, this.next);
+
+      this.addChild(this.next, this.title, this.subtitle);
     } else {
       this.endMessageA = new Heading(colors.mainFG, 'World Complete!', w, h);
       this.endMessageA.position.set(w / 2, h / 3);
@@ -53,5 +52,13 @@ export class LevelCompleteMenu extends Container {
 
       this.addChild(this.endMessageA, this.endMessageB);
     }
+    this.home = new Icon(controller.assets.home, colors.mainFG, w, h);
+    this.home.x = w - (w / 10);
+    this.home.y = h / 8;
+    this.home.buttonMode = this.home.interactive = true;
+    this.addChild(this.home);
+    this.home.on('pointertap', () => {
+      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu[controller.menu.currentLevel]);
+    });
   }
 }

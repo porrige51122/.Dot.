@@ -3,7 +3,7 @@ import * as colors from '../../core/display/Colors.js';
 
 import { GameController } from '../GameController.js';
 import { Heading } from '../../core/display/Heading.js';
-import { Button } from '../../core/display/Button.js';
+import { Icon } from '../../core/display/Icon.js'
 
 export class LevelForeground extends Container {
   constructor(GameController, builder) {
@@ -12,13 +12,11 @@ export class LevelForeground extends Container {
     let w = GameController.canvas.width;
     let h = GameController.canvas.height;
 
-    this.back = new Button(colors.mainText, colors.mainFG, "Back", w, h);
-    this.back.x = w - (w / 10);
-    this.back.y = h / 8;
-    this.back.buttonMode = true;
-    this.back.interactive = true;
-    this.back.enable();
-    this.addChild(this.back);
+    this.home = new Icon(GameController.assets.home, colors.secondaryTitle, w, h);
+    this.home.x = w - (w / 10);
+    this.home.y = h / 8;
+    this.home.buttonMode = this.home.interactive = true;
+    this.addChild(this.home);
 
     if (!builder) {
       this.title = new Heading(colors.secondaryTitle, 'Level ' + (GameController.levels.level + 1), w, h);
@@ -27,14 +25,15 @@ export class LevelForeground extends Container {
       this.title.enable();
       this.addChild(this.title);
 
-      this.back.on('pointertap', () => {
+      this.home.on('pointertap', () => {
         GameController.transitions.transitionFade(GameController.levels, GameController.menu.levelMenu[GameController.menu.currentLevel]);
       });
     } else {
-      this.back.on('pointertap', () => {
+      this.home.on('pointertap', () => {
         GameController.transitions.transitionFade(GameController.levels, GameController.builder);
       });
     }
+
   }
 
 }

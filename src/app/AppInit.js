@@ -10,7 +10,6 @@ import { GameController } from './game/GameController.js';
 class AppInit {
   constructor() {
     let gameController = new GameController();
-
     gameController.init().then(() => {
       console.log("Game Loaded");
     })

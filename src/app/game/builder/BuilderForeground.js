@@ -19,8 +19,8 @@ export class BuilderForeground extends Container {
     this.back.enable();
     this.addChild(this.back);
     this.back.on('pointertap', () => {
-      if (confirm("Are you sure? All unsaved progress will be lost"))
-        GameController.transitions.transitionSlide(GameController.builder, GameController.menu.mainMenu);
+      // if (confirm("Are you sure? All unsaved progress will be lost"))
+      GameController.transitions.transitionSlide(GameController.builder, GameController.menu.mainMenu);
     });
 
     this.play = new Button(colors.mainText, colors.mainFG, "Play", w, h);

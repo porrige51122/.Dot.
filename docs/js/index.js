@@ -86,6 +86,19 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/@fortawesome/fontawesome-free/svgs/solid/door-open.svg":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@fortawesome/fontawesome-free/svgs/solid/door-open.svg ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "images/7af067d941c17331fd7cc9be9064592d.svg");
+
+/***/ }),
+
 /***/ "./node_modules/@pixi/accessibility/lib/accessibility.es.js":
 /*!******************************************************************!*\
   !*** ./node_modules/@pixi/accessibility/lib/accessibility.es.js ***!
@@ -17935,6 +17948,150 @@ ColorMatrixFilter.prototype.grayscale = ColorMatrixFilter.prototype.greyscale;
 
 
 //# sourceMappingURL=filter-color-matrix.es.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@pixi/filter-color-replace/lib/filter-color-replace.esm.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/@pixi/filter-color-replace/lib/filter-color-replace.esm.js ***!
+  \*********************************************************************************/
+/*! exports provided: ColorReplaceFilter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ColorReplaceFilter", function() { return ColorReplaceFilter; });
+/* harmony import */ var _pixi_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @pixi/core */ "./node_modules/@pixi/core/lib/core.es.js");
+/* harmony import */ var _pixi_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @pixi/utils */ "./node_modules/@pixi/utils/lib/utils.es.js");
+/*!
+ * @pixi/filter-color-replace - v3.0.3
+ * Compiled Wed, 29 May 2019 03:04:05 UTC
+ *
+ * @pixi/filter-color-replace is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+
+
+var vertex = "attribute vec2 aVertexPosition;\nattribute vec2 aTextureCoord;\n\nuniform mat3 projectionMatrix;\n\nvarying vec2 vTextureCoord;\n\nvoid main(void)\n{\n    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);\n    vTextureCoord = aTextureCoord;\n}";
+
+var fragment = "varying vec2 vTextureCoord;\nuniform sampler2D uSampler;\nuniform vec3 originalColor;\nuniform vec3 newColor;\nuniform float epsilon;\nvoid main(void) {\n    vec4 currentColor = texture2D(uSampler, vTextureCoord);\n    vec3 colorDiff = originalColor - (currentColor.rgb / max(currentColor.a, 0.0000000001));\n    float colorDistance = length(colorDiff);\n    float doReplace = step(colorDistance, epsilon);\n    gl_FragColor = vec4(mix(currentColor.rgb, (newColor + colorDiff) * currentColor.a, doReplace), currentColor.a);\n}\n";
+
+/**
+ * ColorReplaceFilter, originally by mishaa, updated by timetocode
+ * http://www.html5gamedevs.com/topic/10640-outline-a-sprite-change-certain-colors/?p=69966<br>
+ * ![original](../tools/screenshots/dist/original.png)![filter](../tools/screenshots/dist/color-replace.png)
+ *
+ * @class
+ * @extends PIXI.Filter
+ * @memberof PIXI.filters
+ * @see {@link https://www.npmjs.com/package/@pixi/filter-color-replace|@pixi/filter-color-replace}
+ * @see {@link https://www.npmjs.com/package/pixi-filters|pixi-filters}
+ * @param {number|Array<number>} [originalColor=0xFF0000] The color that will be changed, as a 3 component RGB e.g. [1.0, 1.0, 1.0]
+ * @param {number|Array<number>} [newColor=0x000000] The resulting color, as a 3 component RGB e.g. [1.0, 0.5, 1.0]
+ * @param {number} [epsilon=0.4] Tolerance/sensitivity of the floating-point comparison between colors (lower = more exact, higher = more inclusive)
+ *
+ * @example
+ *  // replaces true red with true blue
+ *  someSprite.filters = [new ColorReplaceFilter(
+ *   [1, 0, 0],
+ *   [0, 0, 1],
+ *   0.001
+ *   )];
+ *  // replaces the RGB color 220, 220, 220 with the RGB color 225, 200, 215
+ *  someOtherSprite.filters = [new ColorReplaceFilter(
+ *   [220/255.0, 220/255.0, 220/255.0],
+ *   [225/255.0, 200/255.0, 215/255.0],
+ *   0.001
+ *   )];
+ *  // replaces the RGB color 220, 220, 220 with the RGB color 225, 200, 215
+ *  someOtherSprite.filters = [new ColorReplaceFilter(0xdcdcdc, 0xe1c8d7, 0.001)];
+ *
+ */
+var ColorReplaceFilter = /*@__PURE__*/(function (Filter) {
+    function ColorReplaceFilter(originalColor, newColor, epsilon) {
+        if ( originalColor === void 0 ) originalColor = 0xFF0000;
+        if ( newColor === void 0 ) newColor = 0x000000;
+        if ( epsilon === void 0 ) epsilon = 0.4;
+
+        Filter.call(this, vertex, fragment);
+        this.uniforms.originalColor = new Float32Array(3);
+        this.uniforms.newColor = new Float32Array(3);
+        this.originalColor = originalColor;
+        this.newColor = newColor;
+        this.epsilon = epsilon;
+    }
+
+    if ( Filter ) ColorReplaceFilter.__proto__ = Filter;
+    ColorReplaceFilter.prototype = Object.create( Filter && Filter.prototype );
+    ColorReplaceFilter.prototype.constructor = ColorReplaceFilter;
+
+    var prototypeAccessors = { originalColor: { configurable: true },newColor: { configurable: true },epsilon: { configurable: true } };
+
+    /**
+     * The color that will be changed, as a 3 component RGB e.g. [1.0, 1.0, 1.0]
+     * @member {number|Array<number>}
+     * @default 0xFF0000
+     */
+    prototypeAccessors.originalColor.set = function (value) {
+        var arr = this.uniforms.originalColor;
+        if (typeof value === 'number') {
+            Object(_pixi_utils__WEBPACK_IMPORTED_MODULE_1__["hex2rgb"])(value, arr);
+            this._originalColor = value;
+        }
+        else {
+            arr[0] = value[0];
+            arr[1] = value[1];
+            arr[2] = value[2];
+            this._originalColor = Object(_pixi_utils__WEBPACK_IMPORTED_MODULE_1__["rgb2hex"])(arr);
+        }
+    };
+    prototypeAccessors.originalColor.get = function () {
+        return this._originalColor;
+    };
+
+    /**
+     * The resulting color, as a 3 component RGB e.g. [1.0, 0.5, 1.0]
+     * @member {number|Array<number>}
+     * @default 0x000000
+     */
+    prototypeAccessors.newColor.set = function (value) {
+        var arr = this.uniforms.newColor;
+        if (typeof value === 'number') {
+            Object(_pixi_utils__WEBPACK_IMPORTED_MODULE_1__["hex2rgb"])(value, arr);
+            this._newColor = value;
+        }
+        else {
+            arr[0] = value[0];
+            arr[1] = value[1];
+            arr[2] = value[2];
+            this._newColor = Object(_pixi_utils__WEBPACK_IMPORTED_MODULE_1__["rgb2hex"])(arr);
+        }
+    };
+    prototypeAccessors.newColor.get = function () {
+        return this._newColor;
+    };
+
+    /**
+     * Tolerance/sensitivity of the floating-point comparison between colors (lower = more exact, higher = more inclusive)
+     * @member {number}
+     * @default 0.4
+     */
+    prototypeAccessors.epsilon.set = function (value) {
+        this.uniforms.epsilon = value;
+    };
+    prototypeAccessors.epsilon.get = function () {
+        return this.uniforms.epsilon;
+    };
+
+    Object.defineProperties( ColorReplaceFilter.prototype, prototypeAccessors );
+
+    return ColorReplaceFilter;
+}(_pixi_core__WEBPACK_IMPORTED_MODULE_0__["Filter"]));
+
+
+//# sourceMappingURL=filter-color-replace.esm.js.map
 
 
 /***/ }),
@@ -46894,7 +47051,6 @@ var AppInit = function AppInit() {
   _classCallCheck(this, AppInit);
 
   var gameController = new _GameController.GameController();
-
   gameController.init().then(function () {
     console.log("Game Loaded");
   });
@@ -47166,6 +47322,54 @@ var Heading = exports.Heading = function (_Container) {
   }]);
 
   return Heading;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/core/display/Icon.js":
+/*!**************************************!*\
+  !*** ./src/app/core/display/Icon.js ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Icon = undefined;
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _filterColorReplace = __webpack_require__(/*! @pixi/filter-color-replace */ "./node_modules/@pixi/filter-color-replace/lib/filter-color-replace.esm.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Icon = exports.Icon = function (_Container) {
+  _inherits(Icon, _Container);
+
+  function Icon(icon, color, w, h) {
+    _classCallCheck(this, Icon);
+
+    var _this = _possibleConstructorReturn(this, (Icon.__proto__ || Object.getPrototypeOf(Icon)).call(this));
+
+    _this.ico = new _pixi.Sprite(icon);
+    _this.ico.anchor.set(0.5);
+    _this.ico.width = w / 16 * 1;
+    _this.ico.height = h / 9 * 1;
+    var filter = new _filterColorReplace.ColorReplaceFilter(0x000000, color);
+    _this.ico.filters = [filter];
+    _this.addChild(_this.ico);
+    return _this;
+  }
+
+  return Icon;
 }(_pixi.Container);
 
 /***/ }),
@@ -48313,6 +48517,10 @@ var _nodeF = __webpack_require__(/*! ../../../assets/nodeF.png */ "./src/assets/
 
 var _nodeF2 = _interopRequireDefault(_nodeF);
 
+var _doorOpen = __webpack_require__(/*! @fortawesome/fontawesome-free/svgs/solid/door-open.svg */ "./node_modules/@fortawesome/fontawesome-free/svgs/solid/door-open.svg");
+
+var _doorOpen2 = _interopRequireDefault(_doorOpen);
+
 var _world = __webpack_require__(/*! ../../../assets/world1.json */ "./src/assets/world1.json");
 
 var _world2 = _interopRequireDefault(_world);
@@ -48340,7 +48548,7 @@ var AssetManager = exports.AssetManager = function () {
     this.promise = new Promise(function (resolve, reject) {
       _this.loader = new _pixi.Loader();
 
-      _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default).add(_nodeD2.default).add(_nodeE2.default).add(_nodeF2.default);
+      _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default).add(_nodeD2.default).add(_nodeE2.default).add(_nodeF2.default).add(_doorOpen2.default);
 
       _this.levels = [_world2.default, _world4.default];
 
@@ -48352,6 +48560,8 @@ var AssetManager = exports.AssetManager = function () {
         _this.nodeD = _this.loader.resources[_nodeD2.default].texture;
         _this.nodeE = _this.loader.resources[_nodeE2.default].texture;
         _this.nodeF = _this.loader.resources[_nodeF2.default].texture;
+        _this.home = _this.loader.resources[_doorOpen2.default].texture;
+
         console.log('All Assets Loaded');
         resolve();
       });
@@ -48442,19 +48652,19 @@ var BuilderBackground = exports.BuilderBackground = function (_Container) {
     var maxh = 4.5;
     for (var i = 1; i < maxw; i++) {
       var line = new _pixi.Graphics();
-      line.lineStyle(5, colors.connector);
+      line.lineStyle(w / 500, colors.connector);
       line.moveTo(w * i / maxw, 0);
       line.lineTo(w * i / maxw, h);
-      line.alpha = 0.5;
+      line.alpha = 0.25;
       _this.grid.push(line);
       _this.addChild(line);
     }
     for (var _i = 1; _i < maxh; _i++) {
       var _line = new _pixi.Graphics();
-      _line.lineStyle(5, colors.connector);
+      _line.lineStyle(w / 500, colors.connector);
       _line.moveTo(0, h * _i / maxh);
       _line.lineTo(w, h * _i / maxh);
-      _line.alpha = 0.5;
+      _line.alpha = 0.25;
       _this.grid.push(_line);
       _this.addChild(_line);
     }
@@ -48518,7 +48728,8 @@ var BuilderForeground = exports.BuilderForeground = function (_Container) {
     _this.back.enable();
     _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
-      if (confirm("Are you sure? All unsaved progress will be lost")) GameController.transitions.transitionSlide(GameController.builder, GameController.menu.mainMenu);
+      // if (confirm("Are you sure? All unsaved progress will be lost"))
+      GameController.transitions.transitionSlide(GameController.builder, GameController.menu.mainMenu);
     });
 
     _this.play = new _Button.Button(colors.mainText, colors.mainFG, "Play", w, h);
@@ -49051,7 +49262,7 @@ var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app
 
 var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
 
-var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app/core/display/Button.js");
+var _Icon = __webpack_require__(/*! ../../core/display/Icon.js */ "./src/app/core/display/Icon.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -49072,13 +49283,11 @@ var LevelForeground = exports.LevelForeground = function (_Container) {
     var w = GameController.canvas.width;
     var h = GameController.canvas.height;
 
-    _this.back = new _Button.Button(colors.mainText, colors.mainFG, "Back", w, h);
-    _this.back.x = w - w / 10;
-    _this.back.y = h / 8;
-    _this.back.buttonMode = true;
-    _this.back.interactive = true;
-    _this.back.enable();
-    _this.addChild(_this.back);
+    _this.home = new _Icon.Icon(GameController.assets.home, colors.secondaryTitle, w, h);
+    _this.home.x = w - w / 10;
+    _this.home.y = h / 8;
+    _this.home.buttonMode = _this.home.interactive = true;
+    _this.addChild(_this.home);
 
     if (!builder) {
       _this.title = new _Heading.Heading(colors.secondaryTitle, 'Level ' + (GameController.levels.level + 1), w, h);
@@ -49087,14 +49296,15 @@ var LevelForeground = exports.LevelForeground = function (_Container) {
       _this.title.enable();
       _this.addChild(_this.title);
 
-      _this.back.on('pointertap', function () {
+      _this.home.on('pointertap', function () {
         GameController.transitions.transitionFade(GameController.levels, GameController.menu.levelMenu[GameController.menu.currentLevel]);
       });
     } else {
-      _this.back.on('pointertap', function () {
+      _this.home.on('pointertap', function () {
         GameController.transitions.transitionFade(GameController.levels, GameController.builder);
       });
     }
+
     return _this;
   }
 
@@ -49400,6 +49610,10 @@ var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app
 
 var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
 
+var _Subtitle = __webpack_require__(/*! ../../core/display/Subtitle.js */ "./src/app/core/display/Subtitle.js");
+
+var _Icon = __webpack_require__(/*! ../../core/display/Icon.js */ "./src/app/core/display/Icon.js");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -49426,32 +49640,29 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
     var w = controller.canvas.width;
     var h = controller.canvas.height;
 
-    _this.back = new _Button.Button(colors.mainFG, colors.mainText, 'Back', w, h);
-    _this.back.position.set(w - w / 10, h / 10);
-    _this.back.buttonMode = _this.back.interactive = true;
-    _this.back.enable();
-    _this.back.on('pointertap', function () {
-      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu[controller.menu.currentLevel]);
-    });
-    _this.addChild(_this.back);
-
     if (controller.levels.level < controller.assets.levels[world].length - 1) {
       _this.title = new _Heading.Heading(0x000034, 'Level ' + (controller.levels.level + 1) + ' Complete!', w, h);
-      _this.title.position.set(w / 2, h / 8);
+      _this.title.position.set(w / 2, 1 * h / 3);
       _this.title.enable();
 
-      _this.next = new _Button.Button(colors.mainFG, colors.mainText, 'Level ' + (controller.levels.level + 2), w, h);
-      _this.next.position.set(w / 2, h / 2);
+      _this.subtitle = new _Heading.Heading(0x000034, 'tap to continue...', w, h);
+      _this.subtitle.position.set(w / 2, 2 * h / 3);
+      _this.subtitle.scale.set(0.5);
+      _this.subtitle.enable();
+
+      _this.next = new _pixi.Graphics();
+      _this.next.beginFill('0xFFFFFF');
+      _this.next.alpha = 0;
+      _this.next.drawRect(0, 0, w, h);
       _this.next.buttonMode = _this.next.interactive = true;
-      _this.next.enable();
-      _this.next.scale.set(2);
       _this.next.on('pointertap', function () {
         _this.next.buttonMode = _this.next.interactive = false;
         controller.levels.level++;
         controller.levels.buildLevel();
         controller.transitions.transitionFade(controller.menu.levelCompleteMenu, controller.levels);
       });
-      _this.addChild(_this.title, _this.next);
+
+      _this.addChild(_this.next, _this.title, _this.subtitle);
     } else {
       _this.endMessageA = new _Heading.Heading(colors.mainFG, 'World Complete!', w, h);
       _this.endMessageA.position.set(w / 2, h / 3);
@@ -49462,6 +49673,14 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
 
       _this.addChild(_this.endMessageA, _this.endMessageB);
     }
+    _this.home = new _Icon.Icon(controller.assets.home, colors.mainFG, w, h);
+    _this.home.x = w - w / 10;
+    _this.home.y = h / 8;
+    _this.home.buttonMode = _this.home.interactive = true;
+    _this.addChild(_this.home);
+    _this.home.on('pointertap', function () {
+      controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu[controller.menu.currentLevel]);
+    });
     return _this;
   }
 
@@ -49935,7 +50154,7 @@ var StatusDisplay = exports.StatusDisplay = function (_Container) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "83f2ddd9dce43855441629dd5751ae31.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "images/83f2ddd9dce43855441629dd5751ae31.png");
 
 /***/ }),
 
@@ -49948,7 +50167,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "5c15feeaf8a671ed4637219b74b10c38.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "images/5c15feeaf8a671ed4637219b74b10c38.png");
 
 /***/ }),
 
@@ -49961,7 +50180,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "1cc6bd8ff1cfd2e3efdda4a89d6ec8c3.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "images/1cc6bd8ff1cfd2e3efdda4a89d6ec8c3.png");
 
 /***/ }),
 
@@ -49974,7 +50193,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "e9cbc8f77b90cdc46b33bb58ca871f4e.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "images/e9cbc8f77b90cdc46b33bb58ca871f4e.png");
 
 /***/ }),
 
@@ -49987,7 +50206,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "f72e4c815fb4f8dd15d8f3fa4679dc5a.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "images/f72e4c815fb4f8dd15d8f3fa4679dc5a.png");
 
 /***/ }),
 
@@ -50000,7 +50219,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "7c2b428e2d55be429a9ac09b41dde199.png");
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "images/7c2b428e2d55be429a9ac09b41dde199.png");
 
 /***/ }),
 
