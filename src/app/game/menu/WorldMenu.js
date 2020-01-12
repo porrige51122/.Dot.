@@ -5,6 +5,7 @@ import { LevelMenu } from './LevelMenu.js';
 import { LargeButton } from '../../core/display/LargeButton.js';
 import { Button } from '../../core/display/Button.js';
 import { Heading } from '../../core/display/Heading.js';
+import { Icon } from '../../core/display/Icon.js';
 
 /**
  * WorldMenu Class
@@ -25,10 +26,11 @@ export class WorldMenu extends Container {
     this.title.position.set(w / 2, h / 8);
     this.title.enable();
 
-    this.back = new Button(colors.mainFG, colors.mainText, "Back", w, h);
-    this.back.position.set(w - (w / 10), h / 8);
+    this.back = new Icon(controller.assets.home, colors.mainFG, w, h);
+    this.back.x = w - (w / 10);
+    this.back.y = h / 8;
     this.back.buttonMode = this.back.interactive = true;
-    this.back.enable();
+    this.addChild(this.back);
     this.back.on('pointertap', () => {
       controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.mainMenu);
     });

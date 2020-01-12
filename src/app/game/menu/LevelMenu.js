@@ -4,6 +4,7 @@ import * as colors from '../../core/display/Colors.js';
 import { GameController } from '../GameController.js';
 import { Button } from '../../core/display/Button.js';
 import { Heading } from '../../core/display/Heading.js';
+import { Icon } from '../../core/display/Icon.js';
 
 export class LevelMenu extends Container {
   constructor(controller, world) {
@@ -41,11 +42,10 @@ export class LevelMenu extends Container {
     this.title.enable();
     this.addChild(this.title);
 
-    this.back = new Button(colors.mainFG, colors.mainText, "Back", w, h);
+    this.back = new Icon(controller.assets.home, colors.mainFG, w, h);
     this.back.x = w - (w / 10);
     this.back.y = h / 8;
     this.back.buttonMode = this.back.interactive = true;
-    this.back.enable();
     this.addChild(this.back);
     this.back.on('pointertap', () => {
       controller.transitions.transitionSlide(controller.menu.levelMenu[controller.menu.currentLevel], controller.menu.worldMenu);

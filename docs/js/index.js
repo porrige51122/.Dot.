@@ -49716,6 +49716,8 @@ var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app
 
 var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
 
+var _Icon = __webpack_require__(/*! ../../core/display/Icon.js */ "./src/app/core/display/Icon.js");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -49770,11 +49772,10 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
     _this.title.enable();
     _this.addChild(_this.title);
 
-    _this.back = new _Button.Button(colors.mainFG, colors.mainText, "Back", w, h);
+    _this.back = new _Icon.Icon(controller.assets.home, colors.mainFG, w, h);
     _this.back.x = w - w / 10;
     _this.back.y = h / 8;
     _this.back.buttonMode = _this.back.interactive = true;
-    _this.back.enable();
     _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
       controller.transitions.transitionSlide(controller.menu.levelMenu[controller.menu.currentLevel], controller.menu.worldMenu);
@@ -49981,6 +49982,8 @@ var _Button = __webpack_require__(/*! ../../core/display/Button.js */ "./src/app
 
 var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
 
+var _Icon = __webpack_require__(/*! ../../core/display/Icon.js */ "./src/app/core/display/Icon.js");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -50013,10 +50016,11 @@ var WorldMenu = exports.WorldMenu = function (_Container) {
     _this.title.position.set(w / 2, h / 8);
     _this.title.enable();
 
-    _this.back = new _Button.Button(colors.mainFG, colors.mainText, "Back", w, h);
-    _this.back.position.set(w - w / 10, h / 8);
+    _this.back = new _Icon.Icon(controller.assets.home, colors.mainFG, w, h);
+    _this.back.x = w - w / 10;
+    _this.back.y = h / 8;
     _this.back.buttonMode = _this.back.interactive = true;
-    _this.back.enable();
+    _this.addChild(_this.back);
     _this.back.on('pointertap', function () {
       controller.transitions.transitionSlide(controller.menu.worldMenu, controller.menu.mainMenu);
     });
