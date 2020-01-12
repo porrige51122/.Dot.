@@ -47768,10 +47768,7 @@ var Transitions = exports.Transitions = function () {
     value: function slideloop() {
       if (this.slide) {
         if (this.height < this.a.y) {
-          this.a.y = 0;
-          this.b.y = 0;
-          this.a.visible = false;
-          this.slide = false;
+          this.finishSlide();
         } else {
           this.a.vy += 0.3;
           this.a.y += this.a.vy;
@@ -47796,14 +47793,43 @@ var Transitions = exports.Transitions = function () {
       if (this.fadein) {
         this.b.alpha += 0.01;
         if (this.b.alpha > 1) {
-          this.b.alpha = 1;
-          this.fadein = false;
+          this.finishFade();
         }
+      }
+    }
+  }, {
+    key: 'finishSlide',
+    value: function finishSlide() {
+      if (this.a !== undefined) {
+        this.a.y = 0;
+        this.b.y = 0;
+        this.a.visible = false;
+        this.slide = false;
+      }
+    }
+  }, {
+    key: 'finishFade',
+    value: function finishFade() {
+      if (this.a !== undefined) {
+        this.a.visible = false;
+        this.a.alpha = 1;
+        this.fadeout = false;
+
+        this.b.alpha = 1;
+        this.fadein = false;
       }
     }
   }, {
     key: 'transitionSlide',
     value: function transitionSlide(a, b) {
+      if (this.a !== undefined) {
+        this.finishSlide();
+        this.finishFade();
+        this.a.visible = false;
+        this.b.visible = false;
+        a.visible = true;
+      }
+
       var h = this.height;
       a.vy = 1;
       a.y = 0;
@@ -47819,6 +47845,14 @@ var Transitions = exports.Transitions = function () {
   }, {
     key: 'transitionFade',
     value: function transitionFade(a, b) {
+      if (this.a !== undefined) {
+        this.finishSlide();
+        this.finishFade();
+        this.a.visible = false;
+        this.b.visible = false;
+        a.visible = true;
+      }
+
       a.vy = 0;
       a.y = 0;
       a.alpha = 1;

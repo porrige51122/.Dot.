@@ -18,10 +18,7 @@ export class Transitions {
   slideloop() {
     if (this.slide) {
       if (this.height < this.a.y) {
-        this.a.y = 0;
-        this.b.y = 0;
-        this.a.visible = false;
-        this.slide = false;
+        this.finishSlide();
       } else {
         this.a.vy += 0.3;
         this.a.y += this.a.vy;
@@ -29,7 +26,7 @@ export class Transitions {
       }
     }
   }
-  
+
   fadeloop() {
     if (this.fadeout) {
       this.a.alpha -= 0.01;
@@ -45,13 +42,40 @@ export class Transitions {
     if (this.fadein) {
       this.b.alpha += 0.01;
       if (this.b.alpha > 1) {
-        this.b.alpha = 1;
-        this.fadein = false;
+        this.finishFade();
       }
     }
   }
 
+  finishSlide() {
+    if (this.a !== undefined) {
+      this.a.y = 0;
+      this.b.y = 0;
+      this.a.visible = false;
+      this.slide = false;
+    }
+  }
+
+  finishFade() {
+    if (this.a !== undefined) {
+      this.a.visible = false;
+      this.a.alpha = 1;
+      this.fadeout = false;
+
+      this.b.alpha = 1;
+      this.fadein = false;
+    }
+  }
+
   transitionSlide(a, b) {
+    if (this.a !== undefined) {
+      this.finishSlide();
+      this.finishFade();
+      this.a.visible = false;
+      this.b.visible = false;
+      a.visible = true;
+    }
+
     let h = this.height;
     a.vy = 1;
     a.y = 0;
@@ -66,6 +90,14 @@ export class Transitions {
   }
 
   transitionFade(a, b) {
+    if (this.a !== undefined) {
+      this.finishSlide();
+      this.finishFade();
+      this.a.visible = false;
+      this.b.visible = false;
+      a.visible = true;
+    }
+
     a.vy = 0;
     a.y = 0;
     a.alpha = 1;
