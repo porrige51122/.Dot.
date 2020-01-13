@@ -41120,7 +41120,7 @@ module.exports = function parseURI (str, opts) {
 /*!*********************************************!*\
   !*** ./node_modules/pixi.js/lib/pixi.es.js ***!
   \*********************************************/
-/*! exports provided: accessibility, extract, interaction, prepare, utils, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings, VERSION, filters, useDeprecated */
+/*! exports provided: accessibility, extract, interaction, prepare, utils, VERSION, filters, useDeprecated, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -47051,8 +47051,10 @@ var AppInit = function AppInit() {
   _classCallCheck(this, AppInit);
 
   var gameController = new _GameController.GameController();
-  gameController.init().then(function () {
-    console.log("Game Loaded");
+  gameController.load().then(function () {
+    gameController.init().then(function () {
+      console.log("Game Loaded");
+    });
   });
 };
 
@@ -48464,40 +48466,57 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 var GameController = exports.GameController = function () {
   function GameController() {
+    var _this = this;
+
     _classCallCheck(this, GameController);
 
     this.canvas = new _Canvas.Canvas();
+    window.addEventListener('resize', function () {
+      _this.resize();
+    });
     this.statusDisplay = new _StatusDisplay.StatusDisplay(this);
     this.canvas.app.stage.addChild(this.statusDisplay);
     this.statusDisplay.setLabel("Loading...");
   }
 
   _createClass(GameController, [{
-    key: 'init',
-    value: function init() {
-      var _this = this;
+    key: 'resize',
+    value: function resize() {
+      this.menu.resize(this);
+    }
+  }, {
+    key: 'load',
+    value: function load() {
+      var _this2 = this;
 
       return new Promise(function (resolve, reject) {
-        _this.assets = new _AssetManager.AssetManager();
-        _this.assets.promise.then(function () {
-
-          _this.transitions = new _Transitions.Transitions(_this);
-
-          _this.levels = new _LevelManager.LevelManager(_this);
-          _this.canvas.app.stage.addChild(_this.levels);
-
-          _this.builder = new _BuilderManager.BuilderManager(_this);
-          _this.canvas.app.stage.addChild(_this.builder);
-
-          _this.menu = new _MenuManager.MenuManager(_this);
-          _this.canvas.app.stage.addChild(_this.menu);
-
-          _this.canvas.app.stage.setChildIndex(_this.statusDisplay, _this.canvas.app.stage.children.length - 1);
-          _pixi.Ticker.shared.add(function () {
-            var str = _pixi.Ticker.shared.FPS.toFixed(0).toString() + "FPS";
-            _this.statusDisplay.setLabel(str);
-          });
+        _this2.assets = new _AssetManager.AssetManager();
+        _this2.assets.promise.then(function () {
           resolve();
+        });
+      });
+    }
+  }, {
+    key: 'init',
+    value: function init() {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this3.transitions = new _Transitions.Transitions(_this3);
+
+        _this3.levels = new _LevelManager.LevelManager(_this3);
+        _this3.canvas.app.stage.addChild(_this3.levels);
+
+        _this3.builder = new _BuilderManager.BuilderManager(_this3);
+        _this3.canvas.app.stage.addChild(_this3.builder);
+
+        _this3.menu = new _MenuManager.MenuManager(_this3);
+        _this3.canvas.app.stage.addChild(_this3.menu);
+
+        _this3.canvas.app.stage.setChildIndex(_this3.statusDisplay, _this3.canvas.app.stage.children.length - 1);
+        _pixi.Ticker.shared.add(function () {
+          var str = _pixi.Ticker.shared.FPS.toFixed(0).toString() + "FPS";
+          _this3.statusDisplay.setLabel(str);
         });
       });
     }
@@ -49921,9 +49940,11 @@ var MainMenu = exports.MainMenu = function (_Container) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.MenuManager = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
 
@@ -49951,36 +49972,52 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * Container of all different menus to switch between them.
  */
 var MenuManager = exports.MenuManager = function (_Container) {
-    _inherits(MenuManager, _Container);
+  _inherits(MenuManager, _Container);
 
-    function MenuManager(gameController) {
-        _classCallCheck(this, MenuManager);
+  function MenuManager(gameController) {
+    _classCallCheck(this, MenuManager);
 
-        var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
+    var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
 
-        _this.gc = gameController;
+    _this.gc = gameController;
 
-        _this.mainMenu = new _MainMenu.MainMenu(gameController);
-        _this.levelMenu = [];
-        for (var i = 0; i < gameController.assets.levels.length; i++) {
-            _this.levelMenu.push(new _LevelMenu.LevelMenu(gameController, i));
-            _this.levelMenu[i].visible = false;
-            _this.addChild(_this.levelMenu[i]);
+    _this.resize(gameController);
+    _this.mainMenu.visible = true;
+    return _this;
+  }
+
+  _createClass(MenuManager, [{
+    key: 'resize',
+    value: function resize(gameController) {
+      var visible = false;
+      if (this.mainMenu != undefined) {
+        this.removeChild(this.mainMenu, this.dailyMenu, this.worldMenu, this.levelCompleteMenu);
+        if (this.mainMenu.visible || this.dailyMenu.visible || this.worldMenu.visible || this.levelCompleteMenu.visible) visible = true;
+        for (var i = 0; i < this.levelMenu.length; i++) {
+          if (this.levelMenu[i].visible) visible = true;
+          this.removeChild(this.levelMenu[i]);
         }
-        _this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
-        _this.worldMenu = new _WorldMenu.WorldMenu(gameController);
-        _this.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gameController);
+      }
+      this.mainMenu = new _MainMenu.MainMenu(gameController);
 
-        // this.mainMenu.visible = false;
-        _this.dailyMenu.visible = false;
-        _this.worldMenu.visible = false;
-        _this.levelCompleteMenu.visible = false;
-
-        _this.addChild(_this.mainMenu, _this.dailyMenu, _this.worldMenu, _this.levelCompleteMenu);
-        return _this;
+      this.levelMenu = [];
+      for (var _i = 0; _i < gameController.assets.levels.length; _i++) {
+        this.levelMenu.push(new _LevelMenu.LevelMenu(gameController, _i));
+        this.levelMenu[_i].visible = false;
+        this.addChild(this.levelMenu[_i]);
+      }
+      this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
+      this.worldMenu = new _WorldMenu.WorldMenu(gameController);
+      this.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gameController);
+      this.addChild(this.mainMenu, this.dailyMenu, this.worldMenu, this.levelCompleteMenu);
+      this.mainMenu.visible = visible;
+      this.dailyMenu.visible = false;
+      this.worldMenu.visible = false;
+      this.levelCompleteMenu.visible = false;
     }
+  }]);
 
-    return MenuManager;
+  return MenuManager;
 }(_pixi.Container);
 
 /***/ }),
