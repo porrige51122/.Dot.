@@ -47052,6 +47052,7 @@ var AppInit = function AppInit() {
 
   var gameController = new _GameController.GameController();
   gameController.load().then(function () {
+    console.log("Assets Loaded");
     gameController.init().then(function () {
       console.log("Game Loaded");
     });
@@ -48452,6 +48453,8 @@ var _Canvas = __webpack_require__(/*! ../core/helpers/Canvas.js */ "./src/app/co
 
 var _StatusDisplay = __webpack_require__(/*! ./status/StatusDisplay.js */ "./src/app/game/status/StatusDisplay.js");
 
+var _Loading = __webpack_require__(/*! ./status/Loading.js */ "./src/app/game/status/Loading.js");
+
 var _Transitions = __webpack_require__(/*! ../core/helpers/Transitions.js */ "./src/app/core/helpers/Transitions.js");
 
 var _AssetManager = __webpack_require__(/*! ./assets/AssetManager.js */ "./src/app/game/assets/AssetManager.js");
@@ -48497,9 +48500,15 @@ var GameController = exports.GameController = function () {
       var _this2 = this;
 
       return new Promise(function (resolve, reject) {
-        _this2.assets = new _AssetManager.AssetManager();
+        var loading = new _Loading.Loading(_this2);
+        _this2.canvas.app.stage.addChild(loading);
+        _this2.assets = new _AssetManager.AssetManager(loading);
         _this2.assets.promise.then(function () {
-          resolve();
+          window.setTimeout(function () {
+            loading.update(100);
+            _this2.canvas.app.stage.removeChild(loading);
+            resolve();
+          }, 1000);
         });
       });
     }
@@ -48525,6 +48534,8 @@ var GameController = exports.GameController = function () {
           var str = _pixi.Ticker.shared.FPS.toFixed(0).toString() + "FPS";
           _this3.statusDisplay.setLabel(str);
         });
+
+        resolve();
       });
     }
   }]);
@@ -48600,7 +48611,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Used to store assets
  */
 var AssetManager = exports.AssetManager = function () {
-  function AssetManager() {
+  function AssetManager(loading) {
     var _this = this;
 
     _classCallCheck(this, AssetManager);
@@ -48611,8 +48622,10 @@ var AssetManager = exports.AssetManager = function () {
       _this.loader.add(_nodeA2.default).add(_nodeB2.default).add(_nodeC2.default).add(_nodeD2.default).add(_nodeE2.default).add(_nodeF2.default).add(_doorOpen2.default);
 
       _this.levels = [_world2.default, _world4.default];
+      _this.loader.on('progress', function () {
+        loading.update(_this.loader.progress * 0.8);
+      });
 
-      _this.loader.on('progress', _this.loadProgressHandler);
       _this.loader.load(function () {
         _this.nodeA = _this.loader.resources[_nodeA2.default].texture;
         _this.nodeB = _this.loader.resources[_nodeB2.default].texture;
@@ -48621,8 +48634,6 @@ var AssetManager = exports.AssetManager = function () {
         _this.nodeE = _this.loader.resources[_nodeE2.default].texture;
         _this.nodeF = _this.loader.resources[_nodeF2.default].texture;
         _this.home = _this.loader.resources[_doorOpen2.default].texture;
-
-        console.log('All Assets Loaded');
         resolve();
       });
     });
@@ -48646,11 +48657,6 @@ var AssetManager = exports.AssetManager = function () {
         output.push(sprite);
       }
       return output;
-    }
-  }, {
-    key: 'loadProgressHandler',
-    value: function loadProgressHandler(loader, resource) {
-      console.log("progress: " + loader.progress + "%");
     }
   }]);
 
@@ -49468,8 +49474,6 @@ var LevelManager = exports.LevelManager = function (_Container) {
     key: 'levelComplete',
     value: function levelComplete(gt) {
       gt.menu.levelsCompleted[this.world].push(this.level);
-      console.log(this.world);
-      console.log(this.level);
       gt.menu.resize(gt);
       gt.menu.worldMenu.update(gt);
 
@@ -50185,6 +50189,83 @@ var WorldMenu = exports.WorldMenu = function (_Container) {
   }]);
 
   return WorldMenu;
+}(_pixi.Container);
+
+/***/ }),
+
+/***/ "./src/app/game/status/Loading.js":
+/*!****************************************!*\
+  !*** ./src/app/game/status/Loading.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Loading = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = __webpack_require__(/*! pixi.js */ "./node_modules/pixi.js/lib/pixi.es.js");
+
+var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app/core/display/Colors.js");
+
+var colors = _interopRequireWildcard(_Colors);
+
+var _Title = __webpack_require__(/*! ../../core/display/Title.js */ "./src/app/core/display/Title.js");
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Loading Class
+ *
+ * Displays current progress of loading
+ */
+var Loading = exports.Loading = function (_Container) {
+  _inherits(Loading, _Container);
+
+  function Loading(controller) {
+    _classCallCheck(this, Loading);
+
+    var _this = _possibleConstructorReturn(this, (Loading.__proto__ || Object.getPrototypeOf(Loading)).call(this));
+
+    _this.w = controller.canvas.width;
+    _this.h = controller.canvas.height;
+
+    _this.rectA = new _pixi.Graphics();
+    _this.rectA.beginFill(colors.red);
+    _this.rectA.drawRect(0, _this.h - _this.h / 32, _this.w, _this.h / 32);
+    _this.addChild(_this.rectA);
+
+    _this.rectB = new _pixi.Graphics();
+    _this.rectB.beginFill(colors.blue);
+    _this.rectB.drawRect(0, _this.h - _this.h / 32, 0, _this.h / 32);
+    _this.addChild(_this.rectB);
+    return _this;
+  }
+
+  _createClass(Loading, [{
+    key: 'update',
+    value: function update(fill) {
+      this.removeChild(this.rectB);
+      this.rectB = new _pixi.Graphics();
+      this.rectB.beginFill(colors.blue);
+      this.rectB.drawRect(0, this.h - this.h / 32, this.w / 100 * fill, this.h / 32);
+      this.addChild(this.rectB);
+    }
+  }]);
+
+  return Loading;
 }(_pixi.Container);
 
 /***/ }),

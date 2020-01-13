@@ -51,8 +51,6 @@ export class LevelManager extends Container {
 
   levelComplete(gt) {
     gt.menu.levelsCompleted[this.world].push(this.level);
-    console.log(this.world);
-    console.log(this.level);
     gt.menu.resize(gt);
     gt.menu.worldMenu.update(gt);
 

@@ -1,7 +1,8 @@
 import { Ticker } from 'pixi.js';
 
 import { Canvas } from '../core/helpers/Canvas.js';
-import { StatusDisplay } from './status/StatusDisplay.js'
+import { StatusDisplay } from './status/StatusDisplay.js';
+import { Loading } from './status/Loading.js'
 import { Transitions } from '../core/helpers/Transitions.js'
 import { AssetManager } from './assets/AssetManager.js';
 import { LevelManager } from './levels/LevelManager.js';
@@ -30,9 +31,15 @@ export class GameController {
 
   load() {
     return new Promise((resolve, reject) => {
-      this.assets = new AssetManager();
+      let loading = new Loading(this);
+      this.canvas.app.stage.addChild(loading);
+      this.assets = new AssetManager(loading);
       this.assets.promise.then(() => {
-        resolve();
+        window.setTimeout(() => {
+          loading.update(100);
+          this.canvas.app.stage.removeChild(loading);
+          resolve();
+        }, 1000);
       })
     })
   }
@@ -55,6 +62,8 @@ export class GameController {
         let str = Ticker.shared.FPS.toFixed(0).toString() + "FPS";
         this.statusDisplay.setLabel(str);
       });
+
+      resolve();
     })
   }
 }

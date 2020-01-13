@@ -11,6 +11,7 @@ class AppInit {
   constructor() {
     let gameController = new GameController();
     gameController.load().then(() => {
+      console.log("Assets Loaded")
       gameController.init().then(() => {
         console.log("Game Loaded");
       })

@@ -16,7 +16,7 @@ import '../../../app.css';
  * Used to store assets
  */
 export class AssetManager {
-  constructor() {
+  constructor(loading) {
     this.promise = new Promise((resolve, reject) => {
       this.loader = new Loader();
 
@@ -29,8 +29,10 @@ export class AssetManager {
                  .add(Home);
 
       this.levels = [World1, World2];
+      this.loader.on('progress', () => {
+        loading.update(this.loader.progress * 0.8);
+      })
 
-      this.loader.on('progress', this.loadProgressHandler)
       this.loader.load(() => {
         this.nodeA = this.loader.resources[NodeA].texture;
         this.nodeB = this.loader.resources[NodeB].texture;
@@ -39,8 +41,6 @@ export class AssetManager {
         this.nodeE = this.loader.resources[NodeE].texture;
         this.nodeF = this.loader.resources[NodeF].texture;
         this.home = this.loader.resources[Home].texture;
-
-        console.log('All Assets Loaded');
         resolve();
       });
     });
@@ -60,9 +60,5 @@ export class AssetManager {
       output.push(sprite);
     }
     return output;
-  }
-
-  loadProgressHandler(loader, resource) {
-    console.log("progress: " + loader.progress + "%");
   }
 }
