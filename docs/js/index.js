@@ -48623,7 +48623,7 @@ var AssetManager = exports.AssetManager = function () {
 
       _this.levels = [_world2.default, _world4.default];
       _this.loader.on('progress', function () {
-        loading.update(_this.loader.progress * 0.8);
+        loading.update(_this.loader.progress * 0.95);
       });
 
       _this.loader.load(function () {

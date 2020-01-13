@@ -30,7 +30,7 @@ export class AssetManager {
 
       this.levels = [World1, World2];
       this.loader.on('progress', () => {
-        loading.update(this.loader.progress * 0.8);
+        loading.update(this.loader.progress * 0.95);
       })
 
       this.loader.load(() => {
