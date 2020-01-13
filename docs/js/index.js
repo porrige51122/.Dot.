@@ -41120,7 +41120,7 @@ module.exports = function parseURI (str, opts) {
 /*!*********************************************!*\
   !*** ./node_modules/pixi.js/lib/pixi.es.js ***!
   \*********************************************/
-/*! exports provided: accessibility, extract, interaction, prepare, utils, VERSION, filters, useDeprecated, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings */
+/*! exports provided: accessibility, extract, interaction, prepare, utils, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings, VERSION, filters, useDeprecated */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49989,12 +49989,15 @@ var MenuManager = exports.MenuManager = function (_Container) {
   _createClass(MenuManager, [{
     key: 'resize',
     value: function resize(gameController) {
-      var visible = false;
+      var visible = [false, false, false, false, -1];
       if (this.mainMenu != undefined) {
         this.removeChild(this.mainMenu, this.dailyMenu, this.worldMenu, this.levelCompleteMenu);
-        if (this.mainMenu.visible || this.dailyMenu.visible || this.worldMenu.visible || this.levelCompleteMenu.visible) visible = true;
+        visible[0] = this.mainMenu.visible;
+        visible[1] = this.dailyMenu.visible;
+        visible[2] = this.worldMenu.visible;
+        visible[3] = this.levelCompleteMenu.visible;
         for (var i = 0; i < this.levelMenu.length; i++) {
-          if (this.levelMenu[i].visible) visible = true;
+          if (this.levelMenu[i].visible) visible[4] = i;
           this.removeChild(this.levelMenu[i]);
         }
       }
@@ -50003,17 +50006,18 @@ var MenuManager = exports.MenuManager = function (_Container) {
       this.levelMenu = [];
       for (var _i = 0; _i < gameController.assets.levels.length; _i++) {
         this.levelMenu.push(new _LevelMenu.LevelMenu(gameController, _i));
-        this.levelMenu[_i].visible = false;
+        this.levelMenu[_i].visible = _i == visible[4];
         this.addChild(this.levelMenu[_i]);
       }
       this.dailyMenu = new _DailyMenu.DailyMenu(gameController);
       this.worldMenu = new _WorldMenu.WorldMenu(gameController);
       this.levelCompleteMenu = new _LevelCompleteMenu.LevelCompleteMenu(gameController);
       this.addChild(this.mainMenu, this.dailyMenu, this.worldMenu, this.levelCompleteMenu);
-      this.mainMenu.visible = visible;
-      this.dailyMenu.visible = false;
-      this.worldMenu.visible = false;
-      this.levelCompleteMenu.visible = false;
+
+      this.mainMenu.visible = visible[0];
+      this.dailyMenu.visible = visible[1];
+      this.worldMenu.visible = visible[2];
+      this.levelCompleteMenu.visible = visible[3];
     }
   }]);
 

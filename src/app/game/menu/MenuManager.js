@@ -22,29 +22,29 @@ export class MenuManager extends Container {
   }
 
   resize(gameController) {
-    let visible = false;
+    let visible = [false, false, false, false, -1];
     if (this.mainMenu != undefined) {
       this.removeChild(this.mainMenu,
                        this.dailyMenu,
                        this.worldMenu,
                        this.levelCompleteMenu
                     );
-      if (this.mainMenu.visible ||
-          this.dailyMenu.visible ||
-          this.worldMenu.visible ||
-          this.levelCompleteMenu.visible)
-          visible = true;
+      visible[0] = this.mainMenu.visible;
+      visible[1] = this.dailyMenu.visible;
+      visible[2] = this.worldMenu.visible;
+      visible[3] = this.levelCompleteMenu.visible;
       for (let i = 0; i < this.levelMenu.length; i++) {
-        if (this.levelMenu[i].visible) visible = true;
+        if (this.levelMenu[i].visible) visible[4] = i;
         this.removeChild(this.levelMenu[i]);
       }
+
     }
     this.mainMenu = new MainMenu(gameController);
 
     this.levelMenu = [];
     for (let i = 0; i < gameController.assets.levels.length; i++) {
       this.levelMenu.push(new LevelMenu(gameController, i));
-      this.levelMenu[i].visible = false;
+      this.levelMenu[i].visible = i == visible[4];
       this.addChild(this.levelMenu[i]);
     }
     this.dailyMenu = new DailyMenu(gameController);
@@ -55,10 +55,11 @@ export class MenuManager extends Container {
                    this.worldMenu,
                    this.levelCompleteMenu
                   );
-    this.mainMenu.visible = visible;
-    this.dailyMenu.visible = false;
-    this.worldMenu.visible = false;
-    this.levelCompleteMenu.visible = false;
+
+    this.mainMenu.visible = visible[0];
+    this.dailyMenu.visible = visible[1];
+    this.worldMenu.visible = visible[2];
+    this.levelCompleteMenu.visible = visible[3];
   }
 
 }
