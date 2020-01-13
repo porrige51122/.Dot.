@@ -48500,15 +48500,15 @@ var GameController = exports.GameController = function () {
       var _this2 = this;
 
       return new Promise(function (resolve, reject) {
-        var loading = new _Loading.Loading(_this2);
-        _this2.canvas.app.stage.addChild(loading);
-        _this2.assets = new _AssetManager.AssetManager(loading);
+        _this2.loading = new _Loading.Loading(_this2);
+        _this2.canvas.app.stage.addChild(_this2.loading);
+        _this2.assets = new _AssetManager.AssetManager(_this2.loading);
         _this2.assets.promise.then(function () {
           window.setTimeout(function () {
-            loading.update(100);
-            _this2.canvas.app.stage.removeChild(loading);
+            _this2.loading.update(100);
+            _this2.canvas.app.stage.removeChild(_this2.loading);
             resolve();
-          }, 1000);
+          }, 500);
         });
       });
     }

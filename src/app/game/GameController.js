@@ -31,15 +31,15 @@ export class GameController {
 
   load() {
     return new Promise((resolve, reject) => {
-      let loading = new Loading(this);
-      this.canvas.app.stage.addChild(loading);
-      this.assets = new AssetManager(loading);
+      this.loading = new Loading(this);
+      this.canvas.app.stage.addChild(this.loading);
+      this.assets = new AssetManager(this.loading);
       this.assets.promise.then(() => {
         window.setTimeout(() => {
-          loading.update(100);
-          this.canvas.app.stage.removeChild(loading);
+          this.loading.update(100);
+          this.canvas.app.stage.removeChild(this.loading);
           resolve();
-        }, 1000);
+        }, 500);
       })
     })
   }
