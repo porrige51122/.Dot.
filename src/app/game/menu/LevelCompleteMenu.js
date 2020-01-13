@@ -19,6 +19,13 @@ export class LevelCompleteMenu extends Container {
     let w = controller.canvas.width;
     let h = controller.canvas.height;
 
+    this.next = new Graphics();
+    this.next.beginFill('0xFFFFFF');
+    this.next.alpha = 0;
+    this.next.drawRect(0, 0, w, h);
+    this.next.buttonMode = this.next.interactive = true;
+    this.addChild(this.next);
+
     if (controller.levels.level < controller.assets.levels[world].length - 1) {
       this.title = new Heading(0x000034, 'Level ' + (controller.levels.level + 1) + ' Complete!', w, h);
       this.title.position.set(w / 2, (1 * h) / 3);
@@ -29,11 +36,6 @@ export class LevelCompleteMenu extends Container {
       this.subtitle.scale.set(0.5);
       this.subtitle.enable();
 
-      this.next = new Graphics();
-      this.next.beginFill('0xFFFFFF');
-      this.next.alpha = 0;
-      this.next.drawRect(0, 0, w, h);
-      this.next.buttonMode = this.next.interactive = true;
       this.next.on('pointertap', () => {
         this.next.buttonMode = this.next.interactive = false;
         controller.levels.level++;
@@ -41,7 +43,7 @@ export class LevelCompleteMenu extends Container {
         controller.transitions.transitionFade(controller.menu.levelCompleteMenu, controller.levels);
       });
 
-      this.addChild(this.next, this.title, this.subtitle);
+      this.addChild(this.title, this.subtitle);
     } else {
       this.endMessageA = new Heading(colors.mainFG, 'World Complete!', w, h);
       this.endMessageA.position.set(w / 2, h / 3);
@@ -49,6 +51,10 @@ export class LevelCompleteMenu extends Container {
       this.endMessageB = new Heading(colors.mainFG, 'Thanks for Playing!', w, h);
       this.endMessageB.position.set(w / 2, h / 3 * 2);
       this.endMessageB.enable();
+
+      this.next.on('pointertap', () => {
+        controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu[controller.menu.currentLevel]);
+      });
 
       this.addChild(this.endMessageA, this.endMessageB);
     }

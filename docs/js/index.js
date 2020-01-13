@@ -49699,6 +49699,13 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
     var w = controller.canvas.width;
     var h = controller.canvas.height;
 
+    _this.next = new _pixi.Graphics();
+    _this.next.beginFill('0xFFFFFF');
+    _this.next.alpha = 0;
+    _this.next.drawRect(0, 0, w, h);
+    _this.next.buttonMode = _this.next.interactive = true;
+    _this.addChild(_this.next);
+
     if (controller.levels.level < controller.assets.levels[world].length - 1) {
       _this.title = new _Heading.Heading(0x000034, 'Level ' + (controller.levels.level + 1) + ' Complete!', w, h);
       _this.title.position.set(w / 2, 1 * h / 3);
@@ -49709,11 +49716,6 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
       _this.subtitle.scale.set(0.5);
       _this.subtitle.enable();
 
-      _this.next = new _pixi.Graphics();
-      _this.next.beginFill('0xFFFFFF');
-      _this.next.alpha = 0;
-      _this.next.drawRect(0, 0, w, h);
-      _this.next.buttonMode = _this.next.interactive = true;
       _this.next.on('pointertap', function () {
         _this.next.buttonMode = _this.next.interactive = false;
         controller.levels.level++;
@@ -49721,7 +49723,7 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
         controller.transitions.transitionFade(controller.menu.levelCompleteMenu, controller.levels);
       });
 
-      _this.addChild(_this.next, _this.title, _this.subtitle);
+      _this.addChild(_this.title, _this.subtitle);
     } else {
       _this.endMessageA = new _Heading.Heading(colors.mainFG, 'World Complete!', w, h);
       _this.endMessageA.position.set(w / 2, h / 3);
@@ -49729,6 +49731,10 @@ var LevelCompleteMenu = exports.LevelCompleteMenu = function (_Container) {
       _this.endMessageB = new _Heading.Heading(colors.mainFG, 'Thanks for Playing!', w, h);
       _this.endMessageB.position.set(w / 2, h / 3 * 2);
       _this.endMessageB.enable();
+
+      _this.next.on('pointertap', function () {
+        controller.transitions.transitionSlide(controller.menu.levelCompleteMenu, controller.menu.levelMenu[controller.menu.currentLevel]);
+      });
 
       _this.addChild(_this.endMessageA, _this.endMessageB);
     }
