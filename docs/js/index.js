@@ -47787,7 +47787,7 @@ var Transitions = exports.Transitions = function () {
     key: 'fadeloop',
     value: function fadeloop() {
       if (this.fadeout) {
-        this.a.alpha -= 0.01;
+        this.a.alpha -= 0.02;
         if (!this.fadein && this.a.alpha < 0.25) {
           this.fadein = true;
         }
@@ -47798,7 +47798,7 @@ var Transitions = exports.Transitions = function () {
         }
       }
       if (this.fadein) {
-        this.b.alpha += 0.01;
+        this.b.alpha += 0.02;
         if (this.b.alpha > 1) {
           this.finishFade();
         }
@@ -48489,6 +48489,7 @@ var GameController = exports.GameController = function () {
     value: function resize() {
       this.menu.resize(this);
       this.transitions.resize(this);
+      this.levels.resize(this);
     }
   }, {
     key: 'load',
@@ -49452,15 +49453,24 @@ var LevelManager = exports.LevelManager = function (_Container) {
       this.game.nodes = this.gt.levels.mg.nodes;
     }
   }, {
+    key: 'resize',
+    value: function resize(gt) {
+      var visible = this.bg.visible;
+      this.removeChild(this.bg);
+      this.bg = new _LevelBackground.LevelBackground(gt);
+      this.addChild(this.bg);
+      this.buildLevel(false);
+      this.bg.visible = visible;
+      this.mg.visible = visible;
+      this.fg.visible = visible;
+    }
+  }, {
     key: 'levelComplete',
     value: function levelComplete(gt) {
-      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level].createBox(colors.blue);
-      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level].completed = true;
-      if (gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1] !== undefined) {
-        gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].alpha = 1;
-        gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].buttonMode = true;
-        gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].interactive = true;
-      }
+      gt.menu.levelsCompleted[this.world].push(this.level);
+      console.log(this.world);
+      console.log(this.level);
+      gt.menu.resize(gt);
       gt.menu.worldMenu.update(gt);
 
       gt.menu.removeChild(gt.menu.levelCompleteMenu);
@@ -49794,7 +49804,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LevelMenu = exports.LevelMenu = function (_Container) {
   _inherits(LevelMenu, _Container);
 
-  function LevelMenu(controller, world) {
+  function LevelMenu(controller, world, levelsCompleted) {
     _classCallCheck(this, LevelMenu);
 
     var _this = _possibleConstructorReturn(this, (LevelMenu.__proto__ || Object.getPrototypeOf(LevelMenu)).call(this));
@@ -49813,8 +49823,12 @@ var LevelMenu = exports.LevelMenu = function (_Container) {
       but.x = w / 7 + w / 7 * (i % 6);
       but.y = h / 3 + h / 6 * Math.floor(i / 6);
       but.enable();
-      if (i < 1 || DEVMODE) {
+      if (i < 1 || DEVMODE || levelsCompleted[world].includes(i) || levelsCompleted[world].includes(i - 1)) {
         but.buttonMode = but.interactive = true;
+        if (levelsCompleted[world].includes(i)) {
+          but.createBox(colors.blue);
+          but.completed = true;
+        }
       } else {
         but.alpha = 0.75;
       }
@@ -49992,7 +50006,10 @@ var MenuManager = exports.MenuManager = function (_Container) {
     var _this = _possibleConstructorReturn(this, (MenuManager.__proto__ || Object.getPrototypeOf(MenuManager)).call(this));
 
     _this.gc = gameController;
-
+    _this.levelsCompleted = [];
+    for (var i = 0; i < gameController.assets.levels.length; i++) {
+      _this.levelsCompleted.push([]);
+    }
     _this.resize(gameController);
     _this.mainMenu.visible = true;
     return _this;
@@ -50017,7 +50034,7 @@ var MenuManager = exports.MenuManager = function (_Container) {
 
       this.levelMenu = [];
       for (var _i = 0; _i < gameController.assets.levels.length; _i++) {
-        this.levelMenu.push(new _LevelMenu.LevelMenu(gameController, _i));
+        this.levelMenu.push(new _LevelMenu.LevelMenu(gameController, _i, this.levelsCompleted));
         this.levelMenu[_i].visible = _i == visible[4];
         this.addChild(this.levelMenu[_i]);
       }

@@ -7,7 +7,7 @@ import { Heading } from '../../core/display/Heading.js';
 import { Icon } from '../../core/display/Icon.js';
 
 export class LevelMenu extends Container {
-  constructor(controller, world) {
+  constructor(controller, world, levelsCompleted) {
     super();
     let DEVMODE =
     // true;
@@ -22,8 +22,12 @@ export class LevelMenu extends Container {
       but.x = w / 7 + ((w / 7) * (i % 6));
       but.y = h / 3 + ((h / 6) * Math.floor(i / 6));
       but.enable();
-      if (i < 1 || DEVMODE) {
+      if (i < 1 || DEVMODE || levelsCompleted[world].includes(i) || levelsCompleted[world].includes(i - 1)) {
         but.buttonMode = but.interactive = true;
+        if (levelsCompleted[world].includes(i)) {
+          but.createBox(colors.blue);
+          but.completed = true;
+        }
       } else {
         but.alpha = 0.75;
       }

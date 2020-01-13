@@ -38,14 +38,22 @@ export class LevelManager extends Container {
 
   }
 
+  resize(gt) {
+    let visible = this.bg.visible;
+    this.removeChild(this.bg);
+    this.bg = new LevelBackground(gt);
+    this.addChild(this.bg);
+    this.buildLevel(false);
+    this.bg.visible = visible;
+    this.mg.visible = visible;
+    this.fg.visible = visible;
+  }
+
   levelComplete(gt) {
-    gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level].createBox(colors.blue);
-    gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level].completed = true;
-    if (gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1] !== undefined) {
-      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].alpha = 1;
-      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].buttonMode = true;
-      gt.menu.levelMenu[gt.menu.currentLevel].buttons[gt.levels.level + 1].interactive = true;
-    }
+    gt.menu.levelsCompleted[this.world].push(this.level);
+    console.log(this.world);
+    console.log(this.level);
+    gt.menu.resize(gt);
     gt.menu.worldMenu.update(gt);
 
     gt.menu.removeChild(gt.menu.levelCompleteMenu);

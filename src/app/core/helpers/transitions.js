@@ -33,7 +33,7 @@ export class Transitions {
 
   fadeloop() {
     if (this.fadeout) {
-      this.a.alpha -= 0.01;
+      this.a.alpha -= 0.02;
       if (!this.fadein && this.a.alpha < 0.25) {
         this.fadein = true;
       }
@@ -44,7 +44,7 @@ export class Transitions {
       }
     }
     if (this.fadein) {
-      this.b.alpha += 0.01;
+      this.b.alpha += 0.02;
       if (this.b.alpha > 1) {
         this.finishFade();
       }

@@ -25,6 +25,7 @@ export class GameController {
   resize() {
     this.menu.resize(this);
     this.transitions.resize(this);
+    this.levels.resize(this);
   }
 
   load() {

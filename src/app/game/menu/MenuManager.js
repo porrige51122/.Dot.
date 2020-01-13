@@ -16,7 +16,10 @@ export class MenuManager extends Container {
   constructor(gameController) {
     super();
     this.gc = gameController;
-
+    this.levelsCompleted = [];
+    for (let i = 0; i < gameController.assets.levels.length; i++) {
+      this.levelsCompleted.push([]);
+    }
     this.resize(gameController);
     this.mainMenu.visible = true;
   }
@@ -43,7 +46,7 @@ export class MenuManager extends Container {
 
     this.levelMenu = [];
     for (let i = 0; i < gameController.assets.levels.length; i++) {
-      this.levelMenu.push(new LevelMenu(gameController, i));
+      this.levelMenu.push(new LevelMenu(gameController, i, this.levelsCompleted));
       this.levelMenu[i].visible = i == visible[4];
       this.addChild(this.levelMenu[i]);
     }
