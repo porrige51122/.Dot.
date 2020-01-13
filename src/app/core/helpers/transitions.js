@@ -2,8 +2,7 @@ import { Ticker } from 'pixi.js';
 
 export class Transitions {
   constructor(GameController) {
-    this.width = GameController.canvas.width;
-    this.height = GameController.canvas.height;
+    this.resize(GameController);
 
     this.a;
     this.b;
@@ -13,6 +12,11 @@ export class Transitions {
 
     Ticker.shared.add(this.slideloop, this);
     Ticker.shared.add(this.fadeloop, this);
+  }
+
+  resize(GameController) {
+    this.width = GameController.canvas.width;
+    this.height = GameController.canvas.height;
   }
 
   slideloop() {

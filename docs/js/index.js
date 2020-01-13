@@ -47752,8 +47752,7 @@ var Transitions = exports.Transitions = function () {
   function Transitions(GameController) {
     _classCallCheck(this, Transitions);
 
-    this.width = GameController.canvas.width;
-    this.height = GameController.canvas.height;
+    this.resize(GameController);
 
     this.a;
     this.b;
@@ -47766,6 +47765,12 @@ var Transitions = exports.Transitions = function () {
   }
 
   _createClass(Transitions, [{
+    key: 'resize',
+    value: function resize(GameController) {
+      this.width = GameController.canvas.width;
+      this.height = GameController.canvas.height;
+    }
+  }, {
     key: 'slideloop',
     value: function slideloop() {
       if (this.slide) {
@@ -48483,6 +48488,7 @@ var GameController = exports.GameController = function () {
     key: 'resize',
     value: function resize() {
       this.menu.resize(this);
+      this.transitions.resize(this);
     }
   }, {
     key: 'load',
