@@ -1,10 +1,14 @@
 import { Container, Graphics } from 'pixi.js';
 import * as colors from '../../core/display/Colors.js';
 
-import { GameController } from '../GameController.js';
 import { Subtitle } from '../../core/display/Subtitle.js';
 import { NodeFactory } from '../../core/display/NodeFactory.js';
 
+/**
+ * LevelMidground Class
+ *
+ * Contains all node information generated from information from the level manager
+ */
 export class LevelMidground extends Container {
   constructor(GameController, builder) {
     super();

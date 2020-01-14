@@ -1,10 +1,15 @@
 import { Container, Graphics } from 'pixi.js';
 import * as colors from '../../core/display/Colors.js';
 
-import { GameController } from '../GameController.js';
 import { Heading } from '../../core/display/Heading.js';
 import { Icon } from '../../core/display/Icon.js'
 
+/**
+ * LevelForeground Class
+ *
+ * Contains all clickable buttons and depending on wether the level is opened in builder mode
+ * Displays the current Level Heading
+ */
 export class LevelForeground extends Container {
   constructor(GameController, builder) {
     super();

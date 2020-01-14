@@ -41120,7 +41120,7 @@ module.exports = function parseURI (str, opts) {
 /*!*********************************************!*\
   !*** ./node_modules/pixi.js/lib/pixi.es.js ***!
   \*********************************************/
-/*! exports provided: accessibility, extract, interaction, prepare, utils, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings, VERSION, filters, useDeprecated */
+/*! exports provided: accessibility, extract, interaction, prepare, utils, VERSION, filters, useDeprecated, Application, AbstractBatchRenderer, AbstractRenderer, Attribute, BaseRenderTexture, BaseTexture, BatchDrawCall, BatchGeometry, BatchPluginFactory, BatchRenderer, BatchShaderGenerator, BatchTextureArray, Buffer, CubeTexture, Filter, Framebuffer, GLProgram, GLTexture, Geometry, MaskData, ObjectRenderer, Program, Quad, QuadUv, RenderTexture, RenderTexturePool, Renderer, Shader, SpriteMaskFilter, State, System, Texture, TextureMatrix, TextureUvs, UniformGroup, ViewableBuffer, autoDetectRenderer, checkMaxIfStatementsInShader, defaultFilterVertex, defaultVertex, resources, systems, AppLoaderPlugin, Loader, LoaderResource, TextureLoader, ParticleContainer, ParticleRenderer, Spritesheet, SpritesheetLoader, TilingSprite, TilingSpriteRenderer, BitmapFontLoader, BitmapText, Ticker, TickerPlugin, UPDATE_PRIORITY, ALPHA_MODES, BLEND_MODES, DRAW_MODES, ENV, FORMATS, GC_MODES, MASK_TYPES, MIPMAP_MODES, PRECISION, RENDERER_TYPE, SCALE_MODES, TARGETS, TYPES, WRAP_MODES, Bounds, Container, DisplayObject, FillStyle, GRAPHICS_CURVES, Graphics, GraphicsData, GraphicsGeometry, LineStyle, graphicsUtils, Circle, DEG_TO_RAD, Ellipse, Matrix, ObservablePoint, PI_2, Point, Polygon, RAD_TO_DEG, Rectangle, RoundedRectangle, SHAPES, Transform, groupD8, Mesh, MeshBatchUvs, MeshGeometry, MeshMaterial, NineSlicePlane, PlaneGeometry, RopeGeometry, SimpleMesh, SimplePlane, SimpleRope, Runner, Sprite, AnimatedSprite, TEXT_GRADIENT, Text, TextMetrics, TextStyle, isMobile, settings */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49121,6 +49121,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * LevelBackend Class
+ *
+ * Contains all logical functions needed for connecting nodes and checking
+ * they are valid.
+ */
 var LevelBackend = exports.LevelBackend = function () {
   function LevelBackend() {
     _classCallCheck(this, LevelBackend);
@@ -49268,8 +49274,6 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
-
 var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -49280,6 +49284,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * LevelBackground Class
+ *
+ * Container of blank rectangle to cover the app background
+ */
 var LevelBackground = exports.LevelBackground = function (_Container) {
   _inherits(LevelBackground, _Container);
 
@@ -49324,8 +49333,6 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
-
 var _Heading = __webpack_require__(/*! ../../core/display/Heading.js */ "./src/app/core/display/Heading.js");
 
 var _Icon = __webpack_require__(/*! ../../core/display/Icon.js */ "./src/app/core/display/Icon.js");
@@ -49338,6 +49345,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * LevelForeground Class
+ *
+ * Contains all clickable buttons and depending on wether the level is opened in builder mode
+ * Displays the current Level Heading
+ */
 var LevelForeground = exports.LevelForeground = function (_Container) {
   _inherits(LevelForeground, _Container);
 
@@ -49402,8 +49415,6 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
-
 var _LevelBackend = __webpack_require__(/*! ./LevelBackend.js */ "./src/app/game/levels/LevelBackend.js");
 
 var _LevelBackground = __webpack_require__(/*! ./LevelBackground.js */ "./src/app/game/levels/LevelBackground.js");
@@ -49422,6 +49433,12 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * LevelManager Class
+ *
+ * Container of all sub-containers which contain the level layers
+ * Also allows for resizing
+ */
 var LevelManager = exports.LevelManager = function (_Container) {
   _inherits(LevelManager, _Container);
 
@@ -49510,8 +49527,6 @@ var _Colors = __webpack_require__(/*! ../../core/display/Colors.js */ "./src/app
 
 var colors = _interopRequireWildcard(_Colors);
 
-var _GameController = __webpack_require__(/*! ../GameController.js */ "./src/app/game/GameController.js");
-
 var _Subtitle = __webpack_require__(/*! ../../core/display/Subtitle.js */ "./src/app/core/display/Subtitle.js");
 
 var _NodeFactory = __webpack_require__(/*! ../../core/display/NodeFactory.js */ "./src/app/core/display/NodeFactory.js");
@@ -49524,6 +49539,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * LevelMidground Class
+ *
+ * Contains all node information generated from information from the level manager
+ */
 var LevelMidground = exports.LevelMidground = function (_Container) {
   _inherits(LevelMidground, _Container);
 

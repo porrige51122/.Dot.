@@ -1,13 +1,18 @@
 import { Container, Ticker } from 'pixi.js';
 import * as colors from '../../core/display/Colors.js'
 
-import { GameController } from '../GameController.js';
 import { LevelBackend } from './LevelBackend.js';
 import { LevelBackground } from './LevelBackground.js';
 import { LevelMidground } from './LevelMidground.js';
 import { LevelForeground } from './LevelForeground.js';
 import { LevelCompleteMenu } from '../menu/LevelCompleteMenu.js';
 
+/**
+ * LevelManager Class
+ *
+ * Container of all sub-containers which contain the level layers
+ * Also allows for resizing
+ */
 export class LevelManager extends Container {
   constructor(GameController) {
     super();

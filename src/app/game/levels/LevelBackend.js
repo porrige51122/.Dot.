@@ -3,6 +3,12 @@ import Toastify from 'toastify-js';
 import { Connector } from '../../core/display/Connector.js';
 import * as Utils from '../../core/utils/Utils.js';
 
+/**
+ * LevelBackend Class
+ *
+ * Contains all logical functions needed for connecting nodes and checking
+ * they are valid.
+ */
 export class LevelBackend {
   checkWin() {
     let check = true;
